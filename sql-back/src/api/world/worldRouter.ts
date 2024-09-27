@@ -3,8 +3,7 @@ import express, { type Router } from "express";
 import { z } from "zod";
 
 import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
-import { GetWorldSchema, WorldSchema } from "@/api/world/worldModel";
-import { validateRequest } from "@/common/utils/httpHandlers";
+import { WorldSchema } from "@/api/world/worldModel";
 import { worldController } from "./worldController";
 
 export const worldRegistry = new OpenAPIRegistry();
@@ -14,9 +13,9 @@ worldRegistry.register("World", WorldSchema);
 
 worldRegistry.registerPath({
   method: "get",
-  path: "/world",
+  path: "/World/sampleData",
   tags: ["World"],
   responses: createApiResponse(z.array(WorldSchema), "Success"),
 });
 
-worldRouter.get("/", worldController.getWorld);
+worldRouter.get("/sampleData", worldController.getSample);

@@ -33,7 +33,7 @@ app.use(requestLogger);
 app.use("/health-check", healthCheckRouter);
 app.use("/users", userRouter);
 app.use("/exercises", exRouter);
-app.use("/world", worldRouter);
+app.use("/World", worldRouter);
 
 // Swagger UI
 app.use(openAPIRouter);
