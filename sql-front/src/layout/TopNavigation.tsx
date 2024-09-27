@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import Nav from 'react-bootstrap/Nav';
 import { Link } from 'react-router-dom';
+import { useAppSelector } from '../store';
 
 export function TopNavigation() {
+  const exercises = useAppSelector(state => state.exercises.entities);
   const [key, setKey] = useState('home');
 
   return (
@@ -12,16 +14,13 @@ export function TopNavigation() {
           <Link to="/">Home</Link>
         </Nav.Link>
       </Nav.Item>
-      <Nav.Item>
-        <Nav.Link as="span" eventKey="ex1">
-          <Link to="/ex1">Ex1</Link>
-        </Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link as="span" eventKey="ex2">
-          <Link to="/ex2">Ex2</Link>
-        </Nav.Link>
-      </Nav.Item>
+      {exercises.map(ex => (
+        <Nav.Item key={ex.id}>
+          <Nav.Link as="span" eventKey={ex.id}>
+            <Link to={ex.id}>{ex.id}</Link>
+          </Nav.Link>
+        </Nav.Item>
+      ))}
     </Nav>
   );
 }

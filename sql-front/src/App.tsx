@@ -1,36 +1,24 @@
 import { TopNavigation } from './layout/TopNavigation'
 import { Container } from 'react-bootstrap'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { Home } from './Home';
+import { Home } from './Home'
+import { useAppSelector } from './store'
+import { Exercise } from './exercises/Exercise'
 
 export function App() {
+  const exercises = useAppSelector(state => state.exercises.entities);
+
   return (
     <BrowserRouter>
       <Container style={{paddingTop: 15}}>
         <TopNavigation />
         <Routes>
           <Route path="/" element={ <Home /> } />
-          <Route path="/ex1" element={ <Ex1 /> } />
-          <Route path="/ex2" element={ <Ex2 /> } />
+          {exercises.map(ex => (
+            <Route key={ex.id} path={ex.id} element={ <Exercise exercise={ex} /> } />
+          ))}
         </Routes>
       </Container>
     </BrowserRouter>
   );
-}
-
-export function Ex1() {
-  return (
-    <>
-      <h1>Ex1</h1>
-    </>
-  )
-}
-
-
-export function Ex2() {
-  return (
-    <>
-      <h1>Ex2</h1>
-    </>
-  )
 }
