@@ -2,6 +2,7 @@ import Nav from 'react-bootstrap/Nav';
 import { Link } from 'react-router-dom';
 import { AppDispatch, useAppDispatch, useAppSelector } from '../store';
 import { config } from '../config';
+import { useEffect } from 'react';
 
 
 export const fetchData = (key: string) => async (dispatch: AppDispatch) => {
@@ -27,10 +28,17 @@ export const fetchData = (key: string) => async (dispatch: AppDispatch) => {
 export function TopNavigation() {
   const exercises = useAppSelector(state => state.exercises.entities);
   const dispatch = useAppDispatch();
-  const selected = useAppSelector(state => state.exercises.selected) || 'home';
+  const selected = useAppSelector(state => state.exercises.selected);
+
+  useEffect(() => {
+    if (document.location.pathname !== '/') {
+      const selectedEx = document.location.pathname.substring(1);
+      dispatch(fetchData(selectedEx));
+    }
+  }, []);
 
   return (
-    <Nav variant="tabs" activeKey={selected} onSelect={k => dispatch(fetchData(k))}>
+    <Nav variant="tabs" activeKey={selected ?? 'home'} onSelect={k => dispatch(fetchData(k))}>
       <Nav.Item>
         <Nav.Link as="span" eventKey="home">
           <Link to="/">Home</Link>

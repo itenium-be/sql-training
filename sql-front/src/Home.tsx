@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { config } from "./config";
+import { Button, Form } from "react-bootstrap";
 
 export function Home() {
-  const [sql, setSql] = useState('');
+  const [name, setName] = useState('');
   const [response, setResponse] = useState('');
 
   const handleFetch = async () => {
@@ -22,13 +23,24 @@ export function Home() {
   return (
     <>
       <h1>SQL Training</h1>
-      <textarea
-        value={sql}
-        onChange={e => setSql(e.target.value)}
-        placeholder="Enter your SQL"
-        style={{width: '100%', height: 350}}
-      />
-      <button onClick={handleFetch}>Submit</button>
+      <ul>
+        <li>Register by completing the form below</li>
+        <li>Then pick one of the tabs to start exercises and score points!</li>
+        <li>ATTN: if a select has two times the same column name, the property values will be overwritten</li>
+      </ul>
+
+      <Form.Group className="mb-3">
+        <Form.Label htmlFor="inputName">Enter your name:</Form.Label>
+        <Form.Control
+          type="text"
+          id="inputName"
+          placeholder="Your name"
+          value={name}
+          onChange={e => setName(e.target.value)}
+        />
+      </Form.Group>
+
+      <Button variant="primary" onClick={handleFetch}>Submit</Button>
       <div>{response}</div>
     </>
   )

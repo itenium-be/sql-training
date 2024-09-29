@@ -10,7 +10,7 @@ export function App() {
 
   return (
     <BrowserRouter>
-      <Container style={{paddingTop: 15}}>
+      <Container style={{paddingTop: 15, paddingBottom: 25}}>
         <TopNavigation />
         <Routes>
           <Route path="/" element={ <Home /> } />

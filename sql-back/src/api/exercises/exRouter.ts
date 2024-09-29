@@ -19,3 +19,29 @@ exRegistry.registerPath({
 });
 
 exRouter.get("/", exController.get);
+
+
+exRegistry.registerPath({
+  method: "post",
+  path: "/exercises",
+  tags: ["Exercises"],
+  requestBody: {
+    required: true,
+    content: {
+      'application/json': {
+        schema: {
+          type: 'object',
+          properties: {
+            sql: {
+              type: 'string',
+            },
+          },
+          required: ['sql'],
+        },
+      },
+    },
+  },
+  responses: createApiResponse(z.any().array(), "Success"),
+});
+
+exRouter.post("/", exController.post);
