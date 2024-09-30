@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Button from 'react-bootstrap/Button';
 import Badge from 'react-bootstrap/Badge';
-import { ExerciseModel, SqlExerciseModel } from "./exerciseModels";
+import { ExerciseId, ExerciseModel, SqlExerciseModel } from "./exerciseModels";
 import { ExerciseSampleData, ExercisesData } from "./ExerciseSampleData";
 import { config, HttpResponse } from "../config";
 import { useAppDispatch, useAppSelector } from "../store";
@@ -42,7 +42,11 @@ function TheExercises({exercise}: {exercise: ExerciseModel}) {
 
 
 function SqlExercises({exercise}: {exercise: ExerciseModel}) {
-  const currentExIndex = useAppSelector(state => state.exercises[state.exercises.selected!].currentExercise);
+  let currentGame = useAppSelector(state => state.exercises.selected);
+  // HACK: not clicking on the link but on the cell resets the selected exercise
+  // HACK: This is an issue in TopNavigation with <Nav.Link> vs <Link>
+  currentGame ??= document.location.pathname.substring(1) as ExerciseId;
+  const currentExIndex = useAppSelector(state => state.exercises[currentGame!].currentExercise);
   const currentEx = exercise.exercises.find(ex => ex.id === currentExIndex);
   const dispatch = useAppDispatch();
 
