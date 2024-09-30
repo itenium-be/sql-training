@@ -37,20 +37,20 @@ teacherRegistry.registerPath({
 });
 
 const getSample: RequestHandler = async (_req: Request, res: Response) => {
-  const result = await executeQuery('SELECT t.name, t.phone, t.mobile, d.name as dept_name, d.phone as dept_phone FROM teachers t JOIN departments d ON t.dept=d.id');
+  const result = await executeQuery("SELECT t.name, t.phone, t.mobile, TO_CHAR(employed_at, 'YYYY-MM-DD') AS employed_at, TO_CHAR(birth_date, 'YYYY-MM-DD') AS birth_date, d.name as dept_name, d.phone as dept_phone FROM teachers t JOIN departments d ON t.dept=d.id");
   const serviceResponse = ServiceResponse.success<any[]>("Sample data found", result.rows);
   return handleServiceResponse(serviceResponse, res);
 };
 
 const getTeachers: RequestHandler = async (_req: Request, res: Response) => {
-  const result = await executeQuery('SELECT * FROM teachers');
-  const serviceResponse = ServiceResponse.success<any[]>("Sample data found", result.rows);
+  const result = await executeQuery("SELECT id, dept, name, phone, mobile, TO_CHAR(employed_at, 'YYYY-MM-DD') AS employed_at, TO_CHAR(birth_date, 'YYYY-MM-DD') AS birth_date FROM teachers");
+  const serviceResponse = ServiceResponse.success<any[]>("Teachers found", result.rows);
   return handleServiceResponse(serviceResponse, res);
 };
 
 const getDepartments: RequestHandler = async (_req: Request, res: Response) => {
   const result = await executeQuery('SELECT * FROM departments');
-  const serviceResponse = ServiceResponse.success<any[]>("Sample data found", result.rows);
+  const serviceResponse = ServiceResponse.success<any[]>("Departments found", result.rows);
   return handleServiceResponse(serviceResponse, res);
 };
 

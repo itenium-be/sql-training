@@ -167,7 +167,7 @@ const worldExercises: ExerciseModel = {
 const teacherExercises: ExerciseModel = {
   id: 'Teachers',
   name: 'Teachers & Departments',
-  sampleQuery: 'SELECT t.name, t.phone, t.mobile, d.name as dept_name, d.phone as dept_phone FROM teachers t JOIN departments d ON t.dept=d.id',
+  sampleQuery: 'SELECT t.name, t.phone, t.mobile, employed_at, birth_date, d.name as dept_name, d.phone as dept_phone FROM teachers t JOIN departments d ON t.dept=d.id',
   desc: 'Be social, join tables! (postgres)',
   exercises: [
     {
@@ -227,13 +227,30 @@ const teacherExercises: ExerciseModel = {
       expectedOrder: false,
       expectedColumns: ['name', 'phone']
     },
+    {
+      id: 5,
+      desc: 'Select all teacher with a name starting with "S" and their seniority (in years)',
+      points: 2,
+      expected: [
+        ['Shrivell', 23],
+        ['Splint', 2],
+        ['Spiregrain', 25],
+      ],
+      expectedOrder: false,
+      expectedColumns: ['name', 'seniority']
+    },
+    {
+      id: 6,
+      desc: 'Show the teacher names with a birthday today (3/10)',
+      points: 1,
+      expected: [
+        ['Throd']
+      ],
+      expectedOrder: false,
+      expectedColumns: ['name']
+    },
   ],
 }
-
-
-// IDEAS:
-// --> add employment_date and display how many years of seniority
-// --> add birthdate and display everyone who's birthday is today
 
 
 // {
@@ -241,7 +258,7 @@ const teacherExercises: ExerciseModel = {
 //   desc: '',
 //   points: 1,
 //   expected: [],
-//   expectedOrder: true,
+//   expectedOrder: false,
 //   expectedColumns: ['', '']
 // },
 

@@ -216,7 +216,9 @@ CREATE TABLE teachers (
   dept NUMERIC(15,0),
   name VARCHAR(100) NOT NULL,
   phone VARCHAR(50),
-  mobile VARCHAR(50)
+  mobile VARCHAR(50),
+  employed_at DATE,
+  birth_date DATE
 );
 
 CREATE TABLE departments (
@@ -225,14 +227,14 @@ CREATE TABLE departments (
   phone VARCHAR(50)
 );
 
-INSERT INTO teachers (dept, name, phone, mobile)
+INSERT INTO teachers (dept, name, phone, mobile, employed_at, birth_date)
 VALUES
-(1, 'Shrivell', 'EXT 2753', '0476 40 35 09'),
-(1, 'Throd', 'EXT 2754', '0477 99 66 55'),
-(1, 'Splint', 'EXT 2793', NULL),
-(NULL, 'Spiregrain', 'EXT 3212', '0799 55 56 57'),
-(2, 'Cutflower', NULL, NULL),
-(NULL, 'Deadyawn', 'EXT 3345', NULL);
+(1, 'Shrivell', 'EXT 2753', '0476 40 35 09', '2000-12-05', '1980-09-06'),
+(1, 'Throd', 'EXT 2754', '0477 99 66 55', '1982-09-01', '1960-10-03'),
+(1, 'Splint', 'EXT 2793', NULL, '2022-03-22', '1995-07-12'),
+(NULL, 'Spiregrain', 'EXT 3212', '0799 55 56 57', '1999-06-01', '1979-11-19'),
+(2, 'Cutflower', NULL, NULL, '2015-02-16', '1990-03-15'),
+(NULL, 'Deadyawn', 'EXT 3345', NULL, '2000-12-05', '1980-11-01');
 
 
 INSERT INTO departments (name, phone)
