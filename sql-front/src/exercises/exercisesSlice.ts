@@ -7,7 +7,7 @@ type StoreState = {
   userName: string;
   scores: Score[];
   World: ExerciseState;
-  Nobel: ExerciseState;
+  Teachers: ExerciseState;
 }
 
 type ExerciseState = {
@@ -24,7 +24,7 @@ const initialState: StoreState = {
     exampleData: [],
     currentExercise: 1,
   },
-  Nobel: {
+  Teachers: {
     exampleData: [],
     currentExercise: 1,
   },

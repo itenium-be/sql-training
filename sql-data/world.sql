@@ -205,3 +205,38 @@ VALUES
 ('Yemen', 'Asia', 527968, 25235000, 32831000000, 'Sana''a', '.ye'),
 ('Zambia', 'Africa', 752612, 15023315, 21490000000, 'Lusaka', '.zm'),
 ('Zimbabwe', 'Africa', 390757, 13061239, 9802000000, 'Harare', '.zw');
+
+
+
+
+-- TEACHERS
+
+CREATE TABLE teachers (
+  id SERIAL PRIMARY KEY,
+  dept NUMERIC(15,0),
+  name VARCHAR(100) NOT NULL,
+  phone VARCHAR(50),
+  mobile VARCHAR(50)
+);
+
+CREATE TABLE departments (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  phone VARCHAR(50)
+);
+
+INSERT INTO teachers (dept, name, phone, mobile)
+VALUES
+(1, 'Shrivell', 'EXT 2753', '0476 40 35 09'),
+(1, 'Throd', 'EXT 2754', '0477 99 66 55'),
+(1, 'Splint', 'EXT 2793', NULL),
+(NULL, 'Spiregrain', 'EXT 3212', '0799 55 56 57'),
+(2, 'Cutflower', NULL, NULL),
+(NULL, 'Deadyawn', 'EXT 3345', NULL);
+
+
+INSERT INTO departments (name, phone)
+VALUES
+('Computing', 'EXT 2700'),
+('Design', 'EXT 3200'),
+('Engineering', 'EXT 3000');

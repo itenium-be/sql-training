@@ -26,13 +26,13 @@ export type Score = {
   elapsed: number;
 }
 
-export type ExerciseId = 'World' | 'Nobel';
+export type ExerciseId = 'World' | 'Teachers';
 
 const worldExercises: ExerciseModel = {
   id: 'World',
   name: 'Countries of the world',
   sampleQuery: 'SELECT id, name, continent, area, population, gdp, capital, tld FROM countries',
-  desc: 'The starter exercises!',
+  desc: 'The starter exercises! (postgres database)',
   exercises: [
     {
       id: 1,
@@ -164,16 +164,89 @@ const worldExercises: ExerciseModel = {
   ],
 }
 
-const nobelExercises: ExerciseModel = {
-  id: 'Nobel',
-  name: 'Nobel Prices',
-  sampleQuery: '',
-  desc: '',
-  exercises: [],
+const teacherExercises: ExerciseModel = {
+  id: 'Teachers',
+  name: 'Teachers & Departments',
+  sampleQuery: 'SELECT t.name, t.phone, t.mobile, d.name as dept_name, d.phone as dept_phone FROM teachers t JOIN departments d ON t.dept=d.id',
+  desc: 'Be social, join tables! (postgres)',
+  exercises: [
+    {
+      id: 1,
+      desc: 'Display the deparments and the number of staff',
+      points: 1,
+      expected: [
+        ["Design", 1],
+        ["Computing", 3],
+        ["Engineering", 0],
+      ],
+      expectedOrder: false,
+      expectedColumns: ['name', 'count']
+    },
+    {
+      id: 2,
+      desc: 'List all teachers with their department. Display "None" if they do not belong to a department.',
+      points: 2,
+      expected: [
+        ["Splint", "Computing"],
+        ["Throd", "Computing"],
+        ["Shrivell", "Computing"],
+        ["Cutflower", "Design"],
+        ["Deadyawn", "None"],
+        ["Spiregrain", "None"],
+      ],
+      expectedOrder: false,
+      expectedColumns: ['name', 'dept_name']
+    },
+    {
+      id: 3,
+      desc: 'Show the name of the teacher and, depending on the department, show "Sci", "Art" or "None".',
+      points: 2,
+      expected: [
+        ['Splint', 'Sci'],
+        ['Throd', 'Sci'],
+        ['Shrivell', 'Sci'],
+        ['Cutflower', 'Art'],
+        ['Deadyawn', 'None'],
+        ['Spiregrain', 'None'],
+      ],
+      expectedOrder: false,
+      expectedColumns: ['name', 'department type']
+    },
+    {
+      id: 4,
+      desc: "Show all teachers and their mobile number. If they don't have one, fallback to their extension and if they don't have an office, fallback to the department extension. We need to be able to call them right away, so phone numbers must start with +32 and be without any spaces. The school number is 09 331 0000",
+      points: 4,
+      expected: [
+        ['Shrivell', '+32476403509'],
+        ['Throd', '+32477996655'],
+        ['Splint', '+3293312793'],
+        ['Spiregrain', '+32799555657'],
+        ['Cutflower', '+3293313200'],
+        ['Deadyawn', '+3293313345'],
+      ],
+      expectedOrder: false,
+      expectedColumns: ['name', 'phone']
+    },
+  ],
 }
+
+
+// IDEAS:
+// --> add employment_date and display how many years of seniority
+// --> add birthdate and display everyone who's birthday is today
+
+
+// {
+//   id: 1,
+//   desc: '',
+//   points: 1,
+//   expected: [],
+//   expectedOrder: true,
+//   expectedColumns: ['', '']
+// },
 
 
 export const exercises = [
   worldExercises,
-  nobelExercises,
+  teacherExercises,
 ]
