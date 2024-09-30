@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { config } from "./config";
-import { Alert, Button, Form, Table, Image, Row } from "react-bootstrap";
+import { Alert, Button, Form, Table, Image, Row, Badge } from "react-bootstrap";
 import { useAppDispatch, useAppSelector } from "./store";
 import { Score } from "./exercises/exerciseModels";
 
@@ -147,6 +147,7 @@ type FastestExercise = {
   game: string;
   exerciseId: number;
   exercise: string;
+  points: number;
   player: string;
   time: number;
 }
@@ -167,6 +168,7 @@ function FastestScorers({scores}: {scores: Score[]}) {
         game: game.id,
         exerciseId: ex.id,
         exercise: ex.desc,
+        points: ex.points,
         player: '',
         time: 0,
       }
@@ -194,13 +196,18 @@ function FastestScorers({scores}: {scores: Score[]}) {
           <th>Game</th>
           <th>Exercise</th>
           <th>Player</th>
-          <th>Time</th>
+          <th style={{width: 90}}>Time</th>
         </tr>
       </thead>
       <tbody>
         {fastestTable.filter(fast => !!fast.player).map(fast => (
           <tr key={fast.game + '-' + fast.exerciseId} className={fast.player === registeredName ? 'table-primary' : undefined}>
-            <td>{fast.game}-{fast.exerciseId}</td>
+            <td>
+              {fast.game}-{fast.exerciseId}
+              <Badge bg="secondary" style={{fontSize: 14}}>
+                {fast.points} point{fast.points === 1 ? '' : 's'}
+              </Badge>
+            </td>
             <td>{fast.exercise}</td>
             <td>{fast.player}</td>
             <td>{formatSeconds(fast.time)}</td>
