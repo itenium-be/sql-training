@@ -62,6 +62,9 @@ function Cell({value}: {value: any}) {
   if (typeof value === 'string' && (value.includes(' ') || value[0] === '+'))
     return <td>{value}</td>
 
+  if (typeof value === 'string' && value.indexOf('-') !== -1 && value.indexOf('-') !== value.lastIndexOf('-'))
+    return <td>{value}</td>
+
   if (!isNaN(parseInt(value)) && value[value.length - 1] !== '%')
     return <td style={{textAlign: 'right'}}>{(+value).toLocaleString().replace(/,/g, '.')}</td>
 
