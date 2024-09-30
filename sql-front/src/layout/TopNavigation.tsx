@@ -4,7 +4,6 @@ import { AppDispatch, useAppDispatch, useAppSelector } from '../store';
 import { config } from '../config';
 import { useEffect } from 'react';
 
-
 export const fetchData = (key: string) => async (dispatch: AppDispatch) => {
   if (key === 'home') {
     dispatch({type: 'exercises/switch', payload: {key}});
@@ -31,6 +30,7 @@ export const fetchData = (key: string) => async (dispatch: AppDispatch) => {
     dispatch({type: 'exercises/switch', payload: {key, data: data.responseObject}});
   } catch (error) {
     console.error('Could not fetch sample data', error);
+    dispatch({type: 'exercises/switch', payload: {key, data: []}});
   }
 };
 
