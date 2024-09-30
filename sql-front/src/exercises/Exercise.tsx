@@ -69,6 +69,10 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
   const [hint, setHint] = useState(false);
   const [success, setSuccess] = useState(false);
   const currentGame = useAppSelector(state => state.exercises.selected);
+  const registeredName = useAppSelector(state => state.exercises.userName);
+  const solved = useAppSelector(state => state.exercises.scores
+    .filter(score => score.player === registeredName)
+    .some(score => score.game === currentGame && score.exerciseid === sql.id));
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -154,7 +158,7 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
     }
   };
 
-  return (
+  const exerciseHeader = (
     <>
       <h2>
         Exercise {sql.id}
@@ -163,6 +167,21 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
         </Badge>
       </h2>
       <p>{sql.desc}</p>
+    </>
+  )
+
+  if (solved) {
+    return (
+      <>
+        {exerciseHeader}
+        <ExerciseSolved sql={sql} reset={reset} text="Greato success, you've already solved this one!" />
+      </>
+    )
+  }
+
+  return (
+    <>
+      {exerciseHeader}
       {error && (
         <Alert variant="danger" onClose={() => setError('')} dismissible>
           {error}
@@ -189,18 +208,7 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
       </Row>
 
       {success ? (
-        <Alert variant="success">
-          <Alert.Heading>
-            {emojis[Math.floor(Math.random() * emojis.length)]}
-            &nbsp;Greato success
-          </Alert.Heading>
-          <Button variant="success" onClick={() => {reset(); dispatch({type: 'exercises/nextQuestion'})}} className="float-end">
-            Next Question
-          </Button>
-          <div className="float-none" style={{marginBottom: 8}}>
-            <b>You scored {sql.points} point{sql.points === 1 ? '' : 's'}!</b>
-          </div>
-        </Alert>
+        <ExerciseSolved sql={sql} reset={reset} />
       ) : (
         <>
           <Button variant="primary" onClick={handleFetch} style={{marginRight: 16}} disabled={!sqlText.length}>
@@ -225,6 +233,25 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
         </>
       )}
     </>
+  )
+}
+
+function ExerciseSolved({sql, reset, text}: {sql: SqlExerciseModel, reset: Function, text?: string}) {
+  const dispatch = useAppDispatch();
+
+  return (
+    <Alert variant="success">
+      <Alert.Heading>
+        {emojis[Math.floor(Math.random() * emojis.length)]}
+        &nbsp;{text ?? 'Greato success'}
+      </Alert.Heading>
+      <Button variant="success" onClick={() => {reset(); dispatch({type: 'exercises/nextQuestion'})}} className="float-end">
+        Next Question
+      </Button>
+      <div className="float-none" style={{marginBottom: 8}}>
+        <b>You scored {sql.points} point{sql.points === 1 ? '' : 's'}!</b>
+      </div>
+    </Alert>
   )
 }
 

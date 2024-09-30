@@ -36,10 +36,11 @@ export const exercisesSlice = createSlice({
   reducers: {
     switch: (state, action) => {
       if (action.payload.key === 'home') {
-        state.selected = null
+        state.selected = null;
       } else {
-        state.selected = action.payload.key as ExerciseId
-        state[action.payload.key as ExerciseId].exampleData = action.payload.data
+        state.selected = action.payload.key as ExerciseId;
+        state[state.selected].exampleData = action.payload.data;
+        state[state.selected].currentExercise = 1;
       }
     },
     nextQuestion: state => {
