@@ -17,6 +17,7 @@ export function Home() {
         <ul>
           <li>Pick one of the tabs to start exercises and score points!</li>
           <li>ATTN: if a select has two times the same column name, the property values will be overwritten</li>
+          <li><a href="http://localhost:8080" target="_blank">There is a Swagger</a></li>
         </ul>
         <Scoreboard />
       </>
