@@ -56,6 +56,12 @@ function TableBody({data}: {data: any[]}) {
 }
 
 function Cell({value}: {value: any}) {
+  if (value === null)
+    return <td><i>NULL</i></td>
+
+  if (typeof value === 'string' && (value.includes(' ') || value[0] === '+'))
+    return <td>{value}</td>
+
   if (!isNaN(parseInt(value)) && value[value.length - 1] !== '%')
     return <td style={{textAlign: 'right'}}>{(+value).toLocaleString().replace(/,/g, '.')}</td>
 
