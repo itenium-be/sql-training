@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { config } from "./config";
-import { Alert, Button, Form, Table } from "react-bootstrap";
+import { Alert, Button, Form, Table, Image, Row } from "react-bootstrap";
 import { useAppDispatch, useAppSelector } from "./store";
 import { Score } from "./exercises/exerciseModels";
 
@@ -64,6 +64,12 @@ export function Home() {
       {response && (
         <Alert variant="info" style={{marginTop: 16}}>{response}</Alert>
       )}
+
+      <Row style={{marginTop: 25}}>
+        <h2>It's Meme Time</h2>
+        <p>Refresh for a different one! <small>Clear localStorage after logging in for more memes!</small></p>
+        <Image src={`/memes/sql-${Math.floor(Math.random() * 18) + 1}.png`} rounded style={{width: 'auto', height: 'auto'}} />
+      </Row>
     </>
   )
 }
