@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { config } from "./config";
 import { Alert, Button, Form, Table } from "react-bootstrap";
 import { useAppDispatch, useAppSelector } from "./store";
+import { Score } from "./exercises/exerciseModels";
 
 export function Home() {
   const [name, setName] = useState('');
@@ -67,37 +68,25 @@ export function Home() {
   )
 }
 
-
-type Score = {
-  player: string;
-  game: string;
-  exerciseid: number;
-  solutionlength: number;
-  /** in seconds */
-  elapsed: number;
-}
-
 function Scoreboard() {
-  const [scores, setScores] = useState<Score[] | null>(null);
+  const scores = useAppSelector(state => state.exercises.scores);
 
-  useEffect(() => {
-    const getScores = async () => {
-      const res = await fetch(`${config.leaderboard.api}/game`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
-      const data = await res.json();
-      // TODO: put it in the store so we know where we currently are...
-      setScores(data);
-    }
-
-    getScores();
-  }, [])
+  if (!scores.length) {
+    return (
+      <>
+        <h1>Leaderboard</h1>
+        <p>Be the first to score points!</p>
+      </>
+    );
+  }
 
   return (
     <>
       <h1>Leaderboard</h1>
-      {scores && <ScoreTable scores={scores} /> }
+      <ScoreTable scores={scores} />
+
+      <h2>Fastest Scorers</h2>
+      <FastestScorers scores={scores} />
     </>
   )
 }
@@ -137,6 +126,74 @@ function ScoreTable({scores}: {scores: Score[]}) {
             <td>{index + 1}</td>
             <td>{player}</td>
             <td>{score}</td>
+          </tr>
+        ))}
+      </tbody>
+    </Table>
+  )
+}
+
+type FastestExercise = {
+  game: string;
+  exerciseId: number;
+  exercise: string;
+  player: string;
+  time: number;
+}
+
+function formatSeconds(seconds: number) {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+
+  return `${mins}m ${secs}s`;
+}
+
+function FastestScorers({scores}: {scores: Score[]}) {
+  const registeredName = useAppSelector(state => state.exercises.userName);
+  const exercises = useAppSelector(state => state.exercises.entities);
+  const fastestTable = exercises.reduce((cur, game) => {
+    const gameExs = game.exercises.map(ex => {
+      return {
+        game: game.id,
+        exerciseId: ex.id,
+        exercise: ex.desc,
+        player: '',
+        time: 0,
+      }
+    })
+    return cur.concat(gameExs);
+  }, [] as FastestExercise[]);
+  // console.log('fastest', fastestTable);
+  // console.log('scores', scores);
+
+  fastestTable.forEach(fastest => {
+    const exScores = scores
+      .filter(score => score.game === fastest.game && score.exerciseid === fastest.exerciseId)
+      .sort((a, b) => b.elapsed - a.elapsed);
+
+    if (exScores.length) {
+      fastest.player = exScores[0].player;
+      fastest.time = exScores[0].elapsed;
+    }
+  })
+
+  return (
+    <Table bordered hover>
+      <thead>
+        <tr>
+          <th>Game</th>
+          <th>Exercise</th>
+          <th>Player</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {fastestTable.filter(fast => !!fast.player).map(fast => (
+          <tr key={fast.game + '-' + fast.exerciseId} className={fast.player === registeredName ? 'table-primary' : undefined}>
+            <td>{fast.game}-{fast.exerciseId}</td>
+            <td>{fast.exercise}</td>
+            <td>{fast.player}</td>
+            <td>{formatSeconds(fast.time)}</td>
           </tr>
         ))}
       </tbody>

@@ -1,10 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { ExerciseId, ExerciseModel, exercises } from './exerciseModels'
+import { ExerciseId, ExerciseModel, exercises, Score } from './exerciseModels'
 
 type StoreState = {
   entities: ExerciseModel[];
   selected: ExerciseId | null;
   userName: string;
+  scores: Score[];
   World: ExerciseState;
   Nobel: ExerciseState;
 }
@@ -18,6 +19,7 @@ const initialState: StoreState = {
   entities: exercises,
   selected: null,
   userName: '',
+  scores: [],
   World: {
     exampleData: [],
     currentExercise: 1,
@@ -57,11 +59,20 @@ export const exercisesSlice = createSlice({
     },
     register: (state, action) => {
       state.userName = action.payload;
+    },
+    setScores: (state, action) => {
+      state.scores = action.payload;
+      state.scores = state.scores.map(score => ({
+        ...score,
+        exerciseid: +score.exerciseid,
+        solutionlength: +score.solutionlength,
+        elapsed: +score.elapsed,
+      }))
     }
   },
 })
 
 
-export const { switch, nextQuestion, prevQuestion } = exercisesSlice.actions
+export const { switch, nextQuestion, prevQuestion, firstQuestion, register, setScores } = exercisesSlice.actions
 
 export default exercisesSlice.reducer

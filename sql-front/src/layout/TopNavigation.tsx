@@ -12,6 +12,17 @@ export const fetchData = (key: string) => async (dispatch: AppDispatch) => {
   }
 
   try {
+    const res = await fetch(`${config.leaderboard.api}/game`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    const data = await res.json();
+    dispatch({type: 'exercises/setScores', payload: data});
+  } catch (error) {
+    console.error('Could not fetch leaderboard', error);
+  }
+
+  try {
     const res = await fetch(`${config.api}/${key}/sampleData`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
@@ -19,7 +30,7 @@ export const fetchData = (key: string) => async (dispatch: AppDispatch) => {
     const data = await res.json();
     dispatch({type: 'exercises/switch', payload: {key, data: data.responseObject}});
   } catch (error) {
-    console.error(error);
+    console.error('Could not fetch sample data', error);
   }
 };
 

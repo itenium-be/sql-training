@@ -17,6 +17,15 @@ export type SqlExerciseModel = {
   hints?: string;
 }
 
+export type Score = {
+  player: string;
+  game: string;
+  exerciseid: number;
+  solutionlength: number;
+  /** in seconds */
+  elapsed: number;
+}
+
 export type ExerciseId = 'World' | 'Nobel';
 
 const worldExercises: ExerciseModel = {
