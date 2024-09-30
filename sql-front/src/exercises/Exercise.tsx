@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from 'react-bootstrap/Button';
 import Badge from 'react-bootstrap/Badge';
 import { ExerciseModel, SqlExerciseModel } from "./exerciseModels";
@@ -68,7 +68,30 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
   const [result, setResult] = useState<null | any[]>(null);
   const [hint, setHint] = useState(false);
   const [success, setSuccess] = useState(false);
+  const currentGame = useAppSelector(state => state.exercises.selected);
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const startExercise = async () => {
+      const postData = {
+        player: localStorage.getItem('userName'),
+        game: currentGame,
+        exerciseId: sql.id,
+      };
+
+      try {
+        await fetch(`${config.leaderboard.api}/game/start`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(postData),
+        });
+      } catch (err) {
+        console.error('Could not start timer for exercise', err);
+      }
+    }
+
+    startExercise();
+  }, [sql])
 
   const reset = () => {
     setError('');
@@ -102,13 +125,32 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
 
         if (deepEqual(arrResult, sql.expected)) {
           setSuccess(true);
+
+          const successData = {
+            player: localStorage.getItem('userName'),
+            game: currentGame,
+            exerciseId: sql.id,
+            solution: sqlText,
+          };
+
+          try {
+            await fetch(`${config.leaderboard.api}/game`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(successData),
+            });
+          } catch (err) {
+            console.error('Could not submit score :(', err);
+            setError('Unable to submit your score 😭');
+          }
+
         } else {
           setError('Query result does not match expected output!');
         }
       }
     } catch (error) {
       console.error(`Error executing ${sqlText}`, error);
-      setError('Unepected error!');
+      setError('Unexpected error!');
     }
   };
 

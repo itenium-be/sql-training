@@ -4,6 +4,7 @@ import { ExerciseId, ExerciseModel, exercises } from './exerciseModels'
 type StoreState = {
   entities: ExerciseModel[];
   selected: ExerciseId | null;
+  userName: string;
   World: ExerciseState;
   Nobel: ExerciseState;
 }
@@ -16,6 +17,7 @@ type ExerciseState = {
 const initialState: StoreState = {
   entities: exercises,
   selected: null,
+  userName: '',
   World: {
     exampleData: [],
     currentExercise: 1,
@@ -52,6 +54,9 @@ export const exercisesSlice = createSlice({
       if (state.selected) {
         state[state.selected].currentExercise = 1;
       }
+    },
+    register: (state, action) => {
+      state.userName = action.payload;
     }
   },
 })
