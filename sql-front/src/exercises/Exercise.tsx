@@ -131,7 +131,13 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
           return record;
         });
 
-        if (deepEqual(arrResult, sql.expected)) {
+        let expectedArr = [...sql.expected];
+        if (!sql.expectedOrder) {
+          arrResult.sort();
+          expectedArr.sort();
+        }
+
+        if (deepEqual(arrResult, expectedArr)) {
           setSuccess(true);
 
           const successData = {
