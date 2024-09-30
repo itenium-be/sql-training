@@ -7,6 +7,11 @@ import { config, HttpResponse } from "../config";
 import { useAppDispatch, useAppSelector } from "../store";
 import { Alert, Col, Row } from "react-bootstrap";
 import deepEqual from 'deep-equal';
+import AceEditor from "react-ace";
+
+import "ace-builds/src-noconflict/mode-sql";
+import "ace-builds/src-noconflict/theme-monokai";
+import "ace-builds/src-noconflict/ext-language_tools";
 
 const emojis = ['🎉', '🥳', '🎊', '💯', '🌟', '🚀', '🦄', '🎈', '🎆', '🏆'];
 
@@ -198,17 +203,27 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
         </Alert>
       )}
       <Row>
-        <Col>
-        <textarea
-          value={sqlText}
-          onChange={e => setSqlText(e.target.value)}
-          placeholder="Enter your SQL"
-          style={{width: '100%', height: 200}}
-        />
+        <Col style={{paddingBottom: 12}}>
+          <AceEditor
+            mode="sql"
+            theme="monokai"
+            width="100%"
+            height="250px"
+            fontSize={18}
+            showPrintMargin={false}
+            showGutter
+            wrapEnabled
+            enableLiveAutocompletion
+            onChange={e => setSqlText(e)}
+            name="UNIQUE_ID_OF_DIV"
+            editorProps={{ enableLiveAutocompletion: true, }}
+            placeholder="Enter your SQL"
+            focus
+          />
         </Col>
         <Col>
           {result ? (
-            <div style={{maxHeight: 200, overflowY: 'auto'}}>
+            <div style={{maxHeight: 250, overflowY: 'auto'}}>
               <ExercisesData data={result} />
             </div>
           ) : (
