@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { ExerciseId, ExerciseModel, exercises, Score } from './exerciseModels'
+import { ExerciseId, ExerciseModel, Score } from './exerciseModels'
+import { exercises } from './exercises';
 
 type StoreState = {
   entities: ExerciseModel[];
