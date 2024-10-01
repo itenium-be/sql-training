@@ -1,3 +1,5 @@
+-- Leaderboard postgres DB
+
 CREATE TABLE game_progress (
   id SERIAL PRIMARY KEY,
   player VARCHAR(100) NOT NULL,

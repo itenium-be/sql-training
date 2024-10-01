@@ -12,16 +12,24 @@ docker pull postgres:17.0
 docker pull node:22.9.0-slim
 ```
 
-## Start
+## Play
 
 Configure leaderboard URI in `sql-front/config.ts`.
 
 ```sh
-# To play
+git clone https://github.com/itenium-be/sql-training
+cd sql-training
 docker compose up -d --build
+# Frontend: http://localhost:5173
+# Swagger: http://localhost:8080
+```
 
-# To develop
-# Only start progress & adjust `sql-back/.env`
+## Develop
+
+Only start progress & adjust `sql-back/.env`
+and set `PG_HOST="localhost"`.
+
+```sh
 cd sql-back
 npm run dev
 
@@ -47,7 +55,7 @@ but you want to continue playing after 😃
 
 ```sh
 docker compose down -v
-docker compose up -d
+docker compose up -d --build
 ```
 
 ## Leaderboard
