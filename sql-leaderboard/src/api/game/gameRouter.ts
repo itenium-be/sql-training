@@ -3,6 +3,9 @@ import { executeQuery } from "../query";
 import { ExerciseStart, ExerciseSubmit } from "./gameModel";
 import { env } from "@/envConfig";
 
+type GameMode = 'running' | 'end';
+let gameMode: GameMode = 'running';
+
 export const gameRouter: Router = express.Router();
 
 const registerUser: RequestHandler = async (_req: Request, res: Response) => {
@@ -42,23 +45,27 @@ const submitExercise: RequestHandler = async (_req: Request, res: Response) => {
 };
 
 const getProgress: RequestHandler = async (_req: Request, res: Response) => {
+  if (gameMode === 'end') {
+    const data = await executeQuery('SELECT player, game, exerciseId, solution, solutionLength, elapsed FROM game_progress');
+    return res.status(200).send(data.rows);
+  }
+
   const data = await executeQuery('SELECT player, game, exerciseId, solutionLength, elapsed FROM game_progress');
   return res.status(200).send(data.rows);
 };
 
-const getFinal: RequestHandler = async (_req: Request, res: Response) => {
+const setFinal: RequestHandler = async (_req: Request, res: Response) => {
   const apiKey = _req.query.apiKey;
   if (apiKey !== env.API_KEY) {
     return res.status(401).send({message: 'Incorrect apiKey (?apiKey=secret)!'});
   }
 
-  // TODO: send this as a html table?
-  const data = await executeQuery('SELECT player, game, exerciseId, solution, solutionLength, elapsed FROM game_progress');
-  return res.status(200).send(data.rows);
+  gameMode = 'end';
+  return res.status(200).send({message: 'Going into final game mode!'});
 };
 
 gameRouter.post("/register", registerUser);
 gameRouter.post("/start", startExercise);
 gameRouter.post("/", submitExercise);
 gameRouter.get("/", getProgress);
-gameRouter.get("/final", getFinal);
+gameRouter.get("/final", setFinal);

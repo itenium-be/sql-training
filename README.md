@@ -46,3 +46,11 @@ cd sql-leaderboard
 docker compose up -d
 npm run dev
 ```
+
+### End Game
+
+Allow people to see all solutions at the endgame:
+
+```
+GET: http://localhost:8000/game/final?apiKey=secret
+```
