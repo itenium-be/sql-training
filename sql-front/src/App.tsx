@@ -1,4 +1,4 @@
-import { TopNavigation } from './layout/TopNavigation'
+import { fetchData, TopNavigation } from './layout/TopNavigation'
 import { Container } from 'react-bootstrap'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Home } from './Home'
@@ -15,6 +15,8 @@ export function App() {
     if (name) {
       dispatch({type: 'exercises/register', payload: name});
     }
+
+    dispatch(fetchData('home'));
   }, []);
 
   return (

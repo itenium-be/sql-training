@@ -3,13 +3,9 @@ import { Link } from 'react-router-dom';
 import { AppDispatch, useAppDispatch, useAppSelector } from '../store';
 import { config } from '../config';
 import { useEffect } from 'react';
+import { ExerciseId } from '../exercises/exerciseModels';
 
-export const fetchData = (key: string) => async (dispatch: AppDispatch) => {
-  if (key === 'home') {
-    dispatch({type: 'exercises/switch', payload: {key}});
-    return;
-  }
-
+export const fetchData = (key: 'home' | ExerciseId) => async (dispatch: AppDispatch) => {
   try {
     const res = await fetch(`${config.leaderboard.api}/game`, {
       method: 'GET',
@@ -19,6 +15,11 @@ export const fetchData = (key: string) => async (dispatch: AppDispatch) => {
     dispatch({type: 'exercises/setScores', payload: data});
   } catch (error) {
     console.error('Could not fetch leaderboard', error);
+  }
+
+  if (key === 'home') {
+    dispatch({type: 'exercises/switch', payload: {key}});
+    return;
   }
 
   try {
@@ -44,7 +45,7 @@ export function TopNavigation() {
   useEffect(() => {
     if (document.location.pathname !== '/') {
       const selectedEx = document.location.pathname.substring(1);
-      dispatch(fetchData(selectedEx));
+      dispatch(fetchData(selectedEx as ExerciseId));
     }
   }, []);
 
