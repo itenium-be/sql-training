@@ -15,7 +15,18 @@ cd ../sql-front
 npm run dev
 ```
 
-## Restart
+### Postgres
+
+See `compose.yaml` and `sql-back/.env`.  
+You can use a tool like [pgAdmin](https://www.postgresql.org/ftp/pgadmin/pgadmin4/v8.12/windows/) to query the data directly.
+
+- Server: localhost
+- Port: 5432
+- User: admin
+- Password: password
+
+
+### Restart
 
 The game just executes your SQL. So if you tried a `TRUNCATE table`,
 but you want to continue playing after 😃

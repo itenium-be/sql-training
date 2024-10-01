@@ -4,15 +4,15 @@ services:
   postgres:
     image: postgres:latest
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
       POSTGRES_DB: game
       PGDATA: /data/postgres
     volumes:
       - ../sql-data/game.sql:/docker-entrypoint-initdb.d/init.sql
       - postgres:/data/postgres
     ports:
-      - "6000:5432"
+      - "${PG_PORT}:5432"
     restart: always
 
 volumes:
