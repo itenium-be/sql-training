@@ -1,11 +1,13 @@
 FROM node:22.9.0-slim
 
+RUN npm i -g serve
+
 WORKDIR /usr/src/app
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 COPY . .
 RUN npm run build
 
-EXPOSE 8080
+EXPOSE 3000
 
-CMD npm run start
+CMD [ "serve", "-s", "dist" ]

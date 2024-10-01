@@ -1,8 +1,28 @@
 version: '3.8'
 
 services:
+  back-end:
+    build:
+      context: ./sql-back
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - trainnet
+
+  front-end:
+    build:
+      context: ./sql-front
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 5173:3000
+    networks:
+      - trainnet
+
   postgres:
-    image: postgres:latest
+    image: postgres:17.0
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: password
@@ -14,6 +34,12 @@ services:
     ports:
       - "5432:5432"
     restart: always
+    networks:
+      - trainnet
 
 volumes:
   postgres:
+
+networks:
+  trainnet:
+    driver: bridge

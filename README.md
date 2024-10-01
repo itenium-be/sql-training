@@ -3,11 +3,25 @@ SQL Training
 
 Node: v22.1.0
 
-## Start
+## Prep
+
+Install [Docker for Windows](https://docs.docker.com/desktop/install/windows-install/)
 
 ```sh
-docker compose up -d
+docker pull postgres:17.0
+docker pull node:22.9.0-slim
+```
 
+## Start
+
+Configure leaderboard URI in `sql-front/config.ts`.
+
+```sh
+# To play
+docker compose up -d --build
+
+# To develop
+# Only start progress & adjust `sql-back/.env`
 cd sql-back
 npm run dev
 
@@ -43,6 +57,7 @@ of which only one should be running 😀
 
 ```sh
 cd sql-leaderboard
+cp .env.template .env
 docker compose up -d
 npm run dev
 ```

@@ -69,7 +69,7 @@ export function ShortestSolutions({scores}: {scores: Score[]}) {
           <tr key={lean.game + '-' + lean.exerciseId} className={lean.player === registeredName ? 'table-primary' : undefined}>
             <td>
               <ExerciseSolution exerciseId={lean.game+'-'+lean.exerciseId} solution={lean.solution} />
-              <ScoreBadge points={lean.points} />
+              <br /><ScoreBadge points={lean.points} />
             </td>
             <td>{lean.exercise}</td>
             <td>{lean.player}</td>

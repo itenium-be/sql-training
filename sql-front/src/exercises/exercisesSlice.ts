@@ -74,7 +74,4 @@ export const exercisesSlice = createSlice({
   },
 })
 
-
-export const { switch, nextQuestion, prevQuestion, firstQuestion, register, setScores } = exercisesSlice.actions
-
 export default exercisesSlice.reducer

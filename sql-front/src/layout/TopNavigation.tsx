@@ -50,7 +50,7 @@ export function TopNavigation() {
   }, []);
 
   return (
-    <Nav variant="tabs" activeKey={selected ?? 'home'} onSelect={k => dispatch(fetchData(k))}>
+    <Nav variant="tabs" activeKey={selected ?? 'home'} onSelect={k => dispatch(fetchData(k as any))}>
       <Nav.Item>
         <Nav.Link as="span" eventKey="home">
           <Link to="/">Home</Link>

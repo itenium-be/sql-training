@@ -67,7 +67,7 @@ export function FastestScorers({scores}: {scores: Score[]}) {
           <tr key={fast.game + '-' + fast.exerciseId} className={fast.player === registeredName ? 'table-primary' : undefined}>
             <td>
               <ExerciseSolution exerciseId={fast.game+'-'+fast.exerciseId} solution={fast.solution} />
-              <ScoreBadge points={fast.points} />
+              <br /><ScoreBadge points={fast.points} />
             </td>
             <td>{fast.exercise}</td>
             <td>{fast.player}</td>
