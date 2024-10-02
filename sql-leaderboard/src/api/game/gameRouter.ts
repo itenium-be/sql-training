@@ -3,13 +3,17 @@ import { executeQuery } from "../query";
 import { ExerciseStart, ExerciseSubmit } from "./gameModel";
 import { env } from "@/envConfig";
 
-type GameMode = 'running' | 'end';
-let gameMode: GameMode = 'running';
+type GameMode = 'init' | 'running' | 'end';
+let gameMode: GameMode = 'init';
 
 export const gameRouter: Router = express.Router();
 
 const registerUser: RequestHandler = async (_req: Request, res: Response) => {
   console.log('register user', _req.body.name);
+  if (gameMode === 'init') {
+    return res.status(400).send({message: 'Game has yet to start!'})
+  }
+
   return res.status(200).send({message: 'Registered!'});
 };
 
@@ -23,6 +27,13 @@ const startExercise: RequestHandler = async (_req: Request, res: Response) => {
 };
 
 const submitExercise: RequestHandler = async (_req: Request, res: Response) => {
+  if (gameMode === 'init') {
+    return res.status(200).send({message: 'Game has not yet started!'});
+  }
+  if (gameMode === 'end') {
+    return res.status(200).send({message: 'Game has finished!'});
+  }
+
   const data: ExerciseSubmit = _req.body;
   console.log('Submit', data);
 
@@ -45,6 +56,10 @@ const submitExercise: RequestHandler = async (_req: Request, res: Response) => {
 };
 
 const getProgress: RequestHandler = async (_req: Request, res: Response) => {
+  if (gameMode === 'init') {
+    return res.status(200).send({message: 'Game has not yet started!'});
+  }
+
   if (gameMode === 'end') {
     const data = await executeQuery('SELECT player, game, exerciseId, solution, solutionLength, elapsed FROM game_progress');
     return res.status(200).send(data.rows);
@@ -54,18 +69,19 @@ const getProgress: RequestHandler = async (_req: Request, res: Response) => {
   return res.status(200).send(data.rows);
 };
 
-const setFinal: RequestHandler = async (_req: Request, res: Response) => {
+const setMode: RequestHandler = async (_req: Request, res: Response) => {
   const apiKey = _req.query.apiKey;
   if (apiKey !== env.API_KEY) {
-    return res.status(401).send({message: 'Incorrect apiKey (?apiKey=secret)!'});
+    return res.status(401).send({message: 'Incorrect apiKey (?apiKey=secret&mode=init|running|end'});
   }
 
-  gameMode = 'end';
-  return res.status(200).send({message: 'Going into final game mode!'});
+  const newMode = _req.query.mode as GameMode;
+  gameMode = newMode;
+  return res.status(200).send({message: `Going into ${gameMode} game mode!`});
 };
 
 gameRouter.post("/register", registerUser);
 gameRouter.post("/start", startExercise);
 gameRouter.post("/", submitExercise);
 gameRouter.get("/", getProgress);
-gameRouter.get("/final", setFinal);
+gameRouter.get("/mode", setMode);

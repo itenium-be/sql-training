@@ -41,6 +41,7 @@ export function TopNavigation() {
   const exercises = useAppSelector(state => state.exercises.entities);
   const dispatch = useAppDispatch();
   const selected = useAppSelector(state => state.exercises.selected);
+  const registeredName = useAppSelector(state => state.exercises.userName);
 
   useEffect(() => {
     if (document.location.pathname !== '/') {
@@ -56,7 +57,7 @@ export function TopNavigation() {
           <Link to="/">Home</Link>
         </Nav.Link>
       </Nav.Item>
-      {exercises.map(ex => (
+      {registeredName && exercises.map(ex => (
         <Nav.Item key={ex.id}>
           <Nav.Link as="span" eventKey={ex.id}>
             <Link to={ex.id}>{ex.id}</Link>

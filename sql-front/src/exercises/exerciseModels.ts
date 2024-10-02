@@ -27,4 +27,4 @@ export type Score = {
   elapsed: number;
 }
 
-export type ExerciseId = 'World' | 'Teachers';
+export type ExerciseId = 'World' | 'Teachers' | 'Worldcup';

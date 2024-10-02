@@ -11,6 +11,7 @@ import { env } from "@/common/utils/envConfig";
 import { worldRouter } from "./api/world/worldRouter";
 import { exRouter } from "./api/exercises/exRouter";
 import { teacherRouter } from "./api/teacher/teacherRouter";
+import { worldcupRouter } from "./api/worldcup/woldcupRouter";
 
 const logger = pino({ name: "server start" });
 const app: Express = express();
@@ -34,6 +35,7 @@ app.use("/health-check", healthCheckRouter);
 app.use("/exercises", exRouter);
 app.use("/World", worldRouter);
 app.use("/Teachers", teacherRouter);
+app.use("/Worldcup", worldcupRouter);
 
 // Swagger UI
 app.use(openAPIRouter);

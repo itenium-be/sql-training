@@ -1,4 +1,5 @@
 version: '3.8'
+name: sql-training
 
 services:
   back-end:
@@ -21,6 +22,15 @@ services:
     networks:
       - trainnet
 
+  sqlserver:
+    build: ./sql-server
+    ports:
+      - 5174:1433
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    restart: always
+
+
   postgres:
     image: postgres:17.0
     environment:
@@ -32,13 +42,14 @@ services:
       - ./sql-data/postgres.sql:/docker-entrypoint-initdb.d/init.sql
       - postgres:/data/postgres
     ports:
-      - "5432:5432"
+      - "5175:5432"
     restart: always
     networks:
       - trainnet
 
 volumes:
   postgres:
+  sqlserver_data:
 
 networks:
   trainnet:

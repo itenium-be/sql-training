@@ -11,5 +11,5 @@ export const env = cleanEnv(process.env, {
   PG_USER: str({ devDefault: testOnly("admin") }),
   PG_PASSWORD: str({ devDefault: testOnly("password") }),
   PG_HOST: host({ devDefault: testOnly("localhost") }),
-  PG_PORT: port({ devDefault: testOnly(5432) }),
+  PG_PORT: port({ devDefault: testOnly(5175) }),
 });

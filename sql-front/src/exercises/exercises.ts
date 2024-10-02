@@ -1,4 +1,5 @@
 import { teacherExercises } from "./teacherExercises";
+import { worldcupExercises } from "./worldcupExercises";
 import { worldExercises } from "./worldExercises";
 
 // {
@@ -14,4 +15,5 @@ import { worldExercises } from "./worldExercises";
 export const exercises = [
   worldExercises,
   teacherExercises,
+  worldcupExercises,
 ]

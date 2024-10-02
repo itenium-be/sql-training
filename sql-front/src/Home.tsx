@@ -31,10 +31,13 @@ export function Home() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name }),
       });
+
       const data = await res.json();
       setResponse(data.message);
-      localStorage.setItem('userName', name);
-      dispatch({type: 'exercises/register', payload: name});
+      if (res.status === 200) {
+        localStorage.setItem('userName', name);
+        dispatch({type: 'exercises/register', payload: name});
+      }
     } catch (error: any) {
       console.error('Error:', error);
       setResponse(error.message);

@@ -4,6 +4,7 @@ import { healthCheckRegistry } from "@/api/healthCheck/healthCheckRouter";
 import { worldRegistry } from "@/api/world/worldRouter";
 import { exRegistry } from "@/api/exercises/exRouter";
 import { teacherRegistry } from "@/api/teacher/teacherRouter";
+import { worldcupRegistry } from "@/api/worldcup/woldcupRouter";
 
 export function generateOpenAPIDocument() {
   const registry = new OpenAPIRegistry([
@@ -11,6 +12,7 @@ export function generateOpenAPIDocument() {
     worldRegistry,
     teacherRegistry,
     exRegistry,
+    worldcupRegistry,
   ]);
   const generator = new OpenApiGeneratorV3(registry.definitions);
 

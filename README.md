@@ -10,6 +10,7 @@ Install [Docker for Windows](https://docs.docker.com/desktop/install/windows-ins
 ```sh
 docker pull postgres:17.0
 docker pull node:22.9.0-slim
+docker pull mcr.microsoft.com/mssql/server:2019-CU13-ubuntu-20.04
 ```
 
 ## Play
@@ -39,13 +40,25 @@ npm run dev
 
 ### Postgres
 
+Starter exercises "World" & "Teachers".
+
 See `compose.yaml` and `sql-back/.env`.  
 You can use a tool like [pgAdmin](https://www.postgresql.org/ftp/pgadmin/pgadmin4/v8.12/windows/) to query the data directly.
 
 - Server: localhost
-- Port: 5432
+- Port: 5175
 - User: admin
 - Password: password
+
+
+### SQL Server
+
+Exercises "Worldcup".
+
+- Server: localhost
+- Port: 5174
+- User: sa
+- Password: password123!
 
 
 ### Restart
@@ -70,10 +83,27 @@ docker compose up -d
 npm run dev
 ```
 
+### Start Game
+
+```yaml
+GET: http://localhost:8000/game/mode?apiKey=secret&mode=running
+
+# Back to init mode:
+GET: http://localhost:8000/game/mode?apiKey=secret&mode=init
+```
+
 ### End Game
 
 Allow people to see all solutions at the endgame:
 
 ```
-GET: http://localhost:8000/game/final?apiKey=secret
+GET: http://localhost:8000/game/mode?apiKey=secret&mode=end
 ```
+
+
+## More exercises
+
+- [https://mystery.knightlab.com/](SQL Murder Mystery) - Can you find out whodunnit?
+- [https://datalemur.com/](datalemur.com) - Ace the SQL & Data Science Interview
+- [https://www.sql-practice.com/](sql-practice.com)
+- [https://sqlzoo.net/wiki/SQL_Tutorial](sqlzoo) - Learn SQL in stages
