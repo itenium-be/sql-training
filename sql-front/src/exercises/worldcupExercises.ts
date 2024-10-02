@@ -30,6 +30,16 @@ JOIN rounds r ON m.round_id=r.id JOIN events e ON r.event_id=e.id`,
     },
     {
       id: 3,
+      desc: 'Select the year of the worldcup in which the most penalties were scored',
+      points: 3,
+      expected: [
+        [2018, 22]
+      ],
+      expectedOrder: false,
+      expectedColumns: ['year', 'amount']
+    },
+    {
+      id: 4,
       desc: 'Find players that played for different countries and a "," separated list of countries they played for',
       points: 4,
       expected: [
@@ -45,7 +55,7 @@ JOIN rounds r ON m.round_id=r.id JOIN events e ON r.event_id=e.id`,
       expectedColumns: ['person.name', 'countries']
     },
     {
-      id: 4,
+      id: 5,
       desc: 'Which countries always survived the "Group Stage" (when present), and how many times was this? (A round not called "Matchday")',
       points: 6,
       expected: [
