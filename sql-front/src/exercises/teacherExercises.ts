@@ -100,5 +100,20 @@ export const teacherExercises: ExerciseModel = {
       expectedColumns: ['department', 'name', 'salary'],
       hints: 'You may want to look at the RANK() Window Function.'
     },
+    {
+      id: 8,
+      desc: 'Looking at the result of the previous exercise, there was only one record for the "Design" department. Adjust the query so that it adds an extra Design row with NULL values.',
+      points: 2,
+      expected: [
+        ['Computing', 'Splint', 3000],
+        ['Computing', 'Throd', 2000],
+        ['Design', 'Cutflower', 1000],
+        ['Design', null, null],
+        [null, 'Deadyawn', 2000],
+        [null, 'Spiregrain', 1000],
+      ],
+      expectedOrder: true,
+      expectedColumns: ['department', 'name', 'salary']
+    },
   ],
 }
