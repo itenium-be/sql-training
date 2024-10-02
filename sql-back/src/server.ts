@@ -43,4 +43,14 @@ app.use(openAPIRouter);
 // Error handlers
 app.use(errorHandler());
 
+process.on('uncaughtException', (error) => {
+  console.error('Unhandled Exception:', error);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
+});
+
 export { app, logger };

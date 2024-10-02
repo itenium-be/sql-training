@@ -7,6 +7,7 @@ import { handleServiceResponse } from "@/common/utils/httpHandlers";
 import * as worldcupSchemas from "./worldcupModel";
 import sql from 'mssql';
 import { sqlConfig } from "../query";
+import { StatusCodes } from "http-status-codes";
 
 export const worldcupRegistry = new OpenAPIRegistry();
 export const worldcupRouter: Router = express.Router();
@@ -48,8 +49,10 @@ const getSample: RequestHandler = async (_req: Request, res: Response) => {
     `
     const serviceResponse = ServiceResponse.success<any[]>("Footy sample found", result.recordset);
     return handleServiceResponse(serviceResponse, res);
-  } catch (err) {
-    console.error(err)
+  } catch (err: any) {
+    console.error(err);
+    const errorResponse = ServiceResponse.failure(err.message, err, StatusCodes.INTERNAL_SERVER_ERROR);
+    return handleServiceResponse(errorResponse, res);
   }
 };
 
