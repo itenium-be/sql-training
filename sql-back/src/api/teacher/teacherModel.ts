@@ -7,6 +7,7 @@ export const TeacherSampleSchema = z.object({
   name: z.string(),
   phone: z.string(),
   mobile: z.string(),
+  salary: z.number(),
   employed_at: z.date(),
   birth_date: z.date(),
   dept_name: z.string(),
@@ -19,6 +20,7 @@ export const TeacherSchema = z.object({
   name: z.string(),
   phone: z.string(),
   mobile: z.string(),
+  salary: z.number(),
   employed_at: z.date(),
   birth_date: z.date(),
 });

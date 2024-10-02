@@ -221,7 +221,8 @@ CREATE TABLE teachers (
   phone VARCHAR(50),
   mobile VARCHAR(50),
   employed_at DATE,
-  birth_date DATE
+  birth_date DATE,
+  salary NUMERIC(15,0)
 );
 
 CREATE TABLE departments (
@@ -230,14 +231,14 @@ CREATE TABLE departments (
   phone VARCHAR(50)
 );
 
-INSERT INTO teachers (dept, name, phone, mobile, employed_at, birth_date)
+INSERT INTO teachers (dept, name, phone, mobile, employed_at, birth_date, salary)
 VALUES
-(1, 'Shrivell', 'EXT 2753', '0476 40 35 09', '2000-12-05', '1980-09-06'),
-(1, 'Throd', 'EXT 2754', '0477 99 66 55', '1982-09-01', '1960-10-03'),
-(1, 'Splint', 'EXT 2793', NULL, '2022-03-22', '1995-07-12'),
-(NULL, 'Spiregrain', 'EXT 3212', '0799 55 56 57', '1999-06-01', '1979-11-19'),
-(2, 'Cutflower', NULL, NULL, '2015-02-16', '1990-03-15'),
-(NULL, 'Deadyawn', 'EXT 3345', NULL, '2000-12-05', '1980-11-01');
+(1, 'Shrivell', 'EXT 2753', '0476 40 35 09', '2000-12-05', '1980-09-06', 1000),
+(1, 'Throd', 'EXT 2754', '0477 99 66 55', '1982-09-01', '1960-10-03', 2000),
+(1, 'Splint', 'EXT 2793', NULL, '2022-03-22', '1995-07-12', 3000),
+(NULL, 'Spiregrain', 'EXT 3212', '0799 55 56 57', '1999-06-01', '1979-11-19', 1000),
+(2, 'Cutflower', NULL, NULL, '2015-02-16', '1990-03-15', 1000),
+(NULL, 'Deadyawn', 'EXT 3345', NULL, '2000-12-05', '1980-11-01', 2000);
 
 
 INSERT INTO departments (name, phone)

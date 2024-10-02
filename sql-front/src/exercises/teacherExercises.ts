@@ -3,7 +3,7 @@ import { ExerciseModel } from "./exerciseModels";
 export const teacherExercises: ExerciseModel = {
   id: 'Teachers',
   name: 'Teachers & Departments',
-  sampleQuery: 'SELECT t.name, t.phone, t.mobile, employed_at, birth_date, d.name as dept_name, d.phone as dept_phone FROM teachers t JOIN departments d ON t.dept=d.id',
+  sampleQuery: 'SELECT t.name, t.phone, t.mobile, t.salary, employed_at, birth_date, d.name as dept_name, d.phone as dept_phone FROM teachers t JOIN departments d ON t.dept=d.id',
   desc: 'Be social, join tables! (postgres)',
   exercises: [
     {
@@ -84,6 +84,21 @@ export const teacherExercises: ExerciseModel = {
       ],
       expectedOrder: false,
       expectedColumns: ['name']
+    },
+    {
+      id: 7,
+      desc: 'Select the department name and the top 2 earners with their salary (include department-less teachers). Sort by department and highest salary.',
+      points: 5,
+      expected: [
+        ['Computing', 'Splint', 3000],
+        ['Computing', 'Throd', 2000],
+        ['Design', 'Cutflower', 1000],
+        [null, 'Deadyawn', 2000],
+        [null, 'Spiregrain', 1000],
+      ],
+      expectedOrder: true,
+      expectedColumns: ['department', 'name', 'salary'],
+      hints: 'You may want to look at the RANK() Window Function.'
     },
   ],
 }

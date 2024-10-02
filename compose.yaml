@@ -29,7 +29,7 @@ services:
       POSTGRES_DB: world
       PGDATA: /data/postgres
     volumes:
-      - ./sql-data/world.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./sql-data/postgres.sql:/docker-entrypoint-initdb.d/init.sql
       - postgres:/data/postgres
     ports:
       - "5432:5432"
