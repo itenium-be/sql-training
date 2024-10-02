@@ -21,7 +21,7 @@ export function App() {
 
   return (
     <BrowserRouter>
-      <Container style={{paddingTop: 15, paddingBottom: 25}}>
+      <Container style={{paddingTop: 15, paddingBottom: 25, maxWidth: '90%'}}>
         <TopNavigation />
         <Routes>
           <Route path="/" element={ <Home /> } />

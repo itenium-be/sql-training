@@ -208,7 +208,7 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
             mode="sql"
             theme="monokai"
             width="100%"
-            height="250px"
+            height="275px"
             fontSize={18}
             showPrintMargin={false}
             showGutter
@@ -223,7 +223,7 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
         </Col>
         <Col>
           {result ? (
-            <div style={{maxHeight: 250, overflowY: 'auto'}}>
+            <div style={{maxHeight: 275, overflowY: 'auto'}}>
               <ExercisesData data={result} />
             </div>
           ) : (
