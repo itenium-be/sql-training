@@ -5,7 +5,7 @@ import { ExerciseId, ExerciseModel, SqlExerciseModel } from "./exerciseModels";
 import { ExerciseSampleData, ExercisesData } from "./ExerciseSampleData";
 import { config, HttpResponse } from "../config";
 import { useAppDispatch, useAppSelector } from "../store";
-import { Alert, Col, Row } from "react-bootstrap";
+import { Alert, Col, Modal, Row } from "react-bootstrap";
 import deepEqual from 'deep-equal';
 import AceEditor from "react-ace";
 
@@ -18,7 +18,10 @@ const emojis = ['🎉', '🥳', '🎊', '💯', '🌟', '🚀', '🦄', '🎈', 
 export function Exercise({exercise}: {exercise: ExerciseModel}) {
   return (
     <>
-      <h1>{exercise.name}</h1>
+      <h1>
+        {exercise.name}
+        <ExerciseSchema exercise={exercise} />
+      </h1>
       <p>{exercise.desc}</p>
 
       <h2>Example Data</h2>
@@ -299,5 +302,37 @@ function HintTable({sql}: {sql: SqlExerciseModel}) {
       <h2>Expected Result</h2>
       <ExercisesData data={data} />
     </div>
+  )
+}
+
+
+function ExerciseSchema({exercise}: {exercise: ExerciseModel}) {
+  const [show, setShow] = useState(false);
+
+  if (!exercise.schema) {
+    return null;
+  }
+
+  return (
+    <>
+      <Button variant="info" className="float-end" style={{marginRight: 16, marginTop: 16}} onClick={() => setShow(true)}>
+        View Database Schema
+      </Button>
+      {show && (
+        <Modal show fullscreen onHide={() => setShow(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title>{exercise.id}</Modal.Title>
+          </Modal.Header>
+
+          <Modal.Body>
+            <img src={`/${exercise.id}.png`} />
+          </Modal.Body>
+
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShow(false)}>Close</Button>
+          </Modal.Footer>
+        </Modal>
+      )}
+    </>
   )
 }

@@ -9,6 +9,7 @@ type StoreState = {
   scores: Score[];
   World: ExerciseState;
   Teachers: ExerciseState;
+  Worldcup: ExerciseState;
 }
 
 type ExerciseState = {
@@ -26,6 +27,10 @@ const initialState: StoreState = {
     currentExercise: 1,
   },
   Teachers: {
+    exampleData: [],
+    currentExercise: 1,
+  },
+  Worldcup: {
     exampleData: [],
     currentExercise: 1,
   },

@@ -3,6 +3,7 @@ export type ExerciseModel = {
   name: string;
   sampleQuery: string;
   desc: string;
+  schema?: boolean;
   exercises: SqlExerciseModel[];
 }
 
