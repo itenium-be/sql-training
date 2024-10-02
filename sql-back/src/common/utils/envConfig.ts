@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { cleanEnv, host, num, port, str, testOnly } from "envalid";
+import { cleanEnv, host, port, str, testOnly } from "envalid";
 
 dotenv.config();
 
@@ -12,4 +12,7 @@ export const env = cleanEnv(process.env, {
   PG_PASSWORD: str({ devDefault: testOnly("password") }),
   PG_HOST: host({ devDefault: testOnly("localhost") }),
   PG_PORT: port({ devDefault: testOnly(5175) }),
+
+  SQL_SERVER_HOST: host({ devDefault: testOnly("localhost") }),
+  SQL_SERVER_PORT: port({ devDefault: testOnly(5174) }),
 });

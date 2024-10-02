@@ -15,3 +15,20 @@ export async function executeQuery(sql: string) {
   await client.end();
   return result
 }
+
+
+export const sqlConfig = {
+  user: 'sa',
+  password: 'password123!',
+  database: 'sportdb',
+  server: env.SQL_SERVER_HOST,
+  port: env.SQL_SERVER_PORT,
+  pool: {
+    max: 10,
+    min: 0,
+    idleTimeoutMillis: 30000
+  },
+  options: {
+    trustServerCertificate: true
+  }
+}

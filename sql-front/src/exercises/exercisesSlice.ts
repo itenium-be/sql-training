@@ -5,6 +5,7 @@ import { exercises } from './exercises';
 type StoreState = {
   entities: ExerciseModel[];
   selected: ExerciseId | null;
+  currentExercise: number;
   userName: string;
   scores: Score[];
   World: ExerciseState;
@@ -14,25 +15,22 @@ type StoreState = {
 
 type ExerciseState = {
   exampleData: any[];
-  currentExercise: number;
 }
 
 const initialState: StoreState = {
   entities: exercises,
   selected: null,
+  currentExercise: 0,
   userName: '',
   scores: [],
   World: {
     exampleData: [],
-    currentExercise: 1,
   },
   Teachers: {
     exampleData: [],
-    currentExercise: 1,
   },
   Worldcup: {
     exampleData: [],
-    currentExercise: 1,
   },
 }
 
@@ -41,27 +39,27 @@ export const exercisesSlice = createSlice({
   initialState,
   reducers: {
     switch: (state, action) => {
+      state.currentExercise = 0;
       if (action.payload.key === 'home') {
         state.selected = null;
       } else {
         state.selected = action.payload.key as ExerciseId;
         state[state.selected].exampleData = action.payload.data;
-        state[state.selected].currentExercise = 1;
       }
     },
     nextQuestion: state => {
       if (state.selected) {
-        state[state.selected].currentExercise++;
+        state.currentExercise++;
       }
     },
     prevQuestion: state => {
       if (state.selected) {
-        state[state.selected].currentExercise--;
+        state.currentExercise--;
       }
     },
     firstQuestion: state => {
       if (state.selected) {
-        state[state.selected].currentExercise = 1;
+        state.currentExercise = 1;
       }
     },
     register: (state, action) => {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Button from 'react-bootstrap/Button';
 import Badge from 'react-bootstrap/Badge';
-import { ExerciseId, ExerciseModel, SqlExerciseModel } from "./exerciseModels";
+import { ExerciseModel, SqlExerciseModel } from "./exerciseModels";
 import { ExerciseSampleData, ExercisesData } from "./ExerciseSampleData";
 import { config, HttpResponse } from "../config";
 import { useAppDispatch, useAppSelector } from "../store";
@@ -34,13 +34,16 @@ export function Exercise({exercise}: {exercise: ExerciseModel}) {
 }
 
 function TheExercises({exercise}: {exercise: ExerciseModel}) {
-  const [start, setStart] = useState(false);
+  const currentExIndex = useAppSelector(state => state.exercises.currentExercise);
+  const dispatch = useAppDispatch();
 
   return (
     <>
       <h2>The Exercises</h2>
-      {!start ? (
-        <Button variant="success" onClick={() => setStart(true)}>Let's Start</Button>
+      {currentExIndex === 0 ? (
+        <Button variant="success" onClick={() => dispatch({type: 'exercises/firstQuestion'})}>
+          Let's Start
+        </Button>
       ) : (
         <SqlExercises exercise={exercise} />
       )}
@@ -50,11 +53,7 @@ function TheExercises({exercise}: {exercise: ExerciseModel}) {
 
 
 function SqlExercises({exercise}: {exercise: ExerciseModel}) {
-  let currentGame = useAppSelector(state => state.exercises.selected);
-  // HACK: not clicking on the link but on the cell resets the selected exercise
-  // HACK: This is an issue in TopNavigation with <Nav.Link> vs <Link>
-  currentGame ??= document.location.pathname.substring(1) as ExerciseId;
-  const currentExIndex = useAppSelector(state => state.exercises[currentGame!].currentExercise);
+  const currentExIndex = useAppSelector(state => state.exercises.currentExercise);
   const currentEx = exercise.exercises.find(ex => ex.id === currentExIndex);
   const dispatch = useAppDispatch();
 
@@ -125,7 +124,10 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
       const res = await fetch(`${config.api}/exercises`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sql: sqlText }),
+        body: JSON.stringify({
+          sql: sqlText,
+          game: currentGame
+        }),
       });
       const data: HttpResponse = await res.json();
       if (!data.success) {

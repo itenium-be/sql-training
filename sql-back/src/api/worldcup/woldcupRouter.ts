@@ -1,29 +1,12 @@
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import express, { RequestHandler, type Router, Request, Response } from "express";
 import { z } from "zod";
-
 import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import { ServiceResponse } from "@/common/models/serviceResponse";
 import { handleServiceResponse } from "@/common/utils/httpHandlers";
 import * as worldcupSchemas from "./worldcupModel";
-
 import sql from 'mssql';
-
-const sqlConfig = {
-  user: 'sa',
-  password: 'password123!',
-  database: 'sportdb',
-  server: 'localhost',
-  port: 5174,
-  pool: {
-    max: 10,
-    min: 0,
-    idleTimeoutMillis: 30000
-  },
-  options: {
-    trustServerCertificate: true
-  }
-}
+import { sqlConfig } from "../query";
 
 export const worldcupRegistry = new OpenAPIRegistry();
 export const worldcupRouter: Router = express.Router();
@@ -63,7 +46,6 @@ const getSample: RequestHandler = async (_req: Request, res: Response) => {
       JOIN events e ON r.event_id=e.id
       ORDER BY e.start_date DESC
     `
-    console.dir(result.recordsets)
     const serviceResponse = ServiceResponse.success<any[]>("Footy sample found", result.recordset);
     return handleServiceResponse(serviceResponse, res);
   } catch (err) {

@@ -22,8 +22,11 @@ exRegistry.registerPath({
             sql: {
               type: 'string',
             },
+            game: {
+              type: 'string'
+            }
           },
-          required: ['sql'],
+          required: ['sql', 'game'],
         },
       },
     },

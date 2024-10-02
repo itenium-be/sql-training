@@ -12,12 +12,62 @@ JOIN rounds r ON m.round_id=r.id JOIN events e ON r.event_id=e.id`,
   exercises: [
     {
       id: 1,
-      desc: 'Ex1',
-      points: 1,
-      expected: [],
+      desc: 'Which country was always present?',
+      points: 2,
+      expected: [['Brazil']],
       expectedOrder: false,
-      expectedColumns: ['', '']
+      expectedColumns: ['team.name']
     },
+    {
+      id: 2,
+      desc: 'Which country has "scored" the most ungoals?',
+      points: 3,
+      expected: [
+        ['France', 4]
+      ],
+      expectedOrder: false,
+      expectedColumns: ['team.name', 'owngoal_count']
+    },
+    {
+      id: 3,
+      desc: 'Find players that played for different countries and a "," separated list of countries they played for',
+      points: 4,
+      expected: [
+        ['Cheryshev', 'Russia,Uruguay'],
+        ['Enzo Fernández', 'Argentina,Australia'],
+        ['Fernandinho', 'Belgium,Brazil'],
+        ['M. Rosas', 'Chile,Mexico'],
+        ['Mandžukic', 'Croatia,France'],
+        ['Varela', 'Portugal,Uruguay'],
+        ['Vidal', 'Chile,Uruguay'],
+      ],
+      expectedOrder: false,
+      expectedColumns: ['person.name', 'countries']
+    },
+    {
+      id: 4,
+      desc: 'Which countries always survived the "Group Stage" (when present), and how many times was this? (A round not called "Matchday")',
+      points: 6,
+      expected: [
+        ['Netherlands', 11],
+        ['Dutch East Indies (-1945)', 1],
+        ['Cuba', 1],
+        ['Turkey', 2],
+        ['Ireland', 3],
+        ['Ukraine', 1],
+        ['Slovakia', 1],
+      ],
+      expectedOrder: false,
+      expectedColumns: ['country.name', 'times_participated']
+    },
+    // {
+    //   id: 5,
+    //   desc: '',
+    //   points: 1,
+    //   expected: [],
+    //   expectedOrder: false,
+    //   expectedColumns: ['', '']
+    // },
   ],
 }
 
