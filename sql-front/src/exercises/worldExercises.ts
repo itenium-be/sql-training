@@ -115,7 +115,7 @@ export const worldExercises: ExerciseModel = {
     {
       id: 8,
       desc: 'Get confusing top level domains: tld that are the start or end of a different country name, sorted by tld. Select the tld and a "," separated list of matching country names, sort the country names descending by population.',
-      points: 5,
+      points: 4,
       expected: [
         ['.al', 'Nepal,Senegal,Portugal'],
         ['.ar', 'Myanmar,Madagascar,Qatar'],
