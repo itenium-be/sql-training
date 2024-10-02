@@ -29,7 +29,8 @@ services:
     volumes:
       - sqlserver_data:/var/opt/mssql
     restart: always
-
+    networks:
+      - trainnet
 
   postgres:
     image: postgres:17.0

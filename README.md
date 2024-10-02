@@ -103,7 +103,13 @@ GET: http://localhost:8000/game/mode?apiKey=secret&mode=end
 
 ## More exercises
 
+In the `goals` table, `score0` and `score1` are `NULL`, our intern forgot to write the code to set these fields. They should be the game score at that point including the goal just scored. Write the UPDATE statement.
+
+
+### Other resources
+
 - [https://mystery.knightlab.com/](SQL Murder Mystery) - Can you find out whodunnit?
 - [https://datalemur.com/](datalemur.com) - Ace the SQL & Data Science Interview
 - [https://www.sql-practice.com/](sql-practice.com)
-- [https://sqlzoo.net/wiki/SQL_Tutorial](sqlzoo) - Learn SQL in stages
+- [https://sqlzoo.net/wiki/SQL_Tutorial](sqlzoo) - Learn SQL in stages (Countries & Teacher datasets came from this one!)
+
