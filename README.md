@@ -103,6 +103,8 @@ GET: http://localhost:8000/game/mode?apiKey=secret&mode=end
 
 ## More exercises
 
+Goal scored at the latest minute that won the game.
+
 In the `goals` table, `score0` and `score1` are `NULL`, our intern forgot to write the code to set these fields. They should be the game score at that point including the goal just scored. Write the UPDATE statement.
 
 
