@@ -20,6 +20,7 @@ export function Exercise({exercise}: {exercise: ExerciseModel}) {
     <>
       <h1>
         {exercise.name}
+        <ExercisePoints exercise={exercise} />
         <ExerciseSchema exercise={exercise} />
       </h1>
       <p>{exercise.desc}</p>
@@ -306,6 +307,23 @@ function HintTable({sql}: {sql: SqlExerciseModel}) {
     </div>
   )
 }
+
+
+function ExercisePoints({exercise}: {exercise: ExerciseModel}) {
+  const totalPoints = exercise.exercises.reduce((pts, ex) => ex.points + pts, 0);
+
+  return (
+    <small>
+      <Badge bg="primary" style={{fontSize: 14, marginLeft: 8}} title="Exercise count">
+        #{exercise.exercises.length}
+      </Badge>
+      <Badge bg="primary" style={{fontSize: 14, marginLeft: 8}}>
+        {totalPoints} points
+      </Badge>
+    </small>
+  )
+}
+
 
 
 function ExerciseSchema({exercise}: {exercise: ExerciseModel}) {

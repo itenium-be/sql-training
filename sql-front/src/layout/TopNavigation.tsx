@@ -12,7 +12,9 @@ export const fetchData = (key: 'home' | ExerciseId) => async (dispatch: AppDispa
       headers: { 'Content-Type': 'application/json' },
     });
     const data = await res.json();
-    dispatch({type: 'exercises/setScores', payload: data});
+    if (!data.message) {
+      dispatch({type: 'exercises/setScores', payload: data});
+    }
   } catch (error) {
     console.error('Could not fetch leaderboard', error);
   }
