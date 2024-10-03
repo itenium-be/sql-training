@@ -96,7 +96,7 @@ GET: http://localhost:8000/game/mode?apiKey=secret&mode=init
 
 Allow people to see all solutions at the endgame:
 
-```
+```yaml
 GET: http://localhost:8000/game/mode?apiKey=secret&mode=end
 ```
 
