@@ -94,7 +94,7 @@ export const worldExercises: ExerciseModel = {
         ['Oceania', 14, 21, 'Nauru', 37783477, 11284],
         ['South America', 13, 389, 'Saint Vincent and the Grenadines', 407618970, 8594],
       ],
-      expectedOrder: true,
+      expectedOrder: false,
       expectedColumns: ['continent', 'countries', 'smallest area', 'smallest name', 'total population', 'averga gdp']
     },
     {
