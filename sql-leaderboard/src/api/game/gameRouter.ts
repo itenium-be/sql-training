@@ -4,7 +4,7 @@ import { ExerciseStart, ExerciseSubmit } from "./gameModel";
 import { env } from "@/envConfig";
 
 type GameMode = 'init' | 'running' | 'end';
-let gameMode: GameMode = 'init';
+let gameMode: GameMode = 'running';
 
 export const gameRouter: Router = express.Router();
 
