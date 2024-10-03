@@ -56,6 +56,9 @@ function TableBody({data}: {data: any[]}) {
 }
 
 function Cell({value}: {value: any}) {
+  if (typeof value === 'boolean')
+    return <td>{value.toString()}</td>
+
   if (value === null)
     return <td><i>NULL</i></td>
 
