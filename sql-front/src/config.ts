@@ -1,7 +1,7 @@
 export const config = {
   api: 'http://localhost:8080',
   leaderboard: {
-    api: 'http://localhost:8000'
+    api: 'http://192.168.3.93:8000' // TODO: put my local IP here!
   }
 }
 
