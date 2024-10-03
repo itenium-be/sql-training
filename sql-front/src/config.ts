@@ -1,7 +1,7 @@
 export const config = {
   api: 'http://localhost:8080',
   leaderboard: {
-    api: 'http://192.168.3.93:8000' // TODO: put my local IP here!
+    api: 'http://pongit.synology.me:4001' // TODO: put my local IP here!
   }
 }
 
