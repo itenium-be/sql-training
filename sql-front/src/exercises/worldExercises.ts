@@ -8,7 +8,7 @@ export const worldExercises: ExerciseModel = {
   exercises: [
     {
       id: 1,
-      desc: 'Give the name and the per capita GDP (without decimals) for all countries with a population of at least 200 million.',
+      desc: 'Give the name and the per capita GDP (floored) for all countries with a population of at least 200 million.',
       points: 1,
       expected: [
         ['Brazil', 11115],
