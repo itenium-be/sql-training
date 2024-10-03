@@ -65,8 +65,10 @@ function Cell({value}: {value: any}) {
   if (typeof value === 'string' && value.indexOf('-') !== -1 && value.indexOf('-') !== value.lastIndexOf('-'))
     return <td>{value}</td>
 
-  if (!isNaN(parseInt(value)) && value[value.length - 1] !== '%')
-    return <td style={{textAlign: 'right'}}>{(+value).toLocaleString().replace(/,/g, '.')}</td>
+  if (!isNaN(parseInt(value)) && value[value.length - 1] !== '%') {
+    const belgianFormattedValue = (+value).toLocaleString("nl-BE")
+    return <td style={{textAlign: 'right'}}>{belgianFormattedValue}</td>
+  }
 
   return <td>{value}</td>
 }
