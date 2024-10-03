@@ -56,7 +56,7 @@ SELECT
   MIN(area) AS smallest,
   (SELECT name FROM countries WHERE area = MIN(c1.area) AND continent=c1.continent) AS smallest_name,
   SUM(population) AS total_population,
-  ROUND(AVG(gdp/population)) AS avg_gdp
+  ROUND(SUM(gdp)/SUM(population)) AS avg_gdp
 FROM countries c1
 GROUP BY continent
 ORDER BY continent
