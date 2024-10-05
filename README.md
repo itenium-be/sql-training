@@ -110,8 +110,7 @@ In the `goals` table, `score0` and `score1` are `NULL`, our intern forgot to wri
 
 ### Other resources
 
-- [https://mystery.knightlab.com/](SQL Murder Mystery) - Can you find out whodunnit?
-- [https://datalemur.com/](datalemur.com) - Ace the SQL & Data Science Interview
-- [https://www.sql-practice.com/](sql-practice.com)
-- [https://sqlzoo.net/wiki/SQL_Tutorial](sqlzoo) - Learn SQL in stages (Countries & Teacher datasets came from this one!)
-
+- [SQL Murder Mystery](https://mystery.knightlab.com/) - Can you find out whodunnit?
+- [datalemur.com](https://datalemur.com/) - Ace the SQL & Data Science Interview
+- [sql-practice.com](https://www.sql-practice.com/)
+- [sqlzoo](https://sqlzoo.net/wiki/SQL_Tutorial) - Learn SQL in stages (Countries & Teacher datasets came from this one!)

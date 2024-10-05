@@ -27,6 +27,18 @@ export function ScoreTable({scores}: {scores: Score[]}) {
   const fastestTable = calculateFastest(exercises, scores);
   const leanestTable = calculateShortest(exercises, scores);
 
+  const totalScores = Object.entries(playerScores).map(([player, score]) => {
+    const fastest = fastestTable.filter(fast => fast.player === player).length;
+    const shortest = leanestTable.filter(fast => fast.player === player).length;
+    return {
+      name: player,
+      score,
+      fastest,
+      shortest,
+      total: score + fastest * 2 + shortest * 2
+    };
+  })
+
   return (
     <Table bordered hover>
       <thead>
@@ -40,17 +52,15 @@ export function ScoreTable({scores}: {scores: Score[]}) {
         </tr>
       </thead>
       <tbody>
-        {Object.entries(playerScores).sort((a, b) => b[1] - a[1]).map(([player, score], index) => {
-          const fastest = fastestTable.filter(fast => fast.player === player).length;
-          const shortest = leanestTable.filter(fast => fast.player === player).length;
+        {totalScores.sort((a, b) => b.total - a.total).map((player, index) => {
           return (
-            <tr key={player} className={player === registeredName ? 'table-primary' : undefined}>
+            <tr key={player.name} className={player.name === registeredName ? 'table-primary' : undefined}>
               <td>{index + 1}</td>
-              <td>{player}</td>
-              <td>{score}</td>
-              <td>{fastest}</td>
-              <td>{shortest}</td>
-              <td><b>{score + fastest * 2 + shortest * 2}</b></td>
+              <td>{player.name}</td>
+              <td>{player.score}</td>
+              <td>{player.fastest}</td>
+              <td>{player.shortest}</td>
+              <td><b>{player.total}</b></td>
             </tr>
           );
         })}

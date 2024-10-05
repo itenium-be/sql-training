@@ -20,7 +20,7 @@ JOIN rounds r ON m.round_id=r.id JOIN events e ON r.event_id=e.id`,
     },
     {
       id: 2,
-      desc: 'Which country has "scored" the most ungoals?',
+      desc: 'Which country has "scored" the most owngoals?',
       points: 4,
       expected: [
         ['France', 4]

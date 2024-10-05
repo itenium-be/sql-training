@@ -9,4 +9,7 @@ ENV MSSQL_PID Express
 
 EXPOSE 1433
 
+RUN chmod +x ./entrypoint.sh
+RUN chmod +x ./run-initialization.sh
+
 CMD /bin/bash ./entrypoint.sh
