@@ -16,14 +16,16 @@ WHERE population>200000000
 - Find the country that has all the vowels and no spaces in its name.
 
 ```sql
-SELECT name
-FROM countries
-WHERE NOT name like '% %'
-AND name like '%a%'
-AND name like '%e%'
-AND name like '%o%'
-AND name like '%i%'
-AND name like '%u%'
+SELECT name FROM countries WHERE NOT name like '% %'
+AND name like '%a%' AND name like '%e%' AND name like '%o%' AND name like '%i%' AND name like '%u%';
+
+-- Michael:
+select name from countries where name not like ('% %')
+and name like all (array['%a%','%e%','%i%','%o%','%u%'])
+
+-- Regex: https://www.postgresql.org/docs/current/functions-matching.html#FUNCTIONS-POSIX-REGEXP
+select name from countries
+where name ~ '^(?=.*a)(?=.*e)(?=.*i)(?=.*o)(?=.*u)[^ ]+$'
 ```
 
 
@@ -61,6 +63,11 @@ WHERE area = (
   WHERE subquery.continent = countries.continent
 )
 ORDER BY continent
+
+-- Mike
+SELECT DISTINCT ON (continent), continent, name, area
+FROM countries
+ORDER BY continent, area DESC
 ```
 
 
@@ -217,7 +224,7 @@ having count(0)=(SELECT COUNT(*) FROM events)
 ```
 
 
-- Which country has "scored" the most ungoals?
+- Which country has "scored" the most own goals?
 
 ```sql
 SELECT TOP 1 c.name, COUNT(g.id) AS owngoals
