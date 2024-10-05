@@ -20,7 +20,7 @@ JOIN rounds r ON m.round_id=r.id JOIN events e ON r.event_id=e.id`,
     },
     {
       id: 2,
-      desc: 'Which country has "scored" the most owngoals?',
+      desc: 'Which country has "scored" the most owngoals? Also select how many.',
       points: 4,
       expected: [
         ['France', 4]
@@ -30,7 +30,7 @@ JOIN rounds r ON m.round_id=r.id JOIN events e ON r.event_id=e.id`,
     },
     {
       id: 3,
-      desc: 'Select the year of the worldcup in which the most penalties were scored',
+      desc: 'Select the year of the worldcup in which the most penalties were scored, also select the amount of penalties.',
       points: 4,
       expected: [
         [2018, 22]
