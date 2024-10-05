@@ -21,7 +21,7 @@ AND name like '%a%' AND name like '%e%' AND name like '%o%' AND name like '%i%' 
 
 -- Michael:
 select name from countries where name not like ('% %')
-and name like all (array['%a%','%e%','%i%','%o%','%u%'])
+and name like all (array['%a%', '%e%', '%i%', '%o%', '%u%'])
 
 -- Regex: https://www.postgresql.org/docs/current/functions-matching.html#FUNCTIONS-POSIX-REGEXP
 select name from countries
@@ -90,11 +90,14 @@ ORDER BY continent
 - Show the name and the population of each country in Europe. Also show the population as the rounded percentage of the population of Germany. Only take the countries where the population is at least 50% and sort by largest %.
 
 ```sql
-SELECT name, population, ROUND(population * 100.0 / (SELECT population FROM countries WHERE name = 'Germany')) || '%' as per
-FROM countries c
-WHERE c.continent='Europe'
-AND c.population*1.0/(SELECT c1.population FROM countries c1 WHERE name = 'Germany')>0.5
-ORDER BY c.population*1.0/(SELECT c1.population FROM countries c1 WHERE name = 'Germany') DESC
+WITH gp AS (
+  SELECT population * 1.0 AS pop FROM countries WHERE name = 'Germany'
+)
+SELECT name, population, ROUND(population / gp.pop * 100, 0) || '%'
+FROM countries, gp
+WHERE continent = 'Europe'
+AND population >= 0.5 * gp.pop
+ORDER BY population / gp.pop DESC
 ```
 
 
@@ -237,7 +240,7 @@ ORDER BY owngoals DESC
 ```
 
 
-- Select the year of the worldcup in which the most penalties were score
+- Select the year of the worldcup in which the most penalties were scored
 
 ```sql
 SELECT TOP 1 s.name, COUNT(g.id) AS penalty_count
