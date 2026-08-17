@@ -5,6 +5,7 @@ import { Home } from './Home'
 import { useAppDispatch, useAppSelector } from './store'
 import { Exercise } from './exercises/Exercise'
 import { useEffect } from 'react'
+import { fetchExercises } from './exercises/exercisesApi'
 
 export function App() {
   const exercises = useAppSelector(state => state.exercises.entities);
@@ -15,6 +16,12 @@ export function App() {
     if (name) {
       dispatch({type: 'exercises/register', payload: name});
     }
+
+    // The exercises live on the server, so the catalogue is the first thing
+    // we need: the routes below are built from it.
+    fetchExercises()
+      .then(entities => dispatch({type: 'exercises/setExercises', payload: entities}))
+      .catch(err => console.error('Could not fetch the exercises', err));
 
     dispatch(fetchData('home'));
   }, []);

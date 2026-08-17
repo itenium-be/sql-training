@@ -1,4 +1,4 @@
-import { ExerciseModel } from "./exerciseModels";
+import { ExerciseModel } from "../exerciseModels";
 
 export const worldcupExercises: ExerciseModel = {
   id: 'Worldcup',

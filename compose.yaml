@@ -44,9 +44,13 @@ services:
       QUERY_TIMEOUT_MS: 10000
       QUERY_MAX_ROWS: 500
       QUERY_MAX_LENGTH: 5000
+      # Scores are submitted from here, server to server, not from the browser.
+      LEADERBOARD_URL: http://leaderboard:8000
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY:-internal-secret}
     depends_on:
       - postgres
       - sqlserver
+      - leaderboard
     ports:
       - 8080:8080
     networks:
@@ -62,6 +66,8 @@ services:
       HOST: 0.0.0.0
       PORT: 8000
       API_KEY: ${LEADERBOARD_API_KEY:-secret}
+      # Only sql-back knows this, so players cannot post their own scores.
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY:-internal-secret}
       PG_HOST: leaderboard-db
       PG_PORT: 5432
       PG_USER: admin

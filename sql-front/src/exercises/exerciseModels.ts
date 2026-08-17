@@ -1,3 +1,19 @@
+/**
+ * Everything the browser is allowed to know.
+ *
+ * The expected results and the hints deliberately are not here: they live in
+ * sql-back and only ever arrive one exercise at a time, when the player asks
+ * for a hint. Otherwise the answers would sit in the bundle for anyone to read.
+ */
+
+export type SqlExerciseModel = {
+  id: number;
+  desc: string;
+  points: number;
+  /** Whether this exercise has hint text on top of the expected result. */
+  hasHints: boolean;
+}
+
 export type ExerciseModel = {
   id: ExerciseId;
   name: string;
@@ -7,15 +23,11 @@ export type ExerciseModel = {
   exercises: SqlExerciseModel[];
 }
 
-export type SqlExerciseModel = {
-  id: number;
-  desc: string;
-  points: number;
-  expected: any[][];
-  /** Require specific array order */
-  expectedOrder: boolean;
-  expectedColumns: string[];
+/** Fetched from the backend when the player asks for a hint. */
+export type ExerciseHint = {
   hints?: string;
+  expected: unknown[][];
+  expectedColumns: string[];
 }
 
 /**

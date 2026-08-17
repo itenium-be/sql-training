@@ -19,8 +19,9 @@ export type QueryCost = {
 };
 
 export type PlayerQueryResult = {
+  /** Every row. Grading needs the lot; only the response is trimmed. */
   rows: any[];
-  /** True when we cut the result off at QUERY_MAX_ROWS. */
+  /** True when there are more rows than QUERY_MAX_ROWS to show. */
   truncated: boolean;
   cost: QueryCost;
 };
@@ -110,11 +111,7 @@ async function runPostgres(pool: Pool, text: string, readOnlyTransaction: boolea
     const rows = lastResult(await client.query(text)).rows ?? [];
     const cost = await explainPostgres(client, text);
 
-    return {
-      rows: rows.slice(0, env.QUERY_MAX_ROWS),
-      truncated: rows.length > env.QUERY_MAX_ROWS,
-      cost,
-    };
+    return { rows, truncated: rows.length > env.QUERY_MAX_ROWS, cost };
   } finally {
     // Nothing a player types is ever allowed to stick.
     await client.query("ROLLBACK").catch(() => undefined);
@@ -216,7 +213,7 @@ export async function executePlayerQuerySqlServer(text: string): Promise<PlayerQ
     const rows = recordsets.length ? (recordsets[recordsets.length - 1] ?? []) : [];
 
     return {
-      rows: rows.slice(0, env.QUERY_MAX_ROWS),
+      rows,
       truncated: rows.length > env.QUERY_MAX_ROWS,
       cost: { reads, plannerCost: 0, rowsScanned: rows.length },
     };

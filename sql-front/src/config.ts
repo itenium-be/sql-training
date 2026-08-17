@@ -61,4 +61,8 @@ export type QueryResponse = {
   rows: QueryRow[];
   truncated: boolean;
   cost: QueryCost;
+  /** The server grades the answer; the browser never sees the expected result. */
+  correct: boolean;
+  /** Submits so far for this exercise, counted server side. */
+  attempts: number;
 }

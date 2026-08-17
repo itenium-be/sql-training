@@ -27,6 +27,12 @@ const startExercise: RequestHandler = async (_req: Request, res: Response) => {
 };
 
 const submitExercise: RequestHandler = async (_req: Request, res: Response) => {
+  // Scores arrive from sql-back, which graded the query and counted the
+  // attempts itself. A player curling this endpoint has no business here.
+  if (_req.header('x-internal-key') !== env.INTERNAL_API_KEY) {
+    return res.status(401).send({message: 'Scores are submitted by the query server, not by players'});
+  }
+
   if (gameMode === 'init') {
     return res.status(200).send({message: 'Game has not yet started!'});
   }

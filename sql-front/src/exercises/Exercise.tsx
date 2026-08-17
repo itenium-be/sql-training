@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import Button from 'react-bootstrap/Button';
 import Badge from 'react-bootstrap/Badge';
-import { ExerciseId, ExerciseModel, SqlExerciseModel } from "./exerciseModels";
+import { ExerciseHint, ExerciseId, ExerciseModel, SqlExerciseModel } from "./exerciseModels";
 import { ExerciseSampleData, ExercisesData } from "./ExerciseSampleData";
-import { config, HttpResponse, QueryResponse, QueryRow } from "../config";
+import { QueryResponse } from "../config";
 import { useAppDispatch, useAppSelector } from "../store";
 import { Alert, Col, Modal, Row } from "react-bootstrap";
-import deepEqual from 'deep-equal';
 import { SqlEditor } from "./SqlEditor";
+import { fetchHint, runExercise, startExercise } from "./exercisesApi";
 
 const emojis = ['🎉', '🥳', '🎊', '💯', '🌟', '🚀', '🦄', '🎈', '🎆', '🏆'];
 
@@ -66,8 +66,7 @@ function SqlExercises({exercise}: {exercise: ExerciseModel}) {
     )
   }
 
-  // Remount per question: attempts and hints are scored, so they must not
-  // leak from the previous exercise.
+  // Remount per question so nothing leaks from the previous exercise.
   return <SqlExercise key={`${exercise.id}-${currentEx.id}`} sql={currentEx} game={exercise.id} />
 }
 
@@ -76,9 +75,8 @@ function SqlExercise({sql, game}: {sql: SqlExerciseModel, game: ExerciseId}) {
   const [sqlText, setSqlText] = useState('');
   const [error, setError] = useState('');
   const [result, setResult] = useState<QueryResponse | null>(null);
-  const [hint, setHint] = useState(false);
+  const [hint, setHint] = useState<ExerciseHint | null>(null);
   const [success, setSuccess] = useState(false);
-  const [attempts, setAttempts] = useState(0);
   const [running, setRunning] = useState(false);
   const registeredName = useAppSelector(state => state.exercises.userName);
   const solved = useAppSelector(state => state.exercises.scores
@@ -86,33 +84,32 @@ function SqlExercise({sql, game}: {sql: SqlExerciseModel, game: ExerciseId}) {
     .some(score => score.game === game && score.exerciseid === sql.id));
   const dispatch = useAppDispatch();
 
+  const identity = {player: registeredName, game, exerciseId: sql.id};
+
   useEffect(() => {
-    const startExercise = async () => {
-      const postData = {
-        player: localStorage.getItem('userName'),
-        game,
-        exerciseId: sql.id,
-      };
-
-      try {
-        await fetch(`${config.leaderboard.api}/game/start`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(postData),
-        });
-      } catch (err) {
-        console.error('Could not start timer for exercise', err);
-      }
-    }
-
-    startExercise();
+    startExercise({player: localStorage.getItem('userName') ?? '', game, exerciseId: sql.id})
+      .catch(err => console.error('Could not start timer for exercise', err));
   }, [sql, game])
 
   const reset = () => {
     setError('');
     setResult(null);
     setSuccess(false);
-    setHint(false);
+    setHint(null);
+  }
+
+  const showHint = async () => {
+    try {
+      const data = await fetchHint(identity);
+      if (data.success) {
+        setHint(data.responseObject);
+      } else {
+        setError(data.message);
+      }
+    } catch (err) {
+      console.error('Could not fetch the hint', err);
+      setError('Could not fetch the hint');
+    }
   }
 
   const handleFetch = async () => {
@@ -120,72 +117,23 @@ function SqlExercise({sql, game}: {sql: SqlExerciseModel, game: ExerciseId}) {
       return;
     }
 
-    const attempt = attempts + 1;
-    setAttempts(attempt);
     setRunning(true);
-
     try {
       setError('');
       setResult(null);
       setSuccess(false);
 
-      const res = await fetch(`${config.api}/exercises`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          sql: sqlText,
-          game
-        }),
-      });
-      const data: HttpResponse<QueryResponse> = await res.json();
+      const data = await runExercise(identity, sqlText);
       if (!data.success) {
         setError(data.message);
         return;
       }
 
-      const queryResult = data.responseObject;
-      setResult(queryResult);
-
-      const arrResult = queryResult.rows.map((obj: QueryRow) => {
-        const record: (string | undefined)[] = [];
-        Object.keys(obj).forEach(value => record.push(obj[value]?.toString()));
-        return record;
-      });
-
-      const expectedArr = [...sql.expected];
-      if (!sql.expectedOrder) {
-        arrResult.sort();
-        expectedArr.sort();
-      }
-
-      if (!deepEqual(arrResult, expectedArr)) {
-        setError('Query result does not match expected output!');
-        return;
-      }
-
-      setSuccess(true);
-
-      const successData = {
-        player: localStorage.getItem('userName'),
-        game,
-        exerciseId: sql.id,
-        solution: sqlText,
-        attempts: attempt,
-        hintsUsed: hint ? 1 : 0,
-        reads: queryResult.cost.reads,
-        plannerCost: queryResult.cost.plannerCost,
-        rowsScanned: queryResult.cost.rowsScanned,
-      };
-
-      try {
-        await fetch(`${config.leaderboard.api}/game`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(successData),
-        });
-      } catch (err) {
-        console.error('Could not submit score :(', err);
-        setError('Unable to submit your score 😭');
+      setResult(data.responseObject);
+      if (data.responseObject.correct) {
+        setSuccess(true);
+      } else {
+        setError(data.message);
       }
     } catch (error) {
       console.error(`Error executing ${sqlText}`, error);
@@ -252,9 +200,9 @@ function SqlExercise({sql, game}: {sql: SqlExerciseModel, game: ExerciseId}) {
           <Button variant="primary" onClick={handleFetch} style={{marginRight: 16}} disabled={!sqlText.trim().length || running}>
             {running ? 'Running…' : 'Submit'}
           </Button>
-          {attempts > 0 && (
+          {result && (
             <small className="text-muted" style={{marginRight: 16}}>
-              Attempt {attempts + 1} coming up{hint ? ', hint used' : ''}
+              Attempt {result.attempts + 1} coming up{hint ? ', hint used' : ''}
             </small>
           )}
           <Button variant="secondary" onClick={() => {reset(); dispatch({type: 'exercises/nextQuestion'})}} className="float-end">
@@ -266,12 +214,12 @@ function SqlExercise({sql, game}: {sql: SqlExerciseModel, game: ExerciseId}) {
             </Button>
           )}
           {result && !hint && (
-            <Button variant="secondary" onClick={() => setHint(true)} className="float-end" style={{marginRight: 12}} title="Costs you the no-hints bonus">
+            <Button variant="secondary" onClick={showHint} className="float-end" style={{marginRight: 12}} title="Costs you the no-hints bonus">
               Show Hint
             </Button>
           )}
           {hint && (
-            <HintTable sql={sql} />
+            <HintTable hint={hint} />
           )}
         </>
       )}
@@ -306,7 +254,7 @@ function QueryCostBadges({result}: {result: QueryResponse}) {
 }
 
 
-function ExerciseSolved({sql, reset, text}: {sql: SqlExerciseModel, reset: Function, text?: string}) {
+function ExerciseSolved({sql, reset, text}: {sql: SqlExerciseModel, reset: () => void, text?: string}) {
   const dispatch = useAppDispatch();
 
   return (
@@ -326,19 +274,20 @@ function ExerciseSolved({sql, reset, text}: {sql: SqlExerciseModel, reset: Funct
 }
 
 
-function HintTable({sql}: {sql: SqlExerciseModel}) {
-  const data = sql.expected.map(record => {
-    const obj: any = {};
-    sql.expectedColumns.forEach((colName, index) => obj[colName] = record[index])
+/** Only ever rendered from what the hint endpoint just handed over. */
+function HintTable({hint}: {hint: ExerciseHint}) {
+  const data = hint.expected.map(record => {
+    const obj: Record<string, unknown> = {};
+    hint.expectedColumns.forEach((colName, index) => obj[colName] = record[index])
     return obj;
   });
 
   return (
     <div style={{paddingTop: 25}}>
-      {sql.hints && (
+      {hint.hints && (
         <>
           <h2>Hints</h2>
-          <p>{sql.hints}</p>
+          <p>{hint.hints}</p>
         </>
       )}
       <h2>Expected Result</h2>

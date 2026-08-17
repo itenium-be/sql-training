@@ -8,6 +8,8 @@ export const env = cleanEnv(process.env, {
   HOST: host({ devDefault: testOnly("localhost") }),
   PORT: port({ devDefault: testOnly(8000) }),
   API_KEY: str({ devDefault: testOnly('secret') }),
+  /** Shared with sql-back: only it may write scores, players may not. */
+  INTERNAL_API_KEY: str({ default: 'internal-secret' }),
 
   PG_USER: str({ devDefault: testOnly("admin") }),
   PG_PASSWORD: str({ devDefault: testOnly("password") }),

@@ -6,6 +6,10 @@ Node: v22.1.0
 Everybody plays against **one shared server**. Nobody has to run docker on their
 own laptop unless they want to.
 
+> **This repository is private, and needs to stay that way.** It holds the
+> exercise answers. Players get the databases and the schema, nothing else:
+> the answers never leave `sql-back`, not even into the frontend bundle.
+
 ## Host the game
 
 On the one machine that runs the training:
@@ -21,6 +25,7 @@ cp .env.template .env
 # Set PUBLIC_HOST to the hostname or LAN IP the players will browse to.
 # It is baked into the frontend at container start, so "localhost" only
 # works if you are the only player.
+# Also change LEADERBOARD_API_KEY and INTERNAL_API_KEY.
 
 docker compose up -d --build
 ```
@@ -76,6 +81,9 @@ Start the databases (`docker compose up -d postgres sqlserver leaderboard-db`)
 and adjust `sql-back/.env` to set `PG_HOST="localhost"`, `PG_PORT="5175"` and
 `SQL_SERVER_HOST="localhost"`, `SQL_SERVER_PORT="5174"`.
 
+`sql-back` submits scores, so it needs the leaderboard running too, with a
+matching `INTERNAL_API_KEY` on both sides.
+
 ```sh
 cd sql-back
 npm run dev
@@ -83,6 +91,25 @@ npm run dev
 cd ../sql-front
 npm run dev
 ```
+
+### Where the exercises live
+
+`sql-back/src/api/exercises/definitions/` — questions, expected results and
+hints together. Add or edit exercises there; the frontend picks them up on the
+next reload, there is nothing to keep in sync.
+
+The browser only ever gets what a player is allowed to know:
+
+| | Endpoint | Contains |
+|---|---|---|
+| Catalogue | `GET /exercises` | Question, points, whether a hint exists |
+| Submit | `POST /exercises` | Your rows, the query cost, and `correct: true/false` |
+| Hint | `POST /exercises/hint` | The hint and the expected result, *and records that you asked* |
+
+The server grades the answer, counts the attempts and reports the score to the
+leaderboard itself over `INTERNAL_API_KEY`. That is what makes the first-try and
+no-hints bonuses mean anything: none of those numbers pass through the browser,
+and `POST /game` on the leaderboard refuses anything without that key.
 
 ### Nobody can wreck the shared database
 
@@ -120,7 +147,7 @@ All the weights live in one place: `sql-front/src/leaderboard/scoring.ts`.
 | 🪶 **Efficient** | 3 | Made the database read the fewest blocks |
 | ✂️ **Leanest** | 1 | Shortest SQL, whitespace ignored |
 | 🎯 **First Try** | 1 per exercise | Solved on the first Submit |
-| 🙈 **No Hints** | 1 per exercise | Solved without revealing the expected result |
+| 🙈 **No Hints** | 1 per exercise | Solved without asking the server for the hint |
 
 Fastest, Efficient and Leanest are per exercise, best-of-the-room awards. A tie
 pays out to everyone tied.

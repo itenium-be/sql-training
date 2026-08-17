@@ -23,6 +23,11 @@ export const env = cleanEnv(process.env, {
   SQL_SERVER_USER: str({ default: "sa" }),
   SQL_SERVER_PASSWORD: str({ default: "password123!" }),
 
+  /** Where to report solves. Scores are submitted from here, not from the browser. */
+  LEADERBOARD_URL: str({ default: "http://localhost:8000" }),
+  /** Shared with the leaderboard so only this server can write scores. */
+  INTERNAL_API_KEY: str({ default: "internal-secret" }),
+
   /** A runaway cartesian join should not take the shared server down with it. */
   QUERY_TIMEOUT_MS: num({ default: 10000 }),
   /** Nobody reads 50k rows in the browser anyway. */
