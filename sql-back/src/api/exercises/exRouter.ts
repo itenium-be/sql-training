@@ -31,7 +31,18 @@ exRegistry.registerPath({
       },
     },
   },
-  responses: createApiResponse(z.any().array(), "Success"),
+  responses: createApiResponse(
+    z.object({
+      rows: z.any().array(),
+      truncated: z.boolean(),
+      cost: z.object({
+        reads: z.number(),
+        plannerCost: z.number(),
+        rowsScanned: z.number(),
+      }),
+    }),
+    "Success",
+  ),
 });
 
 exRouter.post("/", exController.post);

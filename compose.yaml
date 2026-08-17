@@ -1,24 +1,75 @@
-version: '3.8'
 name: sql-training
 
-services:
-  back-end:
-    build:
-      context: ./sql-back
-      dockerfile: Dockerfile
-    restart: always
-    ports:
-      - 8080:8080
-    networks:
-      - trainnet
+# The whole game, meant to run on ONE machine that everybody points their
+# browser at. Copy .env.template to .env and set PUBLIC_HOST first.
+#
+# Participants who want to poke around in the data themselves can run
+# compose.databases.yaml locally; they still play against this server.
 
+services:
   front-end:
     build:
       context: ./sql-front
       dockerfile: Dockerfile
     restart: always
+    environment:
+      # These end up in the browser, so they must be reachable from the
+      # players' laptops: a hostname or LAN IP, never "localhost".
+      API_URL: http://${PUBLIC_HOST:-localhost}:8080
+      LEADERBOARD_URL: http://${PUBLIC_HOST:-localhost}:4001
     ports:
       - 5173:3000
+    networks:
+      - trainnet
+
+  back-end:
+    build:
+      context: ./sql-back
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 8080
+      PG_HOST: postgres
+      PG_PORT: 5432
+      PG_USER: admin
+      PG_PASSWORD: password
+      PG_PLAYER_USER: player
+      PG_PLAYER_PASSWORD: player
+      SQL_SERVER_HOST: sqlserver
+      SQL_SERVER_PORT: 1433
+      SQL_SERVER_USER: sa
+      SQL_SERVER_PASSWORD: password123!
+      QUERY_TIMEOUT_MS: 10000
+      QUERY_MAX_ROWS: 500
+      QUERY_MAX_LENGTH: 5000
+    depends_on:
+      - postgres
+      - sqlserver
+    ports:
+      - 8080:8080
+    networks:
+      - trainnet
+
+  leaderboard:
+    build:
+      context: ./sql-leaderboard
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 8000
+      API_KEY: ${LEADERBOARD_API_KEY:-secret}
+      PG_HOST: leaderboard-db
+      PG_PORT: 5432
+      PG_USER: admin
+      PG_PASSWORD: password
+    depends_on:
+      - leaderboard-db
+    ports:
+      - 4001:8000
     networks:
       - trainnet
 
@@ -40,7 +91,11 @@ services:
       POSTGRES_DB: world
       PGDATA: /data/postgres
     volumes:
-      - ./sql-data/postgres.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./sql-data/postgres.sql:/docker-entrypoint-initdb.d/01-init.sql
+      # Creates the read only "player" role the exercises run as. Only applied
+      # to an empty volume: `docker compose down -v` to pick it up on an
+      # existing install.
+      - ./sql-data/postgres-roles.sql:/docker-entrypoint-initdb.d/02-roles.sql
       - postgres:/data/postgres
     ports:
       - "5175:5432"
@@ -48,8 +103,25 @@ services:
     networks:
       - trainnet
 
+  leaderboard-db:
+    image: postgres:17.0
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: game
+      PGDATA: /data/postgres
+    volumes:
+      - ./sql-data/game.sql:/docker-entrypoint-initdb.d/init.sql
+      - leaderboard:/data/postgres
+    ports:
+      - "6000:5432"
+    restart: always
+    networks:
+      - trainnet
+
 volumes:
   postgres:
+  leaderboard:
   sqlserver_data:
 
 networks:

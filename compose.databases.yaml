@@ -1,0 +1,56 @@
+name: sql-training-databases
+
+# Just the databases plus a browser based SQL client, for participants who like
+# to explore the data with a real tool.
+#
+# You do NOT need this to play: the exercises run against the shared server.
+# Anything you do here stays on your own machine and is not scored.
+#
+#   docker compose -f compose.databases.yaml up -d
+#   # Adminer: http://localhost:8081  (server: postgres, user: admin, password: password, database: world)
+
+services:
+  postgres:
+    image: postgres:17.0
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: world
+      PGDATA: /data/postgres
+    volumes:
+      - ./sql-data/postgres.sql:/docker-entrypoint-initdb.d/01-init.sql
+      - ./sql-data/postgres-roles.sql:/docker-entrypoint-initdb.d/02-roles.sql
+      - postgres:/data/postgres
+    ports:
+      - "5175:5432"
+    restart: always
+    networks:
+      - localdbnet
+
+  sqlserver:
+    build: ./sql-server
+    ports:
+      - 5174:1433
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    restart: always
+    networks:
+      - localdbnet
+
+  adminer:
+    image: adminer:latest
+    ports:
+      - 8081:8080
+    restart: always
+    depends_on:
+      - postgres
+    networks:
+      - localdbnet
+
+volumes:
+  postgres:
+  sqlserver_data:
+
+networks:
+  localdbnet:
+    driver: bridge

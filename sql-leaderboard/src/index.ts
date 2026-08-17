@@ -1,5 +1,10 @@
 import { env } from "./envConfig";
 import { app, logger } from "@/server";
+import { ensureSchema } from "@/api/schema";
+
+ensureSchema()
+  .then(() => logger.info("leaderboard schema up to date"))
+  .catch((err) => logger.error(`could not migrate the leaderboard schema: ${err.message}`));
 
 const server = app.listen(env.PORT, () => {
   const { NODE_ENV, HOST, PORT } = env;

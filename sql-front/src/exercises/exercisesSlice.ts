@@ -67,11 +67,23 @@ export const exercisesSlice = createSlice({
     },
     setScores: (state, action) => {
       state.scores = action.payload;
+      // postgres NUMERIC arrives as a string, and rows written before a metric
+      // existed arrive as null.
+      const toNumber = (value: any, fallback = 0) => {
+        const parsed = Number(value);
+        return Number.isFinite(parsed) ? parsed : fallback;
+      };
+
       state.scores = state.scores.map(score => ({
         ...score,
-        exerciseid: +score.exerciseid,
-        solutionlength: +score.solutionlength,
-        elapsed: +score.elapsed,
+        exerciseid: toNumber(score.exerciseid),
+        solutionlength: toNumber(score.solutionlength),
+        elapsed: toNumber(score.elapsed),
+        attempts: toNumber(score.attempts, 1),
+        hintsused: toNumber(score.hintsused),
+        reads: toNumber(score.reads),
+        plannercost: toNumber(score.plannercost),
+        rowsscanned: toNumber(score.rowsscanned),
       }))
     }
   },

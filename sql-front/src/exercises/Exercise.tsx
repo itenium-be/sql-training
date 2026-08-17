@@ -1,17 +1,13 @@
 import { useEffect, useState } from "react";
 import Button from 'react-bootstrap/Button';
 import Badge from 'react-bootstrap/Badge';
-import { ExerciseModel, SqlExerciseModel } from "./exerciseModels";
+import { ExerciseId, ExerciseModel, SqlExerciseModel } from "./exerciseModels";
 import { ExerciseSampleData, ExercisesData } from "./ExerciseSampleData";
-import { config, HttpResponse } from "../config";
+import { config, HttpResponse, QueryResponse, QueryRow } from "../config";
 import { useAppDispatch, useAppSelector } from "../store";
 import { Alert, Col, Modal, Row } from "react-bootstrap";
 import deepEqual from 'deep-equal';
-import AceEditor from "react-ace";
-
-import "ace-builds/src-noconflict/mode-sql";
-import "ace-builds/src-noconflict/theme-monokai";
-import "ace-builds/src-noconflict/ext-language_tools";
+import { SqlEditor } from "./SqlEditor";
 
 const emojis = ['🎉', '🥳', '🎊', '💯', '🌟', '🚀', '🦄', '🎈', '🎆', '🏆'];
 
@@ -70,28 +66,31 @@ function SqlExercises({exercise}: {exercise: ExerciseModel}) {
     )
   }
 
-  return <SqlExercise sql={currentEx} />
+  // Remount per question: attempts and hints are scored, so they must not
+  // leak from the previous exercise.
+  return <SqlExercise key={`${exercise.id}-${currentEx.id}`} sql={currentEx} game={exercise.id} />
 }
 
 
-function SqlExercise({sql}: {sql: SqlExerciseModel}) {
+function SqlExercise({sql, game}: {sql: SqlExerciseModel, game: ExerciseId}) {
   const [sqlText, setSqlText] = useState('');
   const [error, setError] = useState('');
-  const [result, setResult] = useState<null | any[]>(null);
+  const [result, setResult] = useState<QueryResponse | null>(null);
   const [hint, setHint] = useState(false);
   const [success, setSuccess] = useState(false);
-  const currentGame = useAppSelector(state => state.exercises.selected);
+  const [attempts, setAttempts] = useState(0);
+  const [running, setRunning] = useState(false);
   const registeredName = useAppSelector(state => state.exercises.userName);
   const solved = useAppSelector(state => state.exercises.scores
     .filter(score => score.player === registeredName)
-    .some(score => score.game === currentGame && score.exerciseid === sql.id));
+    .some(score => score.game === game && score.exerciseid === sql.id));
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     const startExercise = async () => {
       const postData = {
         player: localStorage.getItem('userName'),
-        game: currentGame,
+        game,
         exerciseId: sql.id,
       };
 
@@ -107,7 +106,7 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
     }
 
     startExercise();
-  }, [sql])
+  }, [sql, game])
 
   const reset = () => {
     setError('');
@@ -117,6 +116,14 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
   }
 
   const handleFetch = async () => {
+    if (running || !sqlText.trim()) {
+      return;
+    }
+
+    const attempt = attempts + 1;
+    setAttempts(attempt);
+    setRunning(true);
+
     try {
       setError('');
       setResult(null);
@@ -127,55 +134,64 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           sql: sqlText,
-          game: currentGame
+          game
         }),
       });
-      const data: HttpResponse = await res.json();
+      const data: HttpResponse<QueryResponse> = await res.json();
       if (!data.success) {
         setError(data.message);
-      } else {
-        setResult(data.responseObject);
+        return;
+      }
 
-        const arrResult = data.responseObject.map((obj: any) => {
-          const record: any[] = [];
-          Object.keys(obj).forEach(value => record.push(obj[value]?.toString()));
-          return record;
+      const queryResult = data.responseObject;
+      setResult(queryResult);
+
+      const arrResult = queryResult.rows.map((obj: QueryRow) => {
+        const record: (string | undefined)[] = [];
+        Object.keys(obj).forEach(value => record.push(obj[value]?.toString()));
+        return record;
+      });
+
+      const expectedArr = [...sql.expected];
+      if (!sql.expectedOrder) {
+        arrResult.sort();
+        expectedArr.sort();
+      }
+
+      if (!deepEqual(arrResult, expectedArr)) {
+        setError('Query result does not match expected output!');
+        return;
+      }
+
+      setSuccess(true);
+
+      const successData = {
+        player: localStorage.getItem('userName'),
+        game,
+        exerciseId: sql.id,
+        solution: sqlText,
+        attempts: attempt,
+        hintsUsed: hint ? 1 : 0,
+        reads: queryResult.cost.reads,
+        plannerCost: queryResult.cost.plannerCost,
+        rowsScanned: queryResult.cost.rowsScanned,
+      };
+
+      try {
+        await fetch(`${config.leaderboard.api}/game`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(successData),
         });
-
-        let expectedArr = [...sql.expected];
-        if (!sql.expectedOrder) {
-          arrResult.sort();
-          expectedArr.sort();
-        }
-
-        if (deepEqual(arrResult, expectedArr)) {
-          setSuccess(true);
-
-          const successData = {
-            player: localStorage.getItem('userName'),
-            game: currentGame,
-            exerciseId: sql.id,
-            solution: sqlText,
-          };
-
-          try {
-            await fetch(`${config.leaderboard.api}/game`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(successData),
-            });
-          } catch (err) {
-            console.error('Could not submit score :(', err);
-            setError('Unable to submit your score 😭');
-          }
-
-        } else {
-          setError('Query result does not match expected output!');
-        }
+      } catch (err) {
+        console.error('Could not submit score :(', err);
+        setError('Unable to submit your score 😭');
       }
     } catch (error) {
       console.error(`Error executing ${sqlText}`, error);
       setError('Unexpected error!');
+    } finally {
+      setRunning(false);
     }
   };
 
@@ -210,28 +226,19 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
       )}
       <Row>
         <Col style={{paddingBottom: 12}}>
-          <AceEditor
-            mode="sql"
-            theme="monokai"
-            width="100%"
-            height="275px"
-            fontSize={18}
-            showPrintMargin={false}
-            showGutter
-            wrapEnabled
-            enableLiveAutocompletion
-            onChange={e => setSqlText(e)}
-            name="UNIQUE_ID_OF_DIV"
-            editorProps={{ enableLiveAutocompletion: true, }}
-            placeholder="Enter your SQL"
-            focus
-          />
+          <SqlEditor game={game} value={sqlText} onChange={setSqlText} onSubmit={handleFetch} />
         </Col>
         <Col>
           {result ? (
-            <div style={{maxHeight: 275, overflowY: 'auto'}}>
-              <ExercisesData data={result} />
-            </div>
+            <>
+              <div style={{maxHeight: 275, overflowY: 'auto'}}>
+                <ExercisesData data={result.rows} />
+              </div>
+              {result.truncated && (
+                <small className="text-muted">Only the first {result.rows.length} rows are shown.</small>
+              )}
+              <QueryCostBadges result={result} />
+            </>
           ) : (
             <p></p>
           )}
@@ -242,9 +249,14 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
         <ExerciseSolved sql={sql} reset={reset} />
       ) : (
         <>
-          <Button variant="primary" onClick={handleFetch} style={{marginRight: 16}} disabled={!sqlText.length}>
-            Submit
+          <Button variant="primary" onClick={handleFetch} style={{marginRight: 16}} disabled={!sqlText.trim().length || running}>
+            {running ? 'Running…' : 'Submit'}
           </Button>
+          {attempts > 0 && (
+            <small className="text-muted" style={{marginRight: 16}}>
+              Attempt {attempts + 1} coming up{hint ? ', hint used' : ''}
+            </small>
+          )}
           <Button variant="secondary" onClick={() => {reset(); dispatch({type: 'exercises/nextQuestion'})}} className="float-end">
             Skip Question
           </Button>
@@ -253,8 +265,8 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
               Back
             </Button>
           )}
-          {result && (
-            <Button variant="secondary" onClick={() => setHint(true)} className="float-end" style={{marginRight: 12}}>
+          {result && !hint && (
+            <Button variant="secondary" onClick={() => setHint(true)} className="float-end" style={{marginRight: 12}} title="Costs you the no-hints bonus">
               Show Hint
             </Button>
           )}
@@ -266,6 +278,33 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
     </>
   )
 }
+
+
+/** Immediate feedback on how much work the database did, since that is scored. */
+function QueryCostBadges({result}: {result: QueryResponse}) {
+  if (!result.cost.reads && !result.cost.plannerCost) {
+    return null;
+  }
+
+  return (
+    <div style={{marginTop: 8}}>
+      <Badge bg="light" text="dark" title="Blocks read to answer this. Lower is better, and it does not depend on how busy the server is.">
+        {result.cost.reads.toLocaleString('nl-BE')} reads
+      </Badge>
+      {result.cost.plannerCost > 0 && (
+        <Badge bg="light" text="dark" style={{marginLeft: 6}} title="What the query planner estimated this would cost">
+          cost {result.cost.plannerCost.toLocaleString('nl-BE')}
+        </Badge>
+      )}
+      {result.cost.rowsScanned > 0 && (
+        <Badge bg="light" text="dark" style={{marginLeft: 6}} title="Rows the plan walked over, across every step">
+          {result.cost.rowsScanned.toLocaleString('nl-BE')} rows scanned
+        </Badge>
+      )}
+    </div>
+  )
+}
+
 
 function ExerciseSolved({sql, reset, text}: {sql: SqlExerciseModel, reset: Function, text?: string}) {
   const dispatch = useAppDispatch();

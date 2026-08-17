@@ -1,43 +1,20 @@
-import { Table } from "react-bootstrap";
+import { OverlayTrigger, Table, Tooltip } from "react-bootstrap";
 import { useAppSelector } from "../store";
 import { Score } from "../exercises/exerciseModels";
-import { calculateFastest } from "./FastestScores";
-import { calculateShortest } from "./ShortestSolutions";
+import { calculateTotals, scoringWeights } from "./scoring";
+
+function Header({label, title}: {label: string, title: string}) {
+  return (
+    <OverlayTrigger placement="top" overlay={<Tooltip>{title}</Tooltip>}>
+      <th style={{cursor: 'help'}}>{label}</th>
+    </OverlayTrigger>
+  )
+}
 
 export function ScoreTable({scores}: {scores: Score[]}) {
   const registeredName = useAppSelector(state => state.exercises.userName);
   const exercises = useAppSelector(state => state.exercises.entities);
-  const exercisesPoints: any = {};
-  exercises.forEach(game => {
-    game.exercises.forEach(exercise => {
-      exercisesPoints[`${game.id}-${exercise.id}`] = exercise.points;
-    })
-  })
-  // console.log('exercisesPoints', exercisesPoints);
-
-  const playerScores: Record<string, number> = {};
-  scores.forEach(score => {
-    if (!playerScores[score.player]) {
-      playerScores[score.player] = 0;
-    }
-    const points = exercisesPoints[`${score.game}-${score.exerciseid}`];
-    playerScores[score.player] += points || 0;
-  });
-
-  const fastestTable = calculateFastest(exercises, scores);
-  const leanestTable = calculateShortest(exercises, scores);
-
-  const totalScores = Object.entries(playerScores).map(([player, score]) => {
-    const fastest = fastestTable.filter(fast => fast.player === player).length;
-    const shortest = leanestTable.filter(fast => fast.player === player).length;
-    return {
-      name: player,
-      score,
-      fastest,
-      shortest,
-      total: score + fastest * 2 + shortest * 2
-    };
-  })
+  const totalScores = calculateTotals(exercises, scores);
 
   return (
     <Table bordered hover>
@@ -45,25 +22,31 @@ export function ScoreTable({scores}: {scores: Score[]}) {
         <tr>
           <th>Rank</th>
           <th>Player</th>
-          <th>Points</th>
-          <th># Fastest</th>
-          <th># Shortest</th>
+          <Header label="Points" title="For solving exercises" />
+          <Header label="⚡ Fastest" title={`Exercises solved quickest of anyone (${scoringWeights.fastest} points each)`} />
+          <Header label="🪶 Efficient" title={`Exercises where your query read the fewest blocks (${scoringWeights.efficient} points each)`} />
+          <Header label="✂️ Leanest" title={`Exercises with the shortest SQL (${scoringWeights.leanest} point each)`} />
+          <Header label="🎯 First Try" title={`Solved on the first Submit (${scoringWeights.firstTry} point each)`} />
+          <Header label="🙈 No Hints" title={`Solved without revealing the expected result (${scoringWeights.noHints} point each)`} />
+          <Header label="Bonus" title="All of the above added up" />
           <th>Total Score</th>
         </tr>
       </thead>
       <tbody>
-        {totalScores.sort((a, b) => b.total - a.total).map((player, index) => {
-          return (
-            <tr key={player.name} className={player.name === registeredName ? 'table-primary' : undefined}>
-              <td>{index + 1}</td>
-              <td>{player.name}</td>
-              <td>{player.score}</td>
-              <td>{player.fastest}</td>
-              <td>{player.shortest}</td>
-              <td><b>{player.total}</b></td>
-            </tr>
-          );
-        })}
+        {totalScores.map((player, index) => (
+          <tr key={player.name} className={player.name === registeredName ? 'table-primary' : undefined}>
+            <td>{index + 1}</td>
+            <td>{player.name}</td>
+            <td>{player.points}</td>
+            <td>{player.fastest}</td>
+            <td>{player.efficient}</td>
+            <td>{player.leanest}</td>
+            <td>{player.firstTry}</td>
+            <td>{player.noHints}</td>
+            <td>{player.bonus}</td>
+            <td><b>{player.total}</b></td>
+          </tr>
+        ))}
       </tbody>
     </Table>
   )

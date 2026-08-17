@@ -18,6 +18,10 @@ export type SqlExerciseModel = {
   hints?: string;
 }
 
+/**
+ * One solved exercise. Field names are lowercase because that is how
+ * postgres hands back unquoted column names.
+ */
 export type Score = {
   player: string;
   game: string;
@@ -26,6 +30,15 @@ export type Score = {
   solutionlength: number;
   /** in seconds */
   elapsed: number;
+  /** Submits needed to get it right, 1 means first try. */
+  attempts: number;
+  /** 0 when solved without revealing the expected result. */
+  hintsused: number;
+  /** Blocks / logical reads the query needed. Lower is better, and it does
+   * not care how busy the server was when you ran it. */
+  reads: number;
+  plannercost: number;
+  rowsscanned: number;
 }
 
 export type ExerciseId = 'World' | 'Teachers' | 'Worldcup';

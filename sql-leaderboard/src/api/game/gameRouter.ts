@@ -50,22 +50,50 @@ const submitExercise: RequestHandler = async (_req: Request, res: Response) => {
   }
 
   const solutionLength = data.solution.replace(/\s/g, '').length;
-  const values = [data.player, data.game, data.exerciseId, data.solution, solutionLength, elapsed];
-  await executeQuery('INSERT INTO game_progress (player, game, exerciseId, solution, solutionLength, elapsed) VALUES ($1, $2, $3, $4, $5, $6)', values);
+  const values = [
+    data.player,
+    data.game,
+    data.exerciseId,
+    data.solution,
+    solutionLength,
+    elapsed,
+    positiveNumber(data.attempts, 1),
+    positiveNumber(data.hintsUsed, 0),
+    positiveNumber(data.reads, 0),
+    positiveNumber(data.plannerCost, 0),
+    positiveNumber(data.rowsScanned, 0),
+  ];
+  await executeQuery(
+    `INSERT INTO game_progress
+      (player, game, exerciseId, solution, solutionLength, elapsed, attempts, hintsUsed, reads, plannerCost, rowsScanned)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
+    values
+  );
   return res.status(200).send({message: 'Registered!'});
 };
+
+/** Everything the client reports about its own run has to survive being nonsense. */
+function positiveNumber(value: unknown, fallback: number): number {
+  const parsed = Math.floor(Number(value));
+  if (!Number.isFinite(parsed) || parsed < 0) {
+    return fallback;
+  }
+  return parsed;
+}
 
 const getProgress: RequestHandler = async (_req: Request, res: Response) => {
   if (gameMode === 'init') {
     return res.status(200).send({message: 'Game has not yet started!'});
   }
 
+  const metrics = 'solutionLength, elapsed, attempts, hintsUsed, reads, plannerCost, rowsScanned';
+
   if (gameMode === 'end') {
-    const data = await executeQuery('SELECT player, game, exerciseId, solution, solutionLength, elapsed FROM game_progress');
+    const data = await executeQuery(`SELECT player, game, exerciseId, solution, ${metrics} FROM game_progress`);
     return res.status(200).send(data.rows);
   }
 
-  const data = await executeQuery('SELECT player, game, exerciseId, solutionLength, elapsed FROM game_progress');
+  const data = await executeQuery(`SELECT player, game, exerciseId, ${metrics} FROM game_progress`);
   return res.status(200).send(data.rows);
 };
 

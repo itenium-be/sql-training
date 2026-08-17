@@ -1,2 +1,5 @@
 ~$*.pptx
 node_modules
+
+# docker compose settings for the machine hosting the game
+/.env
