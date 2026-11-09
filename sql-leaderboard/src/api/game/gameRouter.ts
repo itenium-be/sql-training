@@ -7,7 +7,7 @@ import { calculatePoints } from "./scoring";
 
 const gameModes = ["init", "running", "end"] as const;
 type GameMode = (typeof gameModes)[number];
-let gameMode: GameMode = "running";
+let gameMode: GameMode = "init";
 const AVATAR_COUNT = 60;
 
 export const gameRouter: Router = express.Router();

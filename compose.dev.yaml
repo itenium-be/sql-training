@@ -60,13 +60,13 @@ services:
         - path: ./sql-leaderboard/package.json
           action: rebuild
 
-  # --base /slides/ makes slidev own the same prefix the nav links to, so the
-  # dev proxy forwards /slides/ unstripped (see nginx.dev.conf). Still reachable
-  # straight on http://localhost:3030 too.
+  # Slidev's dev server serves at the root and its --remote sync state breaks
+  # under a --base prefix, so the deck runs on :3030 and the dev proxy redirects
+  # /slides/ there (see nginx.dev.conf) rather than reverse-proxying it.
   slides:
     build:
       target: build
-    command: bunx slidev --port 3030 --remote --base /slides/
+    command: bunx slidev --port 3030 --remote
     ports:
       - 3030:3030
     develop:
