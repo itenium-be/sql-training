@@ -32,27 +32,6 @@ class: cover
 layout: two-cols
 ---
 
-<img src="/img/building-day.jpg" class="photo w-11/12 h-[420px]" alt="itenium office" />
-
-::right::
-
-<div class="h-full flex flex-col justify-center menu">
-  <span class="eyebrow">Today</span>
-
-# Menu
-
-- Intro
-- Gotchas
-- Exercises!
-
-</div>
-
-<img src="/img/itenium-logo.png" class="brand" alt="itenium" />
-
----
-layout: two-cols
----
-
 # Intro
 
 - Score points by solving the exercises
@@ -64,6 +43,9 @@ layout: two-cols
 - Prize for most points!
 - There are memes!
 - Dbs: Postgres & SQL Server
+- Timer starts when first viewing the q
+- Hint and expected result cost points
+- Every 3 wrong attempts: −1 point
 
 ::right::
 
@@ -82,31 +64,6 @@ layout: center
   <h1>Le Prize</h1>
   <img src="/img/prize.jpg" class="photo mx-auto h-[330px] w-[440px]" alt="A wrapped prize next to a mandarin" />
   <p class="mt-4 text-lg text-[var(--df-muted)]">* Banana for scale</p>
-</div>
-
-<img src="/img/itenium-logo.png" class="brand" alt="itenium" />
-
----
-layout: two-cols
----
-
-# Gotchas
-
-- Timer starts when first viewing the q
-- Hint and expected result cost points
-- Every 3 wrong attempts: −1 point
-- Red squiggle = the database says no
-  - Autocomplete knows every table & column
-- <kbd>Ctrl</kbd>+<kbd>Enter</kbd> submits
-- Read-only databases, 5 second timeout
-- Pick a unique and recognizable name!
-- Your SQL is stored, no “cheating”
-- End game: see winning SQLs
-
-::right::
-
-<div class="h-full flex items-center justify-end">
-  <img src="/img/building-night.jpg" class="photo w-11/12 h-[400px]" alt="" />
 </div>
 
 <img src="/img/itenium-logo.png" class="brand" alt="itenium" />
