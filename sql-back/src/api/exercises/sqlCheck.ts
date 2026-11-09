@@ -16,6 +16,27 @@ function isSqlServer(game: string) {
   return game === "Worldcup";
 }
 
+// The pg games share one database and public schema, so the schema must be narrowed per game.
+const GAME_TABLES: Record<string, string[]> = {
+  World: ["countries"],
+  Teachers: ["teachers", "departments"],
+  Company: ["employees", "customers", "products", "orders", "order_lines"],
+};
+
+export function filterSchemaForGame(game: string, schema: SqlSchema): SqlSchema {
+  const tables = GAME_TABLES[game];
+  if (!tables) {
+    return schema;
+  }
+  const filtered: SqlSchema = {};
+  for (const table of tables) {
+    if (schema[table]) {
+      filtered[table] = schema[table];
+    }
+  }
+  return filtered;
+}
+
 function tokenEnd(text: string, from: number) {
   const match = /^("[^"]*"|\[[^\]]*\]|[\w$#@.]+)/.exec(text.slice(from));
   return from + (match ? match[0].length : 1);
@@ -93,7 +114,7 @@ export async function getSchema(game: string): Promise<SqlSchema> {
   const key = isSqlServer(game) ? "mssql" : "pg";
   const cached = schemaCache.get(key);
   if (cached) {
-    return cached;
+    return filterSchemaForGame(game, cached);
   }
 
   let rows: { table_name: string; column_name: string }[];
@@ -118,5 +139,5 @@ export async function getSchema(game: string): Promise<SqlSchema> {
     schema[row.table_name].push(row.column_name);
   }
   schemaCache.set(key, schema);
-  return schema;
+  return filterSchemaForGame(game, schema);
 }
