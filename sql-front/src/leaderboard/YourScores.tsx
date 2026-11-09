@@ -26,6 +26,7 @@ export function YourScores({scores}: {scores: Score[]}) {
           <th>Exercise</th>
           <th>Points</th>
           <th>Time</th>
+          <th>Reads</th>
         </tr>
       </thead>
       <tbody>
@@ -35,6 +36,7 @@ export function YourScores({scores}: {scores: Score[]}) {
             <td>{fullGame[yourScore.game + '-' + yourScore.exerciseid].desc}</td>
             <td>{fullGame[yourScore.game + '-' + yourScore.exerciseid].points}</td>
             <td>{formatSeconds(yourScore.elapsed)}</td>
+            <td>{yourScore.cost ?? '-'}</td>
           </tr>
         ))}
       </tbody>

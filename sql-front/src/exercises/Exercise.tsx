@@ -80,6 +80,7 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
   const [result, setResult] = useState<null | any[]>(null);
   const [hint, setHint] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [cost, setCost] = useState<number | null>(null);
   const currentGame = useAppSelector(state => state.exercises.selected);
   const registeredName = useAppSelector(state => state.exercises.userName);
   const solved = useAppSelector(state => state.exercises.scores
@@ -114,6 +115,7 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
     setResult(null);
     setSuccess(false);
     setHint(false);
+    setCost(null);
   }
 
   const handleFetch = async () => {
@@ -159,11 +161,13 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
           };
 
           try {
-            await fetch(`${config.leaderboard.api}/game`, {
+            const submitRes = await fetch(`${config.leaderboard.api}/game`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(successData),
             });
+            const submitData = await submitRes.json().catch(() => ({}));
+            setCost(typeof submitData.cost === 'number' ? submitData.cost : null);
           } catch (err) {
             console.error('Could not submit score :(', err);
             setError('Unable to submit your score 😭');
@@ -239,7 +243,7 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
       </Row>
 
       {success ? (
-        <ExerciseSolved sql={sql} reset={reset} />
+        <ExerciseSolved sql={sql} reset={reset} cost={cost} />
       ) : (
         <>
           <Button variant="primary" onClick={handleFetch} style={{marginRight: 16}} disabled={!sqlText.length}>
@@ -267,7 +271,7 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
   )
 }
 
-function ExerciseSolved({sql, reset, text}: {sql: SqlExerciseModel, reset: Function, text?: string}) {
+function ExerciseSolved({sql, reset, text, cost}: {sql: SqlExerciseModel, reset: Function, text?: string, cost?: number | null}) {
   const dispatch = useAppDispatch();
 
   return (
@@ -281,6 +285,7 @@ function ExerciseSolved({sql, reset, text}: {sql: SqlExerciseModel, reset: Funct
       </Button>
       <div className="float-none" style={{marginBottom: 8}}>
         <b>You scored {sql.points} point{sql.points === 1 ? '' : 's'}!</b>
+        {typeof cost === 'number' && <> Your query read {cost} page{cost === 1 ? '' : 's'}.</>}
       </div>
     </Alert>
   )

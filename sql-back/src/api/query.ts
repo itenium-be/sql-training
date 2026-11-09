@@ -3,8 +3,8 @@ import { env } from "@/common/utils/envConfig";
 
 const QUERY_TIMEOUT_MS = 5000;
 
-export async function executeQuery(sql: string) {
-  const options: ClientConfig = {
+export function pgConfig(): ClientConfig {
+  return {
     user: env.PG_USER,
     database: 'world',
     password: env.PG_PASSWORD,
@@ -14,7 +14,10 @@ export async function executeQuery(sql: string) {
     query_timeout: QUERY_TIMEOUT_MS + 2000,
     connectionTimeoutMillis: 5000,
   };
-  const client = new Client(options);
+}
+
+export async function executeQuery(sql: string) {
+  const client = new Client(pgConfig());
   await client.connect();
   try {
     return await client.query(sql);

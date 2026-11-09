@@ -34,4 +34,31 @@ exRegistry.registerPath({
   responses: createApiResponse(z.any().array(), "Success"),
 });
 
+exRegistry.registerPath({
+  method: "post",
+  path: "/exercises/cost",
+  tags: ["Exercises"],
+  requestBody: {
+    required: true,
+    content: {
+      'application/json': {
+        schema: {
+          type: 'object',
+          properties: {
+            sql: {
+              type: 'string',
+            },
+            game: {
+              type: 'string'
+            }
+          },
+          required: ['sql', 'game'],
+        },
+      },
+    },
+  },
+  responses: createApiResponse(z.object({ cost: z.number() }), "Success"),
+});
+
 exRouter.post("/", exController.post);
+exRouter.post("/cost", exController.cost);

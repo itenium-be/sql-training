@@ -9,3 +9,5 @@ GRANT SELECT ON ALL TABLES IN SCHEMA public TO player;
 
 ALTER ROLE player SET statement_timeout = '5s';
 ALTER ROLE player SET default_transaction_read_only = on;
+
+ANALYZE;

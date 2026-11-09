@@ -3,6 +3,7 @@ import { ScoreTable } from "./ScoreTable";
 import { YourScores } from "./YourScores";
 import { FastestScorers } from "./FastestScores";
 import { ShortestSolutions } from "./ShortestSolutions";
+import { MostEfficient } from "./MostEfficient";
 
 export function Scoreboard() {
   const scores = useAppSelector(state => state.exercises.scores);
@@ -29,6 +30,9 @@ export function Scoreboard() {
 
       <h2>Leanest Solutions</h2>
       <ShortestSolutions scores={scores} />
+
+      <h2>Most Efficient Queries</h2>
+      <MostEfficient scores={scores} />
     </>
   )
 }
