@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Image, Row } from "react-bootstrap";
 import { useAppSelector } from "./store";
 import { RegisterForm } from "./RegisterForm";
@@ -5,6 +6,7 @@ import { Scoreboard } from "./leaderboard/Scoreboard";
 
 export function Home() {
   const registeredName = useAppSelector(state => state.exercises.userName);
+  const [meme] = useState(() => Math.floor(Math.random() * 18) + 1);
 
   if (registeredName) {
     return (
@@ -33,7 +35,7 @@ export function Home() {
       <Row style={{marginTop: 25}}>
         <h2>It's Meme Time</h2>
         <p>Refresh for a different one! <small>Clear localStorage after logging in for more memes!</small></p>
-        <Image src={`/memes/sql-${Math.floor(Math.random() * 18) + 1}.png`} rounded style={{width: 'auto', height: 'auto'}} />
+        <Image src={`/memes/sql-${meme}.png`} rounded style={{width: 'auto', height: 'auto'}} />
       </Row>
     </>
   )

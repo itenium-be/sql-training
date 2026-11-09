@@ -1,5 +1,5 @@
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
-import express, { RequestHandler, type Router, Request, Response } from "express";
+import express, { type Request, type RequestHandler, type Response, type Router } from "express";
 import { z } from "zod";
 
 import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
@@ -41,7 +41,7 @@ const getSample: RequestHandler = async (_req: Request, res: Response) => {
     `SELECT t.name, t.phone, t.mobile, salary,
     TO_CHAR(employed_at, 'YYYY-MM-DD') AS employed_at, TO_CHAR(birth_date, 'YYYY-MM-DD') AS birth_date,
     d.name as dept_name, d.phone as dept_phone
-    FROM teachers t JOIN departments d ON t.dept=d.id`
+    FROM teachers t JOIN departments d ON t.dept=d.id`,
   );
   const serviceResponse = ServiceResponse.success<any[]>("Sample data found", result.rows);
   return handleServiceResponse(serviceResponse, res);
@@ -51,14 +51,14 @@ const getTeachers: RequestHandler = async (_req: Request, res: Response) => {
   const result = await executeQuery(
     `SELECT id, dept, name, phone, mobile, salary,
     TO_CHAR(employed_at, 'YYYY-MM-DD') AS employed_at, TO_CHAR(birth_date, 'YYYY-MM-DD') AS birth_date
-    FROM teachers`
+    FROM teachers`,
   );
   const serviceResponse = ServiceResponse.success<any[]>("Teachers found", result.rows);
   return handleServiceResponse(serviceResponse, res);
 };
 
 const getDepartments: RequestHandler = async (_req: Request, res: Response) => {
-  const result = await executeQuery('SELECT * FROM departments');
+  const result = await executeQuery("SELECT * FROM departments");
   const serviceResponse = ServiceResponse.success<any[]>("Departments found", result.rows);
   return handleServiceResponse(serviceResponse, res);
 };

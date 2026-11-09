@@ -1,9 +1,8 @@
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import express, { type Router } from "express";
 import { z } from "zod";
-
-import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import { WorldSchema } from "@/api/world/worldModel";
+import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import { worldController } from "./worldController";
 
 export const worldRegistry = new OpenAPIRegistry();

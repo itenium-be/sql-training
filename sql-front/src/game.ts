@@ -19,25 +19,34 @@ export function avatarUrl(index: number): string {
   return `/avatars/avatar-${String(index).padStart(2, '0')}.png`;
 }
 
+async function fetchJson<T>(url: string): Promise<T | undefined> {
+  try {
+    const res = await fetch(url);
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (error) {
+    console.error(`Could not fetch ${url}`, error);
+  }
+  return undefined;
+}
+
+const setDefined = <T>(setter: (value: T) => void) => (value: T | undefined) => {
+  if (value !== undefined) {
+    setter(value);
+  }
+};
+
 export function usePolling<T>(url: string, intervalMs: number): [T | null, () => Promise<void>] {
   const [data, setData] = useState<T | null>(null);
 
-  const load = useCallback(async () => {
-    try {
-      const res = await fetch(url);
-      if (res.ok) {
-        setData(await res.json());
-      }
-    } catch (error) {
-      console.error(`Could not fetch ${url}`, error);
-    }
-  }, [url]);
+  const load = useCallback(() => fetchJson<T>(url).then(setDefined(setData)), [url]);
 
   useEffect(() => {
-    load();
+    fetchJson<T>(url).then(setDefined(setData));
     const timer = setInterval(load, intervalMs);
     return () => clearInterval(timer);
-  }, [load, intervalMs]);
+  }, [url, load, intervalMs]);
 
   return [data, load];
 }

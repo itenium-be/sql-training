@@ -8,7 +8,7 @@ export const config = {
 export type HttpResponse = {
   success: boolean;
   message: string;
-  responseObject: any;
+  responseObject: unknown;
   statusCode: number;
 }
 

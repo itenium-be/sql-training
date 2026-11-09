@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Alert, Button, ButtonGroup, Container, Form } from 'react-bootstrap';
 import { adminFetch } from './adminApi';
 import { AdminSubmissions } from './AdminSubmissions';
@@ -13,25 +13,27 @@ const modeDescriptions: Record<GameMode, string> = {
 };
 
 export function Admin() {
-  const [apiKey, setApiKey] = useState(() => localStorage.getItem(API_KEY_STORAGE) ?? '');
+  const [storedApiKey] = useState(() => localStorage.getItem(API_KEY_STORAGE) ?? '');
+  const [apiKey, setApiKey] = useState(storedApiKey);
   const [authorized, setAuthorized] = useState(false);
   const [mode, setMode] = useState<GameMode | null>(null);
   const [modes, setModes] = useState<GameMode[]>([]);
   const [message, setMessage] = useState('');
 
-  const login = async (key: string) => {
-    try {
-      const data = await adminFetch(key, '');
-      localStorage.setItem(API_KEY_STORAGE, key);
-      setAuthorized(true);
-      setMode(data.mode);
-      setModes(data.modes);
-      setMessage('');
-    } catch (error: any) {
-      setAuthorized(false);
-      setMessage(error.message);
-    }
-  };
+  const onLoginSuccess = useCallback((key: string, data: {mode: GameMode, modes: GameMode[]}) => {
+    localStorage.setItem(API_KEY_STORAGE, key);
+    setAuthorized(true);
+    setMode(data.mode);
+    setModes(data.modes);
+    setMessage('');
+  }, []);
+
+  const onLoginFailure = useCallback((error: unknown) => {
+    setAuthorized(false);
+    setMessage(error instanceof Error ? error.message : String(error));
+  }, []);
+
+  const login = (key: string) => adminFetch(key, '').then(data => onLoginSuccess(key, data), onLoginFailure);
 
   const logout = () => {
     localStorage.removeItem(API_KEY_STORAGE);
@@ -44,16 +46,16 @@ export function Admin() {
       const data = await adminFetch(apiKey, '/mode', {mode: newMode});
       setMode(data.mode);
       setMessage(data.message);
-    } catch (error: any) {
-      setMessage(error.message);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : String(error));
     }
   };
 
   useEffect(() => {
-    if (apiKey) {
-      login(apiKey);
+    if (storedApiKey) {
+      adminFetch(storedApiKey, '').then(data => onLoginSuccess(storedApiKey, data), onLoginFailure);
     }
-  }, []);
+  }, [storedApiKey, onLoginSuccess, onLoginFailure]);
 
   return (
     <Container style={{paddingTop: 15, paddingBottom: 25, maxWidth: 1100}}>

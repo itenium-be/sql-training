@@ -24,7 +24,7 @@ export type SqlExerciseModel = {
 }
 
 export type ExpectedModel = {
-  expected: any[][];
+  expected: unknown[][];
   expectedColumns: string[];
 }
 

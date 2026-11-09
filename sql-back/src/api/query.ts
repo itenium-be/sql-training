@@ -1,4 +1,4 @@
-import { Client, ClientConfig, QueryConfig, types } from "pg";
+import { Client, type ClientConfig, type QueryConfig, types } from "pg";
 import { env } from "@/common/utils/envConfig";
 
 const QUERY_TIMEOUT_MS = 5000;
@@ -8,7 +8,7 @@ types.setTypeParser(types.builtins.INTERVAL, (value: string) => value);
 function pgOptions(): ClientConfig {
   return {
     user: env.PG_USER,
-    database: 'world',
+    database: "world",
     password: env.PG_PASSWORD,
     port: env.PG_PORT,
     host: env.PG_HOST,
@@ -29,22 +29,21 @@ async function withClient<T>(fn: (client: Client) => Promise<T>) {
 }
 
 export async function executeQuery(sql: string) {
-  return withClient(client => client.query(sql));
+  return withClient((client) => client.query(sql));
 }
 
 export async function executeArrayQuery(sql: string) {
-  return withClient(client => client.query({ text: sql, rowMode: 'array' }));
+  return withClient((client) => client.query({ text: sql, rowMode: "array" }));
 }
 
 export async function explainQuery(sql: string) {
-  return withClient(client => client.query({ text: sql, queryMode: 'extended' } as QueryConfig));
+  return withClient((client) => client.query({ text: sql, queryMode: "extended" } as QueryConfig));
 }
-
 
 export const sqlConfig = {
   user: env.SQL_SERVER_USER,
   password: env.SQL_SERVER_PASSWORD,
-  database: 'sportdb',
+  database: "sportdb",
   server: env.SQL_SERVER_HOST,
   port: env.SQL_SERVER_PORT,
   requestTimeout: QUERY_TIMEOUT_MS,
@@ -52,9 +51,9 @@ export const sqlConfig = {
   pool: {
     max: 10,
     min: 0,
-    idleTimeoutMillis: 30000
+    idleTimeoutMillis: 30000,
   },
   options: {
-    trustServerCertificate: true
-  }
-}
+    trustServerCertificate: true,
+  },
+};

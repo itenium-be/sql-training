@@ -72,7 +72,7 @@ function SqlExercises({exercise}: {exercise: ExerciseModel}) {
 function SqlExercise({sql}: {sql: SqlExerciseModel}) {
   const [sqlText, setSqlText] = useState('');
   const [error, setError] = useState('');
-  const [result, setResult] = useState<null | any[]>(null);
+  const [result, setResult] = useState<null | Record<string, unknown>[]>(null);
   const [hint, setHint] = useState<string | null>(null);
   const [expected, setExpected] = useState<ExpectedModel | null>(null);
   const [points, setPoints] = useState<number | null>(null);
@@ -98,7 +98,7 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
     }
 
     startExercise();
-  }, [sql])
+  }, [sql, currentGame])
 
   const reset = () => {
     setError('');
@@ -256,14 +256,15 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
   )
 }
 
-function ExerciseSolved({sql, reset, text, cost, points}: {sql: SqlExerciseModel, reset: Function, text?: string, cost?: number | null, points?: number | null}) {
+function ExerciseSolved({sql, reset, text, cost, points}: {sql: SqlExerciseModel, reset: () => void, text?: string, cost?: number | null, points?: number | null}) {
   const scored = points ?? sql.points;
+  const [emoji] = useState(() => emojis[Math.floor(Math.random() * emojis.length)]);
   const dispatch = useAppDispatch();
 
   return (
     <Alert variant="success">
       <Alert.Heading>
-        {emojis[Math.floor(Math.random() * emojis.length)]}
+        {emoji}
         &nbsp;{text ?? 'Greato success'}
       </Alert.Heading>
       <Button variant="success" onClick={() => {reset(); dispatch({type: 'exercises/nextQuestion'})}} className="float-end">
@@ -280,7 +281,7 @@ function ExerciseSolved({sql, reset, text, cost, points}: {sql: SqlExerciseModel
 
 function ExpectedTable({expected}: {expected: ExpectedModel}) {
   const data = expected.expected.map(record => {
-    const obj: any = {};
+    const obj: Record<string, unknown> = {};
     expected.expectedColumns.forEach((colName, index) => obj[colName] = record[index])
     return obj;
   });

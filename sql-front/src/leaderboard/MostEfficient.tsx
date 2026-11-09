@@ -1,56 +1,8 @@
 import { Table } from "react-bootstrap";
 import { useAppSelector } from "../store";
-import { ExerciseModel, Score } from "../exercises/exerciseModels";
+import { Score } from "../exercises/exerciseModels";
+import { calculateEfficient } from "./scoreCalculations";
 import { ExerciseSolution, ScoreBadge } from "./ExerciseSolution";
-
-type EfficientExercise = {
-  game: string;
-  exerciseId: number;
-  exercise: string;
-  points: number;
-  player: string;
-  solution?: string;
-  cost: number;
-  avgCost: number;
-}
-
-export function calculateEfficient(exercises: ExerciseModel[], scores: Score[]) {
-  const efficientTable = exercises.reduce((cur, game) => {
-    const gameExs = game.exercises.map(ex => ({
-      game: game.id,
-      exerciseId: ex.id,
-      exercise: ex.desc,
-      points: ex.points,
-      player: '',
-      solution: undefined,
-      cost: 0,
-      avgCost: 0,
-    }));
-    return cur.concat(gameExs);
-  }, [] as EfficientExercise[]);
-
-  efficientTable.forEach(efficient => {
-    const exScores = scores
-      .filter(score => score.game === efficient.game && score.exerciseid === efficient.exerciseId && score.cost !== null)
-      .sort((a, b) => a.cost! - b.cost! || a.solutionlength - b.solutionlength);
-
-    if (!exScores.length) {
-      return;
-    }
-
-    const [best, second] = exScores;
-    if (second && second.cost === best.cost && second.solutionlength === best.solutionlength) {
-      return;
-    }
-
-    efficient.player = best.player;
-    efficient.cost = best.cost!;
-    efficient.avgCost = Math.floor(exScores.reduce((acc, value) => acc + value.cost!, 0) / exScores.length);
-    efficient.solution = best.solution;
-  });
-
-  return efficientTable;
-}
 
 export function MostEfficient({scores}: {scores: Score[]}) {
   const registeredName = useAppSelector(state => state.exercises.userName);

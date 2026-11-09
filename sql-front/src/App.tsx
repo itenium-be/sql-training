@@ -1,4 +1,5 @@
-import { fetchData, TopNavigation } from './layout/TopNavigation'
+import { TopNavigation } from './layout/TopNavigation'
+import { fetchData } from './layout/fetchData'
 import { Container } from 'react-bootstrap'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Home } from './Home'
@@ -38,7 +39,7 @@ function Game() {
       .catch(err => console.error('Could not fetch exercises', err));
 
     dispatch(fetchData('home'));
-  }, []);
+  }, [dispatch]);
 
   if (mode === 'init' || (!registeredName && !started)) {
     return <Intro mode={mode} onStart={() => setStarted(true)} />;

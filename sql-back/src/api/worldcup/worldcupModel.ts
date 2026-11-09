@@ -14,7 +14,6 @@ export const WorldcupSampleSchema = z.object({
   score2: z.number(),
 });
 
-
 export const CountrySchema = z.object({
   id: z.number(),
   name: z.string(),

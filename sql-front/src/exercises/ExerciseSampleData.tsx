@@ -16,7 +16,7 @@ export function ExerciseSampleData() {
   return <ExercisesData data={data} />
 }
 
-export function ExercisesData({data}: {data: any[]}) {
+export function ExercisesData({data}: {data: Record<string, unknown>[]}) {
   if (!data.length) {
     return <b>No resulting data!</b>
   }
@@ -30,7 +30,7 @@ export function ExercisesData({data}: {data: any[]}) {
 }
 
 
-function TableHeader({obj}: {obj: any}) {
+function TableHeader({obj}: {obj: Record<string, unknown>}) {
   const cols = Object.keys(obj);
   return (
     <thead>
@@ -42,12 +42,12 @@ function TableHeader({obj}: {obj: any}) {
 }
 
 
-function TableBody({data}: {data: any[]}) {
+function TableBody({data}: {data: Record<string, unknown>[]}) {
   const cols = Object.keys(data[0]);
   return (
     <tbody>
       {data.map((record, index) => (
-        <tr key={record.id ?? index}>
+        <tr key={String(record.id ?? index)}>
           {cols.map(col => <Cell key={col} value={record[col]} />)}
         </tr>
       ))}
@@ -55,23 +55,25 @@ function TableBody({data}: {data: any[]}) {
   )
 }
 
-function Cell({value}: {value: any}) {
+function Cell({value}: {value: unknown}) {
   if (typeof value === 'boolean')
     return <td>{value.toString()}</td>
 
   if (value === null)
     return <td><i>NULL</i></td>
 
-  if (typeof value === 'string' && (value.includes(' ') || value[0] === '+'))
-    return <td>{value}</td>
+  const text = String(value);
 
-  if (typeof value === 'string' && value.indexOf('-') !== -1 && value.indexOf('-') !== value.lastIndexOf('-'))
-    return <td>{value}</td>
+  if (typeof value === 'string' && (text.includes(' ') || text[0] === '+'))
+    return <td>{text}</td>
 
-  if (!isNaN(parseInt(value)) && value[value.length - 1] !== '%') {
-    const belgianFormattedValue = (+value).toLocaleString("nl-BE")
+  if (typeof value === 'string' && text.indexOf('-') !== -1 && text.indexOf('-') !== text.lastIndexOf('-'))
+    return <td>{text}</td>
+
+  if (!isNaN(parseInt(text)) && text[text.length - 1] !== '%') {
+    const belgianFormattedValue = (+text).toLocaleString("nl-BE")
     return <td style={{textAlign: 'right'}}>{belgianFormattedValue}</td>
   }
 
-  return <td>{value}</td>
+  return <td>{text}</td>
 }

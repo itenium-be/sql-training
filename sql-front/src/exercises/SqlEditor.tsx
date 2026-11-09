@@ -9,6 +9,16 @@ import { tags as t } from "@lezer/highlight";
 import { completeFromList } from "@codemirror/autocomplete";
 import { config } from "../config";
 
+const SUBMIT_EVENT = 'sql-editor-submit';
+
+const submitKeymap = Prec.highest(keymap.of([{
+  key: 'Mod-Enter',
+  run: view => {
+    view.dom.dispatchEvent(new CustomEvent(SUBMIT_EVENT, { bubbles: true }));
+    return true;
+  },
+}]));
+
 type SqlProblem = { message: string; from: number; to: number };
 type SqlSchema = Record<string, string[]>;
 
@@ -114,8 +124,17 @@ type SqlEditorProps = {
 
 export function SqlEditor({ game, value, onChange, onSubmit, height = '275px' }: SqlEditorProps) {
   const [schema, setSchema] = useState<SqlSchema>({});
-  const submitRef = useRef(onSubmit);
-  submitRef.current = onSubmit;
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const wrapper = wrapperRef.current;
+    if (!wrapper) {
+      return;
+    }
+    const handler = () => onSubmit();
+    wrapper.addEventListener(SUBMIT_EVENT, handler);
+    return () => wrapper.removeEventListener(SUBMIT_EVENT, handler);
+  }, [onSubmit]);
 
   useEffect(() => {
     let active = true;
@@ -152,25 +171,21 @@ export function SqlEditor({ game, value, onChange, onSubmit, height = '275px' }:
         return [];
       }
     }, { delay: 600 }),
-    Prec.highest(keymap.of([{
-      key: 'Mod-Enter',
-      run: () => {
-        submitRef.current();
-        return true;
-      },
-    }])),
+    submitKeymap,
   ];
   }, [game, schema]);
 
   return (
-    <CodeMirror
-      value={value}
-      onChange={onChange}
-      height={height}
-      theme="none"
-      extensions={extensions}
-      autoFocus
-      basicSetup={{ foldGutter: false, highlightActiveLineGutter: true, autocompletion: true }}
-    />
+    <div ref={wrapperRef}>
+      <CodeMirror
+        value={value}
+        onChange={onChange}
+        height={height}
+        theme="none"
+        extensions={extensions}
+        autoFocus
+        basicSetup={{ foldGutter: false, highlightActiveLineGutter: true, autocompletion: true }}
+      />
+    </div>
   );
 }

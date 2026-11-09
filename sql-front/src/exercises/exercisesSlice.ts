@@ -13,7 +13,7 @@ type StoreState = {
 }
 
 type ExerciseState = {
-  exampleData: any[];
+  exampleData: Record<string, unknown>[];
 }
 
 const initialState: StoreState = {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Alert, Badge, Button, ButtonGroup, Form, Table } from 'react-bootstrap';
 import { adminFetch } from './adminApi';
 
@@ -72,20 +72,19 @@ export function AdminSubmissions({apiKey}: {apiKey: string}) {
   const [player, setPlayer] = useState('');
   const [error, setError] = useState('');
 
-  const load = async () => {
-    try {
-      const data = await adminFetch(apiKey, '/submissions');
-      setSolutions(data.solutions);
-      setSubmissions(data.submissions);
-      setError('');
-    } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
-    }
-  };
+  const onLoaded = useCallback((data: {solutions: Solution[], submissions: Submission[]}) => {
+    setSolutions(data.solutions);
+    setSubmissions(data.submissions);
+    setError('');
+  }, []);
+
+  const onLoadFailed = useCallback((err: unknown) => setError(err instanceof Error ? err.message : String(err)), []);
+
+  const load = () => adminFetch(apiKey, '/submissions').then(onLoaded, onLoadFailed);
 
   useEffect(() => {
-    load();
-  }, [apiKey]);
+    adminFetch(apiKey, '/submissions').then(onLoaded, onLoadFailed);
+  }, [apiKey, onLoaded, onLoadFailed]);
 
   const players = [...new Set(submissions.map(s => s.player))].sort((a, b) => a.localeCompare(b));
   const countFor = (key: string) => submissions.filter(s => exKey(s.game, s.exerciseid) === key).length;

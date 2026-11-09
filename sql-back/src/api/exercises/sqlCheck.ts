@@ -36,7 +36,10 @@ function nameRange(text: string, message: string) {
   if (!name) {
     return null;
   }
-  const escaped = name.split(".").pop()!.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const escaped = name
+    .split(".")
+    .pop()!
+    .replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const match = new RegExp(`(?<![\\w$#@])${escaped}(?![\\w$#@])`, "i").exec(text);
   return match ? { from: match.index, to: match.index + match[0].length } : null;
 }
@@ -71,11 +74,11 @@ async function checkSqlServer(text: string): Promise<SqlProblem[]> {
     return [];
   } catch (err: any) {
     const all = [...(err.precedingErrors ?? []), err];
-    const real = all.filter(e => e.message && !(e.number >= 11500 && e.number < 11600));
-    if (!real.length && all.some(e => e.number >= 11500 && e.number < 11600)) {
+    const real = all.filter((e) => e.message && !(e.number >= 11500 && e.number < 11600));
+    if (!real.length && all.some((e) => e.number >= 11500 && e.number < 11600)) {
       return [];
     }
-    return real.map(e => toProblem(text, e.message, { line: e.lineNumber }));
+    return real.map((e) => toProblem(text, e.message, { line: e.lineNumber }));
   }
 }
 
@@ -96,9 +99,11 @@ export async function getSchema(game: string): Promise<SqlSchema> {
   let rows: { table_name: string; column_name: string }[];
   if (key === "mssql") {
     const pool = await sql.connect(sqlConfig);
-    const result = await pool.request().query(
-      "SELECT TABLE_NAME AS table_name, COLUMN_NAME AS column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' ORDER BY TABLE_NAME, ORDINAL_POSITION",
-    );
+    const result = await pool
+      .request()
+      .query(
+        "SELECT TABLE_NAME AS table_name, COLUMN_NAME AS column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' ORDER BY TABLE_NAME, ORDINAL_POSITION",
+      );
     rows = result.recordset;
   } else {
     const result = await executeQuery(
@@ -108,9 +113,10 @@ export async function getSchema(game: string): Promise<SqlSchema> {
   }
 
   const schema: SqlSchema = {};
-  rows.forEach(row => {
-    (schema[row.table_name] ??= []).push(row.column_name);
-  });
+  for (const row of rows) {
+    schema[row.table_name] ??= [];
+    schema[row.table_name].push(row.column_name);
+  }
   schemaCache.set(key, schema);
   return schema;
 }

@@ -1,13 +1,13 @@
 import { Table } from "react-bootstrap";
 import { useAppSelector } from "../store";
-import { Score } from "../exercises/exerciseModels";
+import { Score, SqlExerciseModel } from "../exercises/exerciseModels";
 import { formatSeconds } from "../leaderboard/formatSeconds";
 
 export function YourScores({scores}: {scores: Score[]}) {
   const registeredName = useAppSelector(state => state.exercises.userName);
   const exercises = useAppSelector(state => state.exercises.entities);
 
-  const fullGame: any = {};
+  const fullGame: Record<string, SqlExerciseModel> = {};
   exercises.forEach(game => {
     game.exercises.forEach(exercise => {
       fullGame[`${game.id}-${exercise.id}`] = exercise;

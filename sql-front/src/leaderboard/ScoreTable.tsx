@@ -1,16 +1,14 @@
 import { Table } from "react-bootstrap";
 import { useAppSelector } from "../store";
 import { Score } from "../exercises/exerciseModels";
-import { calculateFastest } from "./FastestScores";
-import { calculateShortest } from "./ShortestSolutions";
-import { calculateEfficient } from "./MostEfficient";
+import { calculateEfficient, calculateFastest, calculateShortest } from "./scoreCalculations";
 
 const BONUS_POINTS = 6;
 
 export function ScoreTable({scores}: {scores: Score[]}) {
   const registeredName = useAppSelector(state => state.exercises.userName);
   const exercises = useAppSelector(state => state.exercises.entities);
-  const exercisesPoints: any = {};
+  const exercisesPoints: Record<string, number> = {};
   exercises.forEach(game => {
     game.exercises.forEach(exercise => {
       exercisesPoints[`${game.id}-${exercise.id}`] = exercise.points;

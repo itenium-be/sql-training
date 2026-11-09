@@ -1,13 +1,13 @@
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
-import express, { RequestHandler, type Router, Request, Response } from "express";
+import express, { type Request, type RequestHandler, type Response, type Router } from "express";
+import { StatusCodes } from "http-status-codes";
+import sql from "mssql";
 import { z } from "zod";
 import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import { ServiceResponse } from "@/common/models/serviceResponse";
 import { handleServiceResponse } from "@/common/utils/httpHandlers";
-import * as worldcupSchemas from "./worldcupModel";
-import sql from 'mssql';
 import { sqlConfig } from "../query";
-import { StatusCodes } from "http-status-codes";
+import * as worldcupSchemas from "./worldcupModel";
 
 export const worldcupRegistry = new OpenAPIRegistry();
 export const worldcupRouter: Router = express.Router();
@@ -32,10 +32,9 @@ worldcupRegistry.registerPath({
   responses: createApiResponse(z.array(worldcupSchemas.WorldcupSampleSchema), "Success"),
 });
 
-
 const getSample: RequestHandler = async (_req: Request, res: Response) => {
   try {
-    await sql.connect(sqlConfig)
+    await sql.connect(sqlConfig);
     const result = await sql.query`
       SELECT TOP 3 e.[key], r.name AS Round, t1.name AS Team1, c1.code AS Team1Code, m.score1, t2.name AS Team2, c2.code AS Team2Code, m.score2
       FROM matches m
@@ -46,7 +45,7 @@ const getSample: RequestHandler = async (_req: Request, res: Response) => {
       JOIN rounds r ON m.round_id=r.id
       JOIN events e ON r.event_id=e.id
       ORDER BY e.start_date DESC
-    `
+    `;
     const serviceResponse = ServiceResponse.success<any[]>("Footy sample found", result.recordset);
     return handleServiceResponse(serviceResponse, res);
   } catch (err: any) {

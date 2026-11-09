@@ -24,9 +24,9 @@ export function RegisterForm() {
         localStorage.setItem('userName', registered);
         dispatch({type: 'exercises/register', payload: registered});
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error:', error);
-      setResponse(error.message);
+      setResponse(error instanceof Error ? error.message : String(error));
     }
   };
 

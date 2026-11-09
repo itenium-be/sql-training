@@ -1,9 +1,8 @@
 import { OpenAPIRegistry, OpenApiGeneratorV3 } from "@asteasolutions/zod-to-openapi";
-
-import { healthCheckRegistry } from "@/api/healthCheck/healthCheckRouter";
-import { worldRegistry } from "@/api/world/worldRouter";
 import { exRegistry } from "@/api/exercises/exRouter";
+import { healthCheckRegistry } from "@/api/healthCheck/healthCheckRouter";
 import { teacherRegistry } from "@/api/teacher/teacherRouter";
+import { worldRegistry } from "@/api/world/worldRouter";
 import { worldcupRegistry } from "@/api/worldcup/woldcupRouter";
 
 export function generateOpenAPIDocument() {
