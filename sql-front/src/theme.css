@@ -340,6 +340,55 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
   margin-bottom: 40px;
 }
 
+.df-stamps {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 4px 0 44px;
+}
+
+.df-stamp {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 176px;
+  height: 176px;
+  border-radius: 14px;
+  border: 3px solid currentColor;
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.25);
+  opacity: 0.92;
+  /* screen blend lets the dark ground show through the ink, so the stamps read as pressed-on */
+  mix-blend-mode: screen;
+}
+
+.df-stamp::after {
+  content: '';
+  position: absolute;
+  inset: 9px;
+  border: 2px dashed currentColor;
+  border-radius: 8px;
+  opacity: 0.5;
+}
+
+.df-stamp b {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.df-stamp small {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  opacity: 0.75;
+}
+
 .df-cta {
   font-size: 1.25rem;
   padding: 1rem 2.6rem;

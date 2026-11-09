@@ -1,0 +1,13 @@
+[     517ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost/@server-reactive/nav:1
+[   24814ms] [LOG] [vite] server connection lost. Polling for restart... @ http://localhost/slides/@vite/client:1078
+[   27581ms] TypeError: Cannot convert undefined or null to object
+    at Object.keys (<anonymous>)
+    at reactiveSet (http://localhost/slides/node_modules/vite-plugin-vue-server-ref/dist/client.mjs?v=57c7776d:105:28)
+    at applySet (http://localhost/slides/@server-reactive/nav:36:5)
+    at http://localhost/slides/@server-reactive/nav:45:7
+    at http://localhost/slides/@vite/client:585:53
+    at Array.map (<anonymous>)
+    at HMRClient.notifyListeners (http://localhost/slides/@vite/client:585:41)
+    at handleMessage (http://localhost/slides/@vite/client:1075:26)
+    at Object.promise (http://localhost/slides/@vite/client:665:42)
+    at Queue.dequeue (http://localhost/slides/@vite/client:687:8)

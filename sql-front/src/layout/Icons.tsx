@@ -40,3 +40,40 @@ export function PencilIcon({size = 16}: {size?: number}) {
     </svg>
   );
 }
+
+export function CheckIcon({size = 30}: {size?: number}) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M20 6L9 17l-5-5" />
+    </svg>
+  );
+}
+
+export function BoltIcon({size = 30}: {size?: number}) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M13 2L4.5 13H11l-1 9 8.5-11H12l1-9z" />
+    </svg>
+  );
+}
+
+export function ScissorsIcon({size = 30}: {size?: number}) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="6" cy="6" r="3" />
+      <circle cx="6" cy="18" r="3" />
+      <path d="M20 4L8.12 15.88M14.47 14.48L20 20M8.12 8.12L12 12" />
+    </svg>
+  );
+}
+
+export function PlanIcon({size = 30}: {size?: number}) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="4" r="2.2" />
+      <circle cx="5" cy="19" r="2.2" />
+      <circle cx="19" cy="19" r="2.2" />
+      <path d="M12 6.2v3.4M11 9.6L6 16.9M13 9.6l5 7.3" />
+    </svg>
+  );
+}
