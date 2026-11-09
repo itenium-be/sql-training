@@ -59,19 +59,19 @@ layout: default
 <h1 class="!mb-1">Four <span class="gradient-gold">playgrounds</span></h1>
 
 <div class="posters">
-  <div class="poster">
+  <div class="poster" v-click>
     <div class="art"><img src="/img/game-countries.png" alt="" /></div>
     <div class="pbody"><h3>Countries</h3><p>The basics — one table.</p><span class="db db-pg">Postgres</span></div>
   </div>
-  <div class="poster">
+  <div class="poster" v-click>
     <div class="art"><img src="/img/game-teachers.png" alt="" /></div>
     <div class="pbody"><h3>Teachers</h3><p>Start joining tables.</p><span class="db db-pg">Postgres</span></div>
   </div>
-  <div class="poster">
+  <div class="poster" v-click>
     <div class="art"><img src="/img/game-worldcup.png" alt="" /></div>
     <div class="pbody"><h3>Worldcup</h3><p>Many related tables.</p><span class="db db-ms">SQL Server</span></div>
   </div>
-  <div class="poster">
+  <div class="poster" v-click>
     <div class="art"><img src="/img/game-company.png" alt="" /></div>
     <div class="pbody"><h3>Company</h3><p>Query at scale — many rows.</p><span class="db db-pg">Postgres</span></div>
   </div>
