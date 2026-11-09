@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Register name — mockups</title>
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+:root{
+  --bg:#16100a; --bg-raised:#1f170f; --surface:#241a11;
+  --border:#4a3820; --border-soft:#33271a;
+  --cream:#f0e2c2; --text:#d6c49e; --muted:#a38e66;
+  --gold:#e9b44c; --gold-deep:#c99a3e; --copper:#c47a35;
+  --orange-1:#d8862f; --orange-2:#b2472a; --ink:#1b1a2e;
+  --font:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--font);color:var(--text);background:var(--bg)}
+
+/* ── mockup chrome (not part of the app) ───────────────────── */
+.doc-head{max-width:1100px;margin:0 auto;padding:40px 24px 8px}
+.doc-head h1{font-size:1.6rem;color:var(--cream);margin:0 0 6px}
+.doc-head p{color:var(--muted);margin:0;max-width:720px;line-height:1.5}
+.board-label{max-width:1100px;margin:48px auto 0;padding:0 24px;display:flex;align-items:baseline;gap:12px}
+.board-label .tag{font-family:var(--mono);font-size:.8rem;font-weight:700;color:var(--ink);background:var(--gold);border-radius:6px;padding:2px 9px}
+.board-label h2{font-size:1.15rem;color:var(--cream);margin:0;font-weight:800;letter-spacing:-.01em}
+.board-label small{color:var(--muted);margin-left:auto;font-size:.85rem}
+.board{position:relative;min-height:760px;margin:14px auto;max-width:1100px;border:1px solid var(--border-soft);border-radius:22px;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:56px 32px;
+  background:radial-gradient(760px 440px at 50% 42%,rgba(201,154,62,.14),transparent 70%),var(--bg)}
+.deco{position:absolute;color:var(--gold);opacity:.07;pointer-events:none}
+
+/* ── shared app atoms ──────────────────────────────────────── */
+.pill{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--border);border-radius:999px;padding:9px 20px;
+  font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-weight:700;font-size:.82rem;color:var(--gold)}
+h1.title{font-weight:800;line-height:1.03;letter-spacing:-.03em;margin:22px 0 0;font-size:clamp(2.2rem,5.4vw,3.4rem);color:var(--cream)}
+.grad{background:linear-gradient(90deg,var(--gold-deep),var(--cream) 45%,var(--gold) 80%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{color:var(--muted);font-size:1.05rem;margin:14px 0 0;max-width:520px}
+.input{width:100%;background:var(--bg-raised);border:1px solid var(--border);color:var(--cream);border-radius:999px;
+  padding:.95rem 1.4rem;font-size:1.1rem;font-family:var(--font);outline:none}
+.input::placeholder{color:var(--muted)}
+.input:focus{border-color:var(--gold);box-shadow:0 0 0 .2rem rgba(233,180,76,.2)}
+.cta{border:0;border-radius:999px;color:#fff;font:800 1.1rem var(--font);padding:.95rem 2.2rem;cursor:pointer;
+  background:linear-gradient(90deg,var(--orange-1),var(--orange-2));box-shadow:0 10px 30px rgba(216,134,47,.35);
+  display:inline-flex;align-items:center;gap:10px;white-space:nowrap}
+.hint{color:var(--muted);font-size:.85rem;margin-top:16px}
+.hint b{color:var(--text)}
+.ava{border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:800;color:var(--ink);
+  background:conic-gradient(from 210deg,#e9b44c,#c47a35,#b2472a,#e9b44c);border:2px solid var(--gold);box-shadow:0 0 0 4px rgba(233,180,76,.18)}
+
+/* ── A · focused card ──────────────────────────────────────── */
+.a-card{width:100%;max-width:480px;display:flex;flex-direction:column;align-items:center;gap:22px;margin-top:30px}
+.a-ava-row{display:flex;align-items:center;gap:14px;align-self:flex-start;color:var(--muted);font-size:.85rem}
+.a-field{width:100%;display:flex;gap:12px}
+
+/* ── B · player card ───────────────────────────────────────── */
+.b-wrap{display:grid;grid-template-columns:1fr 360px;gap:48px;align-items:center;max-width:860px;width:100%;margin-top:28px;text-align:left}
+.b-form{display:flex;flex-direction:column;gap:18px}
+.b-form .cta{align-self:flex-start}
+.b-card{background:linear-gradient(180deg,rgba(36,26,17,.9),rgba(31,23,15,.9));border:1px solid var(--border);
+  border-radius:22px;padding:26px;display:flex;flex-direction:column;align-items:center;gap:14px;position:relative;overflow:hidden}
+.b-card::before{content:'';position:absolute;inset:0;background:radial-gradient(240px 160px at 50% 0,rgba(233,180,76,.18),transparent 70%)}
+.b-card>*{position:relative}
+.b-card .role{font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+.b-card .pname{font-size:1.5rem;font-weight:800;color:var(--cream)}
+.b-card .pname.ph{color:var(--muted);font-weight:700}
+.b-badges{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.chip{font-family:var(--mono);font-size:.72rem;padding:4px 10px;border-radius:999px;border:1px solid var(--border);color:var(--text);background:rgba(0,0,0,.25)}
+
+/* ── C · INSERT statement ──────────────────────────────────── */
+.c-editor{width:100%;max-width:620px;margin-top:30px;text-align:left;background:var(--bg-raised);border:1px solid var(--gold-deep);
+  border-radius:18px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.4)}
+.c-head{display:flex;align-items:center;gap:8px;padding:11px 16px;border-bottom:1px solid var(--border-soft)}
+.c-dot{width:11px;height:11px;border-radius:50%}
+.c-dialect{margin-left:auto;font-size:.72rem;font-weight:700;color:var(--muted);border:1px solid var(--border);border-radius:999px;padding:3px 10px}
+.c-code{font-family:var(--mono);font-size:1.05rem;line-height:1.9;padding:22px 20px;display:grid;grid-template-columns:auto 1fr;gap:0 18px}
+.c-ln{color:var(--muted);opacity:.5;text-align:right;user-select:none}
+.c-kw{color:var(--gold)}
+.c-fn{color:var(--copper)}
+.c-val{color:var(--cream);background:rgba(233,180,76,.12);border-radius:5px;padding:1px 7px}
+.c-caret{display:inline-block;width:2px;height:1.1em;background:var(--gold);vertical-align:text-bottom;margin-left:1px;animation:blink 1.05s step-end infinite}
+@keyframes blink{50%{opacity:0}}
+.c-foot{display:flex;align-items:center;gap:14px;padding:14px 18px;border-top:1px solid var(--border-soft);background:rgba(0,0,0,.18)}
+.c-result{font-family:var(--mono);font-size:.82rem;color:#a9c97a}
+.c-run{margin-left:auto}
+
+@media(max-width:720px){.b-wrap{grid-template-columns:1fr}.a-field{flex-direction:column}}
+</style>
+</head>
+<body>
+
+<div class="doc-head">
+  <h1>Register your name — three directions</h1>
+  <p>Screen 2 of the flow (intro → <b>register</b> → waiting room → game). Name entry only; no memes, no other players yet. Same espresso/gold language as the hero. Pick one, or mix.</p>
+</div>
+
+<!-- ═══ A ═══ -->
+<div class="board-label"><span class="tag">A</span><h2>Focused card</h2><small>minimal · closest to the hero</small></div>
+<section class="board">
+  <svg class="deco" style="top:9%;left:7%" width="110" height="110" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3V5"/><path d="M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6"/></svg>
+  <svg class="deco" style="bottom:11%;right:9%" width="180" height="180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 2l8.66 5v10L12 22l-8.66-5V7z"/></svg>
+
+  <div class="pill">Join the showdown</div>
+  <h1 class="title">Pick your <span class="grad">player name</span></h1>
+  <p class="lead">This is how you'll show up on the leaderboard. Choose wisely.</p>
+
+  <div class="a-card">
+    <div class="a-ava-row"><span class="ava" style="width:40px;height:40px;font-size:1rem">?</span> an avatar is assigned — you can change it later</div>
+    <div class="a-field">
+      <input class="input" placeholder="Your name" value="">
+      <button class="cta">Enter the arena
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+    <div class="hint">Press <b>Enter</b> to jump straight in</div>
+  </div>
+</section>
+
+<!-- ═══ B ═══ -->
+<div class="board-label"><span class="tag">B</span><h2>Build your player card</h2><small>identity-forward · live preview</small></div>
+<section class="board">
+  <svg class="deco" style="top:12%;right:8%" width="150" height="150" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 2l8.66 5v10L12 22l-8.66-5V7z"/></svg>
+
+  <div class="b-wrap">
+    <div class="b-form">
+      <div class="eyebrow">Join the showdown</div>
+      <h1 class="title" style="margin-top:4px">Pick your<br><span class="grad">player name</span></h1>
+      <p class="lead" style="margin-top:4px">Your name on the board. Your avatar comes with it — swap it any time.</p>
+      <input class="input" placeholder="Your name" value="">
+      <button class="cta">Enter the arena
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+    <div class="b-card">
+      <span class="ava" style="width:120px;height:120px;font-size:2.6rem">?</span>
+      <div class="role">Challenger</div>
+      <div class="pname ph">your name here</div>
+      <div class="b-badges">
+        <span class="chip">Postgres</span>
+        <span class="chip">SQL Server</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ C ═══ -->
+<div class="board-label"><span class="tag">C</span><h2>INSERT INTO players</h2><small>on-brand · the name entry as a query</small></div>
+<section class="board">
+  <div class="eyebrow">Join the showdown</div>
+  <h1 class="title" style="margin-top:10px">Pick your <span class="grad">player name</span></h1>
+
+  <div class="c-editor">
+    <div class="c-head">
+      <span class="c-dot" style="background:#b2472a"></span>
+      <span class="c-dot" style="background:#e9b44c"></span>
+      <span class="c-dot" style="background:#a9c97a"></span>
+      <span class="c-dialect">register.sql</span>
+    </div>
+    <div class="c-code">
+      <span class="c-ln">1</span><span><span class="c-kw">INSERT&nbsp;INTO</span> players (name)</span>
+      <span class="c-ln">2</span><span><span class="c-kw">VALUES</span> (<span class="c-val">'<span style="color:var(--muted)">your name</span><span class="c-caret"></span>'</span>);</span>
+    </div>
+    <div class="c-foot">
+      <span class="c-result">— waiting for input</span>
+      <button class="cta c-run">Run
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+    </div>
+  </div>
+  <p class="hint" style="margin-top:22px">The name field <b>is</b> the string literal; typing fills the <span style="font-family:var(--mono);color:var(--cream)">VALUES</span>, Run / Enter registers you.</p>
+</section>
+
+<div style="height:48px"></div>
+</body>
+</html>
