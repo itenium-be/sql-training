@@ -17,3 +17,11 @@ CREATE TABLE game_start (
   exerciseId NUMERIC(15,0),
   startTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE players (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  registeredAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE UNIQUE INDEX players_name_unique ON players (LOWER(name));

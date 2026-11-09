@@ -35,8 +35,9 @@ export function Home() {
       const data = await res.json();
       setResponse(data.message);
       if (res.status === 200) {
-        localStorage.setItem('userName', name);
-        dispatch({type: 'exercises/register', payload: name});
+        const registered = data.name ?? name.trim();
+        localStorage.setItem('userName', registered);
+        dispatch({type: 'exercises/register', payload: registered});
       }
     } catch (error: any) {
       console.error('Error:', error);

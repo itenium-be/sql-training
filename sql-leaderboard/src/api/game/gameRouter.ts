@@ -14,7 +14,20 @@ const registerUser: RequestHandler = async (_req: Request, res: Response) => {
     return res.status(400).send({message: 'Game has yet to start!'})
   }
 
-  return res.status(200).send({message: 'Registered!'});
+  const name = typeof _req.body.name === 'string' ? _req.body.name.trim() : '';
+  if (!name) {
+    return res.status(400).send({message: 'Name is required'});
+  }
+  if (name.length > 100) {
+    return res.status(400).send({message: 'Name is too long (max 100 characters)'});
+  }
+
+  const result = await executeQuery('INSERT INTO players (name) VALUES ($1) ON CONFLICT DO NOTHING', [name]);
+  if (!result.rowCount) {
+    return res.status(409).send({message: `Name "${name}" is already taken, pick another one!`});
+  }
+
+  return res.status(200).send({message: 'Registered!', name});
 };
 
 const startExercise: RequestHandler = async (_req: Request, res: Response) => {
