@@ -5,12 +5,16 @@ import { fetchData } from './fetchData';
 import { useEffect } from 'react';
 import { ExerciseId } from '../exercises/exerciseModels';
 import { DatabaseIcon } from './Icons';
+import { avatarIndex, usePlayers } from '../game';
+import { Avatar } from '../Avatar';
 
 export function TopNavigation() {
   const exercises = useAppSelector(state => state.exercises.entities);
   const dispatch = useAppDispatch();
   const selected = useAppSelector(state => state.exercises.selected);
   const registeredName = useAppSelector(state => state.exercises.userName);
+  const [players] = usePlayers();
+  const me = players.find(p => p.name.toLowerCase() === registeredName.toLowerCase());
 
   useEffect(() => {
     if (document.location.pathname !== '/') {
@@ -31,7 +35,12 @@ export function TopNavigation() {
       </Link>
       <div className="df-header-right">
         <a href="/slides/" className="df-slides-link" target="_blank" rel="noreferrer">Slides</a>
-        {registeredName && <span className="df-player" title={registeredName}>{registeredName}</span>}
+        {registeredName && (
+          <span className="df-player" title={registeredName}>
+            {me && <Avatar index={avatarIndex(me)} label={registeredName} size={32} />}
+            <span className="df-player-name">{registeredName}</span>
+          </span>
+        )}
       </div>
     </header>
     <Nav variant="tabs" activeKey={selected ?? 'home'}>

@@ -215,17 +215,22 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
 .df-brand-sub { display: block; color: var(--df-gold); font-size: .75rem; font-weight: 600; }
 
 .df-player {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   border: 1px solid var(--df-border);
   border-radius: 999px;
-  padding: 6px 14px;
+  padding: 4px 14px 4px 4px;
   color: var(--df-cream);
   font-weight: 700;
   font-size: .9rem;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   max-width: 50%;
 }
+
+.df-player .df-avatar { width: 32px; height: 32px; border-width: 1px; flex: none; }
+
+.df-player-name { overflow: hidden; text-overflow: ellipsis; }
 
 .df-header-right {
   display: flex;
