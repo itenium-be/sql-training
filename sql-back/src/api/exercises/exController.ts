@@ -1,34 +1,54 @@
 import type { Request, RequestHandler, Response } from "express";
 import { handleServiceResponse } from "@/common/utils/httpHandlers";
-import { executeQuery, sqlConfig } from "../query";
 import { ServiceResponse } from "@/common/models/serviceResponse";
 import { StatusCodes } from "http-status-codes";
-import sql from 'mssql';
 import { checkSql, getSchema } from "./sqlCheck";
 import { CostError, measurePostgres, measureSqlServer } from "./cost";
+import { QueryError, findExercise, isCorrect, measureCost, runQuery, toObjects } from "./checker";
+import { exercises } from "./definitions/exercises";
+
+type CheckResult = {
+  correct: boolean;
+  cost: number | null;
+  rows: Record<string, unknown>[];
+};
 
 class ExController {
   public post: RequestHandler = async (_req: Request, res: Response) => {
     try {
       const game = _req.body.game;
-      if (/statement_timeout/i.test(_req.body.sql ?? '')) {
-        const errorResponse = ServiceResponse.failure('Changing statement_timeout is not allowed', null, StatusCodes.BAD_REQUEST);
-        return handleServiceResponse(errorResponse, res);
-      }
-      if (game === 'Worldcup') {
-        await sql.connect(sqlConfig);
-        const result = await sql.query(_req.body.sql);
-        const serviceResponse = ServiceResponse.success<any[]>(`SQL Server for ${game} executed`, result.recordset);
-        return handleServiceResponse(serviceResponse, res);
-
-      } else {
-        const result = await executeQuery(_req.body.sql);
-        const serviceResponse = ServiceResponse.success<any[]>(`Postgres SQL for ${game} executed`, result.rows);
-        return handleServiceResponse(serviceResponse, res);
-      }
+      const rows = toObjects(await runQuery(game, _req.body.sql ?? ''));
+      const serviceResponse = ServiceResponse.success<any[]>(`${game === 'Worldcup' ? 'SQL Server' : 'Postgres SQL'} for ${game} executed`, rows);
+      return handleServiceResponse(serviceResponse, res);
     } catch (err: any) {
-      const errorResponse = ServiceResponse.failure(err.message, err, StatusCodes.INTERNAL_SERVER_ERROR);
+      const status = err instanceof QueryError ? StatusCodes.BAD_REQUEST : StatusCodes.INTERNAL_SERVER_ERROR;
+      const errorResponse = ServiceResponse.failure(err.message, null, status);
       return handleServiceResponse(errorResponse, res);
+    }
+  };
+
+  public definitions: RequestHandler = async (_req: Request, res: Response) => {
+    return handleServiceResponse(ServiceResponse.success('Exercises', exercises), res);
+  };
+
+  public check: RequestHandler = async (_req: Request, res: Response) => {
+    const { game, exerciseId, sql: query } = _req.body ?? {};
+    if (typeof query !== 'string' || typeof game !== 'string') {
+      return handleServiceResponse(ServiceResponse.failure('sql, game and exerciseId are required', null, StatusCodes.BAD_REQUEST), res);
+    }
+    const exercise = findExercise(game, Number(exerciseId));
+    if (!exercise) {
+      return handleServiceResponse(ServiceResponse.failure(`Unknown exercise ${game}-${exerciseId}`, null, StatusCodes.NOT_FOUND), res);
+    }
+    try {
+      const result = await runQuery(game, query);
+      const correct = isCorrect(exercise, result);
+      const rows = toObjects(result);
+      const cost = correct ? await measureCost(game, query) : null;
+      return handleServiceResponse(ServiceResponse.success<CheckResult>(correct ? 'Correct' : 'Query result does not match expected output!', { correct, cost, rows }), res);
+    } catch (err: any) {
+      const status = err instanceof QueryError ? StatusCodes.BAD_REQUEST : StatusCodes.INTERNAL_SERVER_ERROR;
+      return handleServiceResponse(ServiceResponse.failure(err.message, null, status), res);
     }
   };
 

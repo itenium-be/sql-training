@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 import { Intro } from './Intro'
 import { Admin } from './Admin'
 import { useGameMode } from './game'
+import { config } from './config'
 
 export function App() {
   if (window.location.pathname.startsWith('/admin')) {
@@ -28,6 +29,11 @@ function Game() {
     if (name) {
       dispatch({type: 'exercises/register', payload: name});
     }
+
+    fetch(`${config.api}/exercises/definitions`)
+      .then(res => res.json())
+      .then(data => dispatch({type: 'exercises/setEntities', payload: data.responseObject}))
+      .catch(err => console.error('Could not fetch exercises', err));
 
     dispatch(fetchData('home'));
   }, []);

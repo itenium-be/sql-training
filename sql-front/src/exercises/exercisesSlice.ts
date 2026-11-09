@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { ExerciseId, ExerciseModel, Score } from './exerciseModels'
-import { exercises } from './exercises';
 
 type StoreState = {
   entities: ExerciseModel[];
@@ -18,7 +17,7 @@ type ExerciseState = {
 }
 
 const initialState: StoreState = {
-  entities: exercises,
+  entities: [],
   selected: null,
   currentExercise: 0,
   userName: '',
@@ -61,6 +60,9 @@ export const exercisesSlice = createSlice({
       if (state.selected) {
         state.currentExercise = 1;
       }
+    },
+    setEntities: (state, action) => {
+      state.entities = action.payload;
     },
     register: (state, action) => {
       state.userName = action.payload;

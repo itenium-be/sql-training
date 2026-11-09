@@ -86,7 +86,39 @@ exRegistry.registerPath({
   responses: createApiResponse(z.object({ cost: z.number() }), "Logical page reads of the query"),
 });
 
+exRegistry.registerPath({
+  method: "get",
+  path: "/exercises/definitions",
+  tags: ["Exercises"],
+  responses: createApiResponse(z.any().array(), "All exercises with their expected results"),
+});
+
+exRegistry.registerPath({
+  method: "post",
+  path: "/exercises/check",
+  tags: ["Exercises"],
+  requestBody: {
+    required: true,
+    content: {
+      'application/json': {
+        schema: {
+          type: 'object',
+          properties: {
+            sql: { type: 'string' },
+            game: { type: 'string' },
+            exerciseId: { type: 'number' }
+          },
+          required: ['sql', 'game', 'exerciseId'],
+        },
+      },
+    },
+  },
+  responses: createApiResponse(z.object({ correct: z.boolean(), cost: z.number().nullable(), rows: z.any().array() }), "Executes the query and checks it against the expected result"),
+});
+
 exRouter.post("/", exController.post);
 exRouter.post("/validate", exController.validate);
 exRouter.get("/schema", exController.schema);
 exRouter.post("/cost", exController.cost);
+exRouter.get("/definitions", exController.definitions);
+exRouter.post("/check", exController.check);

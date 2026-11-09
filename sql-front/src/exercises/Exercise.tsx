@@ -6,7 +6,6 @@ import { ExerciseSampleData, ExercisesData } from "./ExerciseSampleData";
 import { config, HttpResponse } from "../config";
 import { useAppDispatch, useAppSelector } from "../store";
 import { Alert, Col, Modal, Row } from "react-bootstrap";
-import deepEqual from 'deep-equal';
 import { SqlEditor } from "./SqlEditor";
 
 const emojis = ['🎉', '🥳', '🎊', '💯', '🌟', '🚀', '🦄', '🎈', '🎆', '🏆'];
@@ -120,58 +119,50 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
       setResult(null);
       setSuccess(false);
 
-      const res = await fetch(`${config.api}/exercises`, {
+      const res = await fetch(`${config.api}/exercises/check`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           sql: sqlText,
-          game: currentGame
+          game: currentGame,
+          exerciseId: sql.id,
         }),
       });
       const data: HttpResponse = await res.json();
       if (!data.success) {
         setError(data.message);
-      } else {
-        setResult(data.responseObject);
+        return;
+      }
 
-        const arrResult = data.responseObject.map((obj: any) => {
-          const record: any[] = [];
-          Object.keys(obj).forEach(value => record.push(obj[value]?.toString()));
-          return record;
+      setResult(data.responseObject.rows);
+      if (!data.responseObject.correct) {
+        setError(data.message);
+        return;
+      }
+
+      const successData = {
+        player: localStorage.getItem('userName'),
+        game: currentGame,
+        exerciseId: sql.id,
+        solution: sqlText,
+      };
+
+      try {
+        const submitRes = await fetch(`${config.leaderboard.api}/game`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(successData),
         });
-
-        let expectedArr = [...sql.expected];
-        if (!sql.expectedOrder) {
-          arrResult.sort();
-          expectedArr.sort();
+        const submitData = await submitRes.json().catch(() => ({}));
+        if (!submitRes.ok) {
+          setError(submitData.message ?? 'Unable to submit your score 😭');
+          return;
         }
-
-        if (deepEqual(arrResult, expectedArr)) {
-          setSuccess(true);
-
-          const successData = {
-            player: localStorage.getItem('userName'),
-            game: currentGame,
-            exerciseId: sql.id,
-            solution: sqlText,
-          };
-
-          try {
-            const submitRes = await fetch(`${config.leaderboard.api}/game`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(successData),
-            });
-            const submitData = await submitRes.json().catch(() => ({}));
-            setCost(typeof submitData.cost === 'number' ? submitData.cost : null);
-          } catch (err) {
-            console.error('Could not submit score :(', err);
-            setError('Unable to submit your score 😭');
-          }
-
-        } else {
-          setError('Query result does not match expected output!');
-        }
+        setSuccess(true);
+        setCost(typeof submitData.cost === 'number' ? submitData.cost : null);
+      } catch (err) {
+        console.error('Could not submit score :(', err);
+        setError('Unable to submit your score 😭');
       }
     } catch (error) {
       console.error(`Error executing ${sqlText}`, error);

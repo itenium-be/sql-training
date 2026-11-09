@@ -47,6 +47,9 @@ const submitExercise: RequestHandler = async (_req: Request, res: Response) => {
 
   const data: ExerciseSubmit = _req.body;
   console.log('Submit', data);
+  if (typeof data?.player !== 'string' || typeof data.game !== 'string' || typeof data.solution !== 'string') {
+    return res.status(400).send({message: 'player, game, exerciseId and solution are required'});
+  }
 
   const checkValues = [data.player, data.game, data.exerciseId];
   const checkExists = await executeQuery('SELECT 0 FROM game_progress WHERE player=$1 AND game=$2 AND exerciseId=$3', checkValues);
@@ -61,30 +64,37 @@ const submitExercise: RequestHandler = async (_req: Request, res: Response) => {
   }
 
   const solutionLength = data.solution.replace(/\s/g, '').length;
-  const cost = await measureCost(data.game, data.solution);
+  let check: CheckResult;
+  try {
+    check = await checkSolution(data);
+  } catch (err) {
+    console.error('Could not check solution', err);
+    return res.status(503).send({message: 'Could not verify your solution, try again'});
+  }
+  if (!check.correct) {
+    return res.status(400).send({message: check.message});
+  }
+
+  const cost = check.cost;
   const values = [data.player, data.game, data.exerciseId, data.solution, solutionLength, elapsed, cost];
   await executeQuery('INSERT INTO game_progress (player, game, exerciseId, solution, solutionLength, elapsed, cost) VALUES ($1, $2, $3, $4, $5, $6, $7)', values);
   return res.status(200).send({message: 'Registered!', cost});
 };
 
-async function measureCost(game: string, solution: string): Promise<number | null> {
-  try {
-    const res = await fetch(`${env.BACK_END_URL}/exercises/cost`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ game, sql: solution }),
-      signal: AbortSignal.timeout(15000),
-    });
-    const body = await res.json();
-    if (!body.success) {
-      console.warn('Could not measure cost', body.message);
-      return null;
-    }
-    return body.responseObject.cost;
-  } catch (err) {
-    console.error('Could not measure cost', err);
-    return null;
+type CheckResult = { correct: boolean; cost: number | null; message: string };
+
+async function checkSolution(data: ExerciseSubmit): Promise<CheckResult> {
+  const res = await fetch(`${env.BACK_END_URL}/exercises/check`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ game: data.game, exerciseId: data.exerciseId, sql: data.solution }),
+    signal: AbortSignal.timeout(15000),
+  });
+  const body = await res.json();
+  if (!body.success) {
+    return { correct: false, cost: null, message: body.message };
   }
+  return { correct: body.responseObject.correct, cost: body.responseObject.cost, message: body.message };
 }
 
 const getProgress: RequestHandler = async (_req: Request, res: Response) => {

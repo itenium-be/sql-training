@@ -30,6 +30,10 @@ export async function executeQuery(sql: string) {
   return withClient(client => client.query(sql));
 }
 
+export async function executeArrayQuery(sql: string) {
+  return withClient(client => client.query({ text: sql, rowMode: 'array' }));
+}
+
 export async function explainQuery(sql: string) {
   return withClient(client => client.query({ text: sql, queryMode: 'extended' } as QueryConfig));
 }
