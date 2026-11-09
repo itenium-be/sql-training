@@ -1061,3 +1061,30 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
 .lb-aw-name { color: var(--df-cream); font-weight: 600; }
 .lb-aw-val { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.8rem; color: var(--df-muted); }
 .lb-aw-mine .lb-aw-name, .lb-aw-mine .lb-aw-val { color: var(--df-gold); }
+
+/* ── Leaderboard podium (top 3) ────────────────────────────────── */
+.lb-podium {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  align-items: end;
+  max-width: 640px;
+  margin: 8px auto 24px;
+}
+.lb-pod { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.lb-pod-av { width: 56px; height: 56px; font-size: 22px; }
+.lb-pod-1 .lb-pod-av { width: 72px; height: 72px; font-size: 28px; border-color: var(--df-gold); box-shadow: 0 0 0 4px rgba(233,180,76,0.2); }
+.lb-pod-name { font-weight: 800; color: var(--df-cream); }
+.lb-pod-plinth {
+  width: 100%; border-radius: 16px 16px 0 0; border: 1px solid var(--df-border);
+  border-bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 10px; box-sizing: border-box;
+}
+.lb-pod-2 .lb-pod-plinth { height: 96px; background: linear-gradient(180deg, rgba(240,226,194,0.14), rgba(240,226,194,0.02)); }
+.lb-pod-1 .lb-pod-plinth { height: 128px; background: linear-gradient(180deg, rgba(233,180,76,0.3), rgba(233,180,76,0.04)); border-color: var(--df-gold-deep); }
+.lb-pod-3 .lb-pod-plinth { height: 74px; background: linear-gradient(180deg, rgba(196,122,53,0.22), rgba(196,122,53,0.03)); }
+.lb-pod-empty { background: transparent !important; border-color: var(--df-border-soft) !important; }
+.lb-pod-rank { font-size: 1.9rem; font-weight: 800; line-height: 1; color: var(--df-cream); }
+.lb-pod-1 .lb-pod-rank { color: var(--df-gold); font-size: 2.4rem; }
+.lb-pod-3 .lb-pod-rank { color: var(--df-copper); }
+.lb-pod-pts { font-size: 0.9rem; font-weight: 700; color: var(--df-text); }

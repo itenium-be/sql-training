@@ -9,16 +9,7 @@ export function Home() {
   const [meme] = useState(() => Math.floor(Math.random() * 18) + 1);
 
   if (registeredName) {
-    return (
-      <>
-        <h1>Good Luck {registeredName}</h1>
-        <ul>
-          <li>Pick one of the tabs to start exercises and score points!</li>
-          <li><a href="/api/" target="_blank">There is a Swagger</a></li>
-        </ul>
-        <Scoreboard />
-      </>
-    )
+    return <Scoreboard />;
   }
 
   return (

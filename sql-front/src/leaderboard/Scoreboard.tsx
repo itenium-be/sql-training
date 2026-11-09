@@ -45,6 +45,8 @@ export function Scoreboard() {
         ))}
       </div>
 
+      <Podium rows={rows} />
+
       <RankingTable rows={rows} you={registeredName} />
 
       <div className="lb-awards-head">
@@ -88,6 +90,36 @@ function YourStanding({you, rank, total}: {you: PlayerRow; rank: number; total: 
         <span className="lb-badge"><b>{you.shortest}</b> shortest</span>
         <span className="lb-badge"><b>{you.leanest}</b> leanest</span>
       </div>
+    </div>
+  );
+}
+
+function Podium({rows}: {rows: PlayerRow[]}) {
+  if (!rows.length) {
+    return null;
+  }
+  const [first, second, third] = rows;
+
+  const spot = (row: PlayerRow | undefined, place: 1 | 2 | 3) => (
+    <div className={`lb-pod lb-pod-${place}`}>
+      {row ? (
+        <>
+          <span className="lb-av lb-pod-av">{initial(row.name)}</span>
+          <div className="lb-pod-name">{row.name}</div>
+          <div className="lb-pod-plinth">
+            <div className="lb-pod-rank">{place}</div>
+            <div className="lb-pod-pts">{row.total} pts</div>
+          </div>
+        </>
+      ) : <div className="lb-pod-plinth lb-pod-empty" />}
+    </div>
+  );
+
+  return (
+    <div className="lb-podium">
+      {spot(second, 2)}
+      {spot(first, 1)}
+      {spot(third, 3)}
     </div>
   );
 }
