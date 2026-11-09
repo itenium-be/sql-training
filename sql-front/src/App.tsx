@@ -4,11 +4,14 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Home } from './Home'
 import { useAppDispatch, useAppSelector } from './store'
 import { Exercise } from './exercises/Exercise'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { Intro } from './Intro'
 
 export function App() {
   const exercises = useAppSelector(state => state.exercises.entities);
   const dispatch = useAppDispatch();
+  const registeredName = useAppSelector(state => state.exercises.userName);
+  const [started, setStarted] = useState(false);
 
   useEffect(() => {
     const name = localStorage.getItem('userName');
@@ -18,6 +21,10 @@ export function App() {
 
     dispatch(fetchData('home'));
   }, []);
+
+  if (!registeredName && !started) {
+    return <Intro onStart={() => setStarted(true)} />;
+  }
 
   return (
     <BrowserRouter>

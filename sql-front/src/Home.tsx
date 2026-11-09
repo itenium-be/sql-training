@@ -47,13 +47,15 @@ export function Home() {
 
   return (
     <>
-      <h1>SQL Training</h1>
+      <div className="df-eyebrow" style={{marginTop: 24}}>Join the showdown</div>
+      <h1 style={{marginTop: 8}}>Pick your player name</h1>
       <ul>
         <li>Register by completing the form below</li>
         <li>Then pick one of the tabs to start exercises and score points!</li>
         <li>ATTN: if a select has two times the same column name, the property values will be overwritten</li>
       </ul>
 
+      <div className="df-register">
       <Form.Group className="mb-3">
         <Form.Label htmlFor="inputName">Enter your name:</Form.Label>
         <Form.Control
@@ -62,13 +64,16 @@ export function Home() {
           placeholder="Your name"
           value={name}
           onChange={e => setName(e.target.value)}
+          onKeyDown={e => { if (e.key === 'Enter' && name.trim()) handleFetch(); }}
+          autoFocus
         />
       </Form.Group>
 
-      <Button variant="primary" onClick={handleFetch} disabled={!name.length}>Submit</Button>
+      <Button variant="primary" onClick={handleFetch} disabled={!name.trim().length}>Enter the arena</Button>
       {response && (
         <Alert variant="info" style={{marginTop: 16}}>{response}</Alert>
       )}
+      </div>
 
       <Row style={{marginTop: 25}}>
         <h2>It's Meme Time</h2>

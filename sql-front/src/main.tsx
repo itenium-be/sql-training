@@ -6,6 +6,7 @@ import { store } from './store.ts'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
+import './theme.css'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

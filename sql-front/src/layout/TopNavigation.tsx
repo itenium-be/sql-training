@@ -4,6 +4,7 @@ import { AppDispatch, useAppDispatch, useAppSelector } from '../store';
 import { config } from '../config';
 import { useEffect } from 'react';
 import { ExerciseId } from '../exercises/exerciseModels';
+import { DatabaseIcon } from './Icons';
 
 export const fetchData = (key: 'home' | ExerciseId) => async (dispatch: AppDispatch) => {
   try {
@@ -53,6 +54,17 @@ export function TopNavigation() {
   }, []);
 
   return (
+    <>
+    <header className="df-header">
+      <Link to="/" className="df-brand" onClick={() => dispatch(fetchData('home'))}>
+        <span className="df-brand-mark"><DatabaseIcon /></span>
+        <span>
+          <span className="df-brand-name">SQL Showdown</span>
+          <span className="df-brand-sub">DevFest Paris 2026</span>
+        </span>
+      </Link>
+      {registeredName && <span className="df-player" title={registeredName}>{registeredName}</span>}
+    </header>
     <Nav variant="tabs" activeKey={selected ?? 'home'}>
       <Nav.Item>
         <Nav.Link as="span" eventKey="home">
@@ -67,5 +79,6 @@ export function TopNavigation() {
         </Nav.Item>
       ))}
     </Nav>
+    </>
   );
 }
