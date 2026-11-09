@@ -903,6 +903,13 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
   color: var(--df-muted);
 }
 
+.df-timer {
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--df-muted);
+}
+
 .df-editor-submit { margin-left: auto; }
 .df-editor .cm-editor { border: 0 !important; border-radius: 0 !important; }
 

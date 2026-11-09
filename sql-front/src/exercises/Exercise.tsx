@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "../store";
 import { Alert } from "react-bootstrap";
 import { SqlEditor } from "./SqlEditor";
 import { SchemaPanel } from "./SchemaPanel";
+import { QuestionTimer } from "./QuestionTimer";
 import { loadScores } from "../layout/fetchData";
 
 const emojis = ['🎉', '🥳', '🎊', '💯', '🌟', '🚀', '🦄', '🎈', '🎆', '🏆'];
@@ -284,6 +285,7 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
             <div className="df-editor">
               <div className="df-editor-head">
                 <span className="df-editor-dialect">{currentGame === 'Worldcup' ? 'SQL Server' : 'PostgreSQL'}</span>
+                <QuestionTimer />
                 <Button variant="primary" onClick={handleFetch} disabled={!sqlText.length} className="df-editor-submit">
                   Submit&nbsp;&nbsp;⌘↵
                 </Button>
