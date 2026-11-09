@@ -142,6 +142,7 @@ layout: default
 
 ---
 layout: default
+disabled: true
 ---
 
 <div class="grid grid-cols-[1fr_auto] gap-10 items-center h-full">
@@ -176,17 +177,6 @@ image: /img/laptop.jpg
     <div><span class="text-[var(--df-muted)]">Password</span> <code>{{ $slidev.configs.wifiPassword }}</code></div>
     <div><span class="text-[var(--df-muted)]">Then</span> <strong>{{ $slidev.configs.gameUrl }}</strong></div>
   </div>
-</div>
-
----
-layout: center
----
-
-<img src="/img/building-night.jpg" class="absolute inset-0 w-full h-full object-cover opacity-20" alt="" />
-
-<div class="relative text-center">
-  <h1 class="!text-8xl"><span class="gradient-gold">THANK YOU!</span></h1>
-  <img src="/img/itenium-logo.png" class="h-9 mx-auto mt-6" alt="itenium" />
 </div>
 
 ---
