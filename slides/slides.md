@@ -26,11 +26,6 @@ class: cover
   <img src="/img/itenium-logo.png" class="h-10 mb-8" alt="itenium" />
   <div class="pill eyebrow !text-xs mb-6">27 November 2026 · La Fabrique de la Connaissance</div>
   <h1 class="!text-7xl !mb-6 !leading-none">SQL Showdown<br><span class="gradient-gold">DevFest Paris</span> <span class="gradient-copper">edition.</span></h1>
-  <div class="flex items-center gap-3">
-    <span class="pill">Hands-On</span>
-    <span class="pill">Intermediate</span>
-    <span class="pill">⏱ 2h</span>
-  </div>
 </div>
 
 ---
