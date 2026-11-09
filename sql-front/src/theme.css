@@ -487,17 +487,9 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
   background: rgba(0, 0, 0, 0.18);
 }
 
-.df-sqlcard-result {
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
-  font-size: 0.82rem;
-  color: #a9c97a;
-}
-
 .df-sqlcard-run { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; }
 
 .df-regscreen-alert { max-width: 620px; width: 100%; margin-top: 18px; }
-.df-regscreen-hint { color: var(--df-muted); font-size: 0.9rem; margin-top: 22px; }
-.df-regscreen-hint strong { color: var(--df-cream); }
 
 .df-lobby {
   width: 100%;
