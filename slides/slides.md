@@ -60,19 +60,19 @@ layout: default
 
 <div class="posters">
   <div class="poster">
-    <div class="art"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg></div>
+    <div class="art"><img src="/img/game-countries.png" alt="" /></div>
     <div class="pbody"><h3>Countries</h3><p>The basics — one table.</p><span class="db db-pg">Postgres</span></div>
   </div>
   <div class="poster">
-    <div class="art"><svg viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1 3 3 6 3s6-2 6-3v-5"/></svg></div>
+    <div class="art"><img src="/img/game-teachers.png" alt="" /></div>
     <div class="pbody"><h3>Teachers</h3><p>Start joining tables.</p><span class="db db-pg">Postgres</span></div>
   </div>
   <div class="poster">
-    <div class="art"><svg viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 5H4v2a3 3 0 0 0 3 3M17 5h3v2a3 3 0 0 1-3 3"/></svg></div>
+    <div class="art"><img src="/img/game-worldcup.png" alt="" /></div>
     <div class="pbody"><h3>Worldcup</h3><p>Many related tables.</p><span class="db db-ms">SQL Server</span></div>
   </div>
   <div class="poster">
-    <div class="art"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></svg></div>
+    <div class="art"><img src="/img/game-company.png" alt="" /></div>
     <div class="pbody"><h3>Company</h3><p>Query at scale — many rows.</p><span class="db db-pg">Postgres</span></div>
   </div>
 </div>
