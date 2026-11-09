@@ -5,6 +5,10 @@
 # even though the checkout lives on a 9p mount (bind mounts don't deliver
 # inotify there).
 services:
+  proxy:
+    volumes:
+      - ./proxy/nginx.dev.conf:/etc/nginx/conf.d/default.conf:ro
+
   sqlserver:
     ports:
       - 5174:1433
@@ -56,13 +60,13 @@ services:
         - path: ./sql-leaderboard/package.json
           action: rebuild
 
-  # Slidev's dev server owns its asset paths, which don't survive nginx's
-  # /slides/ prefix strip, so in dev the deck is served straight on :3030
-  # (http://localhost:3030) rather than under http://localhost/slides/.
+  # --base /slides/ makes slidev own the same prefix the nav links to, so the
+  # dev proxy forwards /slides/ unstripped (see nginx.dev.conf). Still reachable
+  # straight on http://localhost:3030 too.
   slides:
     build:
       target: build
-    command: bunx slidev --port 3030 --remote
+    command: bunx slidev --port 3030 --remote --base /slides/
     ports:
       - 3030:3030
     develop:
