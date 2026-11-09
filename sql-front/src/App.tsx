@@ -10,6 +10,7 @@ import { Intro } from './Intro'
 import { Register } from './Register'
 import { Waiting } from './Waiting'
 import { Admin } from './Admin'
+import { Beamer } from './beamer/Beamer'
 import { useGameMode } from './game'
 import { screenFor } from './flow'
 import { config, TOKEN_STORAGE } from './config'
@@ -17,6 +18,9 @@ import { config, TOKEN_STORAGE } from './config'
 export function App() {
   if (window.location.pathname.startsWith('/admin')) {
     return <Admin />;
+  }
+  if (window.location.pathname.startsWith('/beamer')) {
+    return <Beamer />;
   }
   return <Game />;
 }
