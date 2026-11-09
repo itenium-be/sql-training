@@ -76,22 +76,25 @@ Exercises "Worldcup".
 
 ## Leaderboard
 
-### Start Game
+### Admin
+
+Go to `http://<host>/admin` and log in with the `API_KEY` (kept in localStorage).
+
+Game modes:
+- `init`: lobby, players register and show up with their avatar on the intro page
+- `running`: submissions are scored
+- `end`: submissions closed, all solutions visible
+
+The mode is kept in memory: a leaderboard restart resets it to `running`.
 
 ```yaml
-GET: http://<host>/leaderboard/game/mode?apiKey=secret&mode=running
-
-# Back to init mode:
-GET: http://<host>/leaderboard/game/mode?apiKey=secret&mode=init
+GET: http://<host>/leaderboard/game/state
+POST: http://<host>/leaderboard/game/admin/mode
+x-api-key: secret
+{"mode": "running"}
 ```
 
-### End Game
-
-Allow people to see all solutions at the endgame:
-
-```yaml
-GET: http://<host>/leaderboard/game/mode?apiKey=secret&mode=end
-```
+Avatars: see [AvatarPrompts.md](AvatarPrompts.md).
 
 
 ## More exercises

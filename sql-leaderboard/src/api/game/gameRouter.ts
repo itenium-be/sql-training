@@ -3,17 +3,14 @@ import { executeQuery } from "../query";
 import { ExerciseStart, ExerciseSubmit } from "./gameModel";
 import { env } from "@/envConfig";
 
-type GameMode = 'init' | 'running' | 'end';
+const gameModes = ['init', 'running', 'end'] as const;
+type GameMode = typeof gameModes[number];
 let gameMode: GameMode = 'running';
 
 export const gameRouter: Router = express.Router();
 
 const registerUser: RequestHandler = async (_req: Request, res: Response) => {
   console.log('register user', _req.body.name);
-  if (gameMode === 'init') {
-    return res.status(400).send({message: 'Game has yet to start!'})
-  }
-
   const name = typeof _req.body.name === 'string' ? _req.body.name.trim() : '';
   if (!name) {
     return res.status(400).send({message: 'Name is required'});
@@ -82,19 +79,42 @@ const getProgress: RequestHandler = async (_req: Request, res: Response) => {
   return res.status(200).send(data.rows);
 };
 
-const setMode: RequestHandler = async (_req: Request, res: Response) => {
-  const apiKey = _req.query.apiKey;
-  if (apiKey !== env.API_KEY) {
-    return res.status(401).send({message: 'Incorrect apiKey (?apiKey=secret&mode=init|running|end'});
+const getState: RequestHandler = async (_req: Request, res: Response) => {
+  return res.status(200).send({mode: gameMode});
+};
+
+const getPlayers: RequestHandler = async (_req: Request, res: Response) => {
+  const data = await executeQuery('SELECT id, name FROM players ORDER BY id');
+  return res.status(200).send(data.rows);
+};
+
+const requireAdmin: RequestHandler = (req: Request, res: Response, next) => {
+  if (req.header('x-api-key') !== env.API_KEY) {
+    return res.status(401).send({message: 'Incorrect API key'});
+  }
+  next();
+};
+
+const getAdmin: RequestHandler = async (_req: Request, res: Response) => {
+  return res.status(200).send({mode: gameMode, modes: gameModes});
+};
+
+const setMode: RequestHandler = async (req: Request, res: Response) => {
+  const newMode = req.body?.mode;
+  if (!gameModes.includes(newMode)) {
+    return res.status(400).send({message: `Invalid mode, expected one of: ${gameModes.join(', ')}`});
   }
 
-  const newMode = _req.query.mode as GameMode;
   gameMode = newMode;
-  return res.status(200).send({message: `Going into ${gameMode} game mode!`});
+  console.log('Game mode', gameMode);
+  return res.status(200).send({mode: gameMode, message: `Going into ${gameMode} game mode!`});
 };
 
 gameRouter.post("/register", registerUser);
 gameRouter.post("/start", startExercise);
 gameRouter.post("/", submitExercise);
 gameRouter.get("/", getProgress);
-gameRouter.get("/mode", setMode);
+gameRouter.get("/state", getState);
+gameRouter.get("/players", getPlayers);
+gameRouter.get("/admin", requireAdmin, getAdmin);
+gameRouter.post("/admin/mode", requireAdmin, setMode);
