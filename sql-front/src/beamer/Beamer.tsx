@@ -3,7 +3,6 @@ import { useAppDispatch, useAppSelector } from '../store';
 import { config } from '../config';
 import { loadScores } from '../layout/fetchData';
 import { usePlayers } from '../game';
-import { ExerciseId } from '../exercises/exerciseModels';
 import { rankPlayers } from '../leaderboard/leaderboardData';
 import { BeamerHeader, BeamerView } from './BeamerHeader';
 import { BeamerPlayers } from './BeamerPlayers';
@@ -19,9 +18,7 @@ export function Beamer({projector = false}: {projector?: boolean}) {
   const storeName = useAppSelector(state => state.exercises.userName);
   const [players] = usePlayers();
   const [view, setView] = useState<BeamerView>('players');
-  const [game, setGame] = useState<ExerciseId>('World');
   const you = storeName || localStorage.getItem('userName') || '';
-  const activeGame = entities.some(e => e.id === game) ? game : (entities[0]?.id ?? game);
 
   useEffect(() => {
     fetch(`${config.api}/exercises/definitions`)
@@ -38,7 +35,7 @@ export function Beamer({projector = false}: {projector?: boolean}) {
 
   const frame = (
     <div className={projector ? 'bm-frame' : 'bm-frame bm-frame-inline'}>
-      <BeamerHeader view={view} onSwitch={setView} bare={!projector} entities={entities} game={activeGame} onGame={setGame} />
+      <BeamerHeader view={view} onSwitch={setView} bare={!projector} />
       {scores.length === 0 ? (
         <div className="bm-body bm-body-empty">
           <div className="bm-title" style={{opacity: 0.7}}>Waiting for the first score…</div>
@@ -46,7 +43,7 @@ export function Beamer({projector = false}: {projector?: boolean}) {
       ) : view === 'players' ? (
         <BeamerPlayers rows={overall} you={you} players={players} showStanding={!projector} />
       ) : (
-        <BeamerExercises entities={entities} scores={scores} you={you} game={activeGame} />
+        <BeamerExercises entities={entities} scores={scores} you={you} />
       )}
     </div>
   );

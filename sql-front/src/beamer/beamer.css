@@ -50,14 +50,8 @@
   line-height: 1.1;
 }
 
-.bm-head-right {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
 .bm-toggle {
+  margin-left: auto;
   display: inline-flex;
   gap: 4px;
   padding: 5px;
@@ -294,6 +288,7 @@
   color: var(--df-cream);
 }
 .bm-games {
+  margin-left: auto;
   display: inline-flex;
   gap: 4px;
   padding: 5px;
