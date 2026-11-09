@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SQL Showdown — favicon candidates</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; background: radial-gradient(1000px 500px at 50% -10%, rgba(201,154,62,0.16), transparent 70%), #16100a;
+    color: #d6c49e; font-family: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif; padding: 40px 24px 80px; }
+  h1 { color: #f0e2c2; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 4px; }
+  .sub { color: #a38e66; margin: 0 0 36px; }
+  .grid { display: grid; gap: 18px; max-width: 920px; margin: 0 auto; }
+  .card { display: grid; grid-template-columns: 96px 1fr; gap: 22px; align-items: center;
+    background: #1f170f; border: 1px solid #33271a; border-radius: 16px; padding: 20px 24px; }
+  .name { font-weight: 800; color: #f0e2c2; font-size: 1.05rem; }
+  .id { font-family: ui-monospace, monospace; font-size: 12px; color: #a38e66; }
+  .big img { width: 72px; height: 72px; border-radius: 14px; display: block; }
+  .sizes { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+  .px { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .px span { font-size: 11px; color: #a38e66; }
+  .px img.s32 { width: 32px; height: 32px; }
+  .px img.s16 { width: 16px; height: 16px; }
+  .tabs { display: flex; gap: 14px; flex-wrap: wrap; }
+  .tab { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px 7px 10px; border-radius: 9px 9px 0 0;
+    font-size: 13px; max-width: 220px; }
+  .tab img { width: 16px; height: 16px; flex: none; }
+  .tab span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tab.light { background: #dfe1e5; color: #202124; }
+  .tab.dark { background: #2a2a2e; color: #e8e8ea; }
+  .lbl { font-size: 12px; color: #a38e66; margin: 0 0 8px; }
+</style>
+</head>
+<body>
+  <h1>SQL Showdown — favicon candidates</h1>
+  <p class="sub">Each shown large, at 32&nbsp;px and 16&nbsp;px actual size, and in a mock browser tab (light + dark chrome). The 16&nbsp;px tab render is the one that matters.</p>
+  <div class="grid" id="grid"></div>
+  <script>
+    const items = [
+      ['01-asterisk.svg',       'Asterisk',      'SELECT * — the star you are chasing'],
+      ['02-database-bolt.svg',  'Database + bolt','SQL engine, charged for speed'],
+      ['03-prompt.svg',         'Query prompt',  '>_ a query waiting to run'],
+      ['04-hexagon.svg',        'Hex badge',     'brand hexagon, run/next chevron'],
+      ['05-trophy.svg',         'Trophy',        'top of the leaderboard'],
+    ];
+    document.getElementById('grid').innerHTML = items.map(([f, name, desc]) => `
+      <div class="card">
+        <div class="big"><img src="${f}" alt="${name}"></div>
+        <div>
+          <div class="name">${name}</div>
+          <div class="id">${desc}</div>
+          <div class="sizes" style="margin-top:14px">
+            <div class="px"><img class="s32" src="${f}" alt=""><span>32px</span></div>
+            <div class="px"><img class="s16" src="${f}" alt=""><span>16px</span></div>
+            <div style="flex:1">
+              <p class="lbl">in a tab</p>
+              <div class="tabs">
+                <div class="tab light"><img src="${f}" alt=""><span>SQL Showdown · DevFest Paris</span></div>
+                <div class="tab dark"><img src="${f}" alt=""><span>SQL Showdown · DevFest Paris</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`).join('');
+  </script>
+</body>
+</html>
