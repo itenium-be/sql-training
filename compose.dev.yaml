@@ -1,0 +1,10 @@
+services:
+  sqlserver:
+    ports:
+      - 5174:1433
+  postgres:
+    ports:
+      - 5175:5432
+  leaderboard-db:
+    ports:
+      - 6000:5432

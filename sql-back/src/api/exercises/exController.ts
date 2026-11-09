@@ -9,6 +9,10 @@ class ExController {
   public post: RequestHandler = async (_req: Request, res: Response) => {
     try {
       const game = _req.body.game;
+      if (/statement_timeout/i.test(_req.body.sql ?? '')) {
+        const errorResponse = ServiceResponse.failure('Changing statement_timeout is not allowed', null, StatusCodes.BAD_REQUEST);
+        return handleServiceResponse(errorResponse, res);
+      }
       if (game === 'Worldcup') {
         await sql.connect(sqlConfig);
         const result = await sql.query(_req.body.sql);

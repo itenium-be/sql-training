@@ -3,52 +3,65 @@ SQL Training
 
 Node: v22.1.0
 
-## Prep
+## Host the game
 
-Install [Docker for Windows](https://docs.docker.com/desktop/install/windows-install/)
-
-```sh
-docker pull postgres:17.0
-docker pull node:22.9.0-slim
-docker pull mcr.microsoft.com/mssql/server:2019-CU13-ubuntu-20.04
-```
-
-## Play
-
-Configure leaderboard URI in `sql-front/config.ts`.
+One machine (e.g. a minipc on a dedicated router) runs everything; players only need a browser.
 
 ```sh
 git clone https://github.com/itenium-be/sql-training
 cd sql-training
+API_KEY=my-secret docker compose up -d --build
+# Players browse to http://<minipc-ip-or-dns>/
+```
+
+Everything goes through the nginx reverse proxy on port 80 (`HTTP_PORT` to change it):
+
+- `/` the website
+- `/api/` back-end (Swagger UI)
+- `/leaderboard/` leaderboard
+
+The databases are not exposed outside of Docker.
+Players query with a read-only `player` user and every query is killed after 5 seconds.
+
+### Reset
+
+```sh
+docker compose down -v
 docker compose up -d --build
-# Frontend: http://localhost:5173
-# Swagger: http://localhost:8080
 ```
 
 ## Develop
 
-Only start progress & adjust `sql-back/.env`
-and set `PG_HOST="localhost"`.
+Start the databases with their ports exposed:
+
+```sh
+docker compose -f compose.yaml -f compose.dev.yaml up -d postgres sqlserver leaderboard-db
+```
+
+Set `PG_HOST="localhost"`, `PG_PORT="5175"`, `SQL_SERVER_HOST="localhost"` and `SQL_SERVER_PORT="5174"` in `sql-back/.env`.
+Copy `sql-leaderboard/.env.template` to `sql-leaderboard/.env`.
 
 ```sh
 cd sql-back
+npm run dev
+
+cd ../sql-leaderboard
 npm run dev
 
 cd ../sql-front
 npm run dev
 ```
 
+The Vite dev server proxies `/api` and `/leaderboard` to the local back-ends.
+
 ### Postgres
 
 Starter exercises "World" & "Teachers".
 
-See `compose.yaml` and `sql-back/.env`.  
-You can use a tool like [pgAdmin](https://www.postgresql.org/ftp/pgadmin/pgadmin4/v8.12/windows/) to query the data directly.
-
 - Server: localhost
 - Port: 5175
-- User: admin
-- Password: password
+- Admin: admin / password
+- Player (read-only): player / player
 
 
 ### SQL Server
@@ -57,39 +70,19 @@ Exercises "Worldcup".
 
 - Server: localhost
 - Port: 5174
-- User: sa
-- Password: password123!
+- Admin: sa / password123!
+- Player (read-only): player / Player123!
 
-
-### Restart
-
-The game just executes your SQL. So if you tried a `TRUNCATE table`,
-but you want to continue playing after 😃
-
-```sh
-docker compose down -v
-docker compose up -d --build
-```
 
 ## Leaderboard
-
-The `sql-front/src/config.ts` contains the leaderboard URI,
-of which only one should be running 😀
-
-```sh
-cd sql-leaderboard
-cp .env.template .env
-docker compose up -d
-npm run dev
-```
 
 ### Start Game
 
 ```yaml
-GET: http://localhost:8000/game/mode?apiKey=secret&mode=running
+GET: http://<host>/leaderboard/game/mode?apiKey=secret&mode=running
 
 # Back to init mode:
-GET: http://localhost:8000/game/mode?apiKey=secret&mode=init
+GET: http://<host>/leaderboard/game/mode?apiKey=secret&mode=init
 ```
 
 ### End Game
@@ -97,7 +90,7 @@ GET: http://localhost:8000/game/mode?apiKey=secret&mode=init
 Allow people to see all solutions at the endgame:
 
 ```yaml
-GET: http://localhost:8000/game/mode?apiKey=secret&mode=end
+GET: http://<host>/leaderboard/game/mode?apiKey=secret&mode=end
 ```
 
 

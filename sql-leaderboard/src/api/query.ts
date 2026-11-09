@@ -6,7 +6,7 @@ export async function executeQuery(sql: string, values: any = undefined) {
     user: env.PG_USER,
     database: 'game',
     password: env.PG_PASSWORD,
-    port: 5432,
+    port: env.PG_PORT,
     host: env.PG_HOST,
   };
   const client = new Client(options);

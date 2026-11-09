@@ -1,0 +1,11 @@
+CREATE ROLE player LOGIN PASSWORD 'player' CONNECTION LIMIT 100;
+
+REVOKE ALL ON DATABASE world FROM PUBLIC;
+GRANT CONNECT ON DATABASE world TO player;
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+GRANT USAGE ON SCHEMA public TO player;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO player;
+
+ALTER ROLE player SET statement_timeout = '5s';
+ALTER ROLE player SET default_transaction_read_only = on;
