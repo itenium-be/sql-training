@@ -25,7 +25,8 @@ export function Waiting() {
         <div className="df-wait-left">
           <div className="df-eyebrow">The arena is filling up</div>
           <h1 className="df-title df-wait-title">
-            You're in, <span className="df-gradient-gold">{registeredName}</span>!
+            You're in,{' '}
+            <span className="df-gradient-gold" style={{ whiteSpace: 'nowrap' }}>{registeredName}!</span>
           </h1>
           <p className="df-lead df-wait-status">
             <span className="df-wait-dot" aria-hidden="true" />
