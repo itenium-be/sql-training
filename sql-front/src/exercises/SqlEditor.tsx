@@ -29,69 +29,69 @@ function loadSchema(game: string): Promise<SqlSchema> {
   return schemaCache.get(key)!;
 }
 
-const devfestTheme = EditorView.theme({
+const editorTheme = EditorView.theme({
   '&': {
-    color: 'var(--df-cream)',
+    color: 'var(--df-strong)',
     backgroundColor: 'var(--df-bg-raised)',
-    border: '1px solid var(--df-border-soft)',
-    borderRadius: '12px',
+    border: 'var(--df-border-width) solid var(--df-border-soft)',
+    borderRadius: 'var(--df-radius)',
     fontSize: '17px',
   },
   '&.cm-focused': {
     outline: 'none',
-    borderColor: 'var(--df-gold-deep)',
+    borderColor: 'var(--df-accent-deep)',
   },
   '.cm-scroller': {
-    fontFamily: "'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
+    fontFamily: 'var(--df-font-mono)',
     lineHeight: '1.6',
     fontVariantLigatures: 'none',
   },
-  '.cm-content': { caretColor: 'var(--df-gold)', padding: '10px 0' },
-  '.cm-cursor, .cm-dropCursor': { borderLeftColor: 'var(--df-gold)', borderLeftWidth: '2px' },
+  '.cm-content': { caretColor: 'var(--df-accent)', padding: '10px 0' },
+  '.cm-cursor, .cm-dropCursor': { borderLeftColor: 'var(--df-accent)', borderLeftWidth: '2px' },
   '&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, ::selection': {
-    backgroundColor: 'rgba(233, 180, 76, 0.25) !important',
+    backgroundColor: 'rgba(var(--df-accent-rgb), 0.25) !important',
   },
   '.cm-gutters': {
     backgroundColor: 'var(--df-surface)',
     color: 'var(--df-muted)',
     border: 'none',
-    borderTopLeftRadius: '12px',
-    borderBottomLeftRadius: '12px',
+    borderTopLeftRadius: 'var(--df-radius)',
+    borderBottomLeftRadius: 'var(--df-radius)',
   },
-  '.cm-activeLine': { backgroundColor: 'rgba(233, 180, 76, 0.06)' },
-  '.cm-activeLineGutter': { backgroundColor: 'rgba(233, 180, 76, 0.12)', color: 'var(--df-cream)' },
+  '.cm-activeLine': { backgroundColor: 'rgba(var(--df-accent-rgb), 0.06)' },
+  '.cm-activeLineGutter': { backgroundColor: 'rgba(var(--df-accent-rgb), 0.12)', color: 'var(--df-strong)' },
   '.cm-placeholder': { color: 'var(--df-muted)' },
-  '.cm-matchingBracket': { backgroundColor: 'rgba(233, 180, 76, 0.2)', outline: 'none' },
+  '.cm-matchingBracket': { backgroundColor: 'rgba(var(--df-accent-rgb), 0.2)', outline: 'none' },
   '.cm-tooltip': {
     backgroundColor: 'var(--df-surface)',
-    color: 'var(--df-cream)',
+    color: 'var(--df-strong)',
     border: '1px solid var(--df-border)',
-    borderRadius: '10px',
+    borderRadius: 'var(--df-radius)',
     overflow: 'hidden',
   },
   '.cm-tooltip-autocomplete > ul > li': { padding: '3px 10px !important' },
   '.cm-tooltip-autocomplete > ul > li[aria-selected]': {
-    backgroundColor: 'rgba(233, 180, 76, 0.2)',
-    color: 'var(--df-cream)',
+    backgroundColor: 'rgba(var(--df-accent-rgb), 0.2)',
+    color: 'var(--df-strong)',
   },
   '.cm-completionDetail': { color: 'var(--df-muted)' },
-  '.cm-diagnostic-error': { borderLeftColor: '#ef6b5b' },
+  '.cm-diagnostic-error': { borderLeftColor: 'var(--df-danger)' },
   '.cm-lintRange-error': {
     backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='3'%3E%3Cpath d='m0 3 l2 -2 l1 0 l2 2 l1 0' stroke='%23ef6b5b' fill='none' stroke-width='1.2'/%3E%3C/svg%3E\")",
   },
 }, { dark: true });
 
-const devfestHighlight = HighlightStyle.define([
-  { tag: t.keyword, color: '#e9b44c', fontWeight: '600' },
-  { tag: [t.operatorKeyword, t.operator], color: '#e3a066' },
-  { tag: [t.string, t.special(t.string)], color: '#a9c97a' },
-  { tag: [t.number, t.bool, t.null], color: '#e98a5b' },
-  { tag: [t.typeName, t.standard(t.name)], color: '#7fb8d4' },
-  { tag: [t.function(t.variableName), t.function(t.name)], color: '#f0d28a' },
-  { tag: [t.lineComment, t.blockComment, t.comment], color: '#8a7a5c', fontStyle: 'italic' },
-  { tag: t.special(t.name), color: '#d9b8f0' },
-  { tag: [t.punctuation, t.paren, t.squareBracket, t.brace, t.separator], color: '#bfae8a' },
-  { tag: t.name, color: '#f0e2c2' },
+const editorHighlight = HighlightStyle.define([
+  { tag: t.keyword, color: 'var(--df-syn-keyword)', fontWeight: '600' },
+  { tag: [t.operatorKeyword, t.operator], color: 'var(--df-syn-operator)' },
+  { tag: [t.string, t.special(t.string)], color: 'var(--df-syn-string)' },
+  { tag: [t.number, t.bool, t.null], color: 'var(--df-syn-number)' },
+  { tag: [t.typeName, t.standard(t.name)], color: 'var(--df-syn-type)' },
+  { tag: [t.function(t.variableName), t.function(t.name)], color: 'var(--df-syn-function)' },
+  { tag: [t.lineComment, t.blockComment, t.comment], color: 'var(--df-syn-comment)', fontStyle: 'italic' },
+  { tag: t.special(t.name), color: 'var(--df-syn-special)' },
+  { tag: [t.punctuation, t.paren, t.squareBracket, t.brace, t.separator], color: 'var(--df-syn-punctuation)' },
+  { tag: t.name, color: 'var(--df-syn-name)' },
 ]);
 
 async function validate(game: string, text: string): Promise<SqlProblem[]> {
@@ -131,8 +131,8 @@ export function SqlEditor({ game, value, onChange, onSubmit, height = '275px' }:
     return [
     sql({ dialect, schema, upperCaseKeywords: true }),
     dialect.language.data.of({ autocomplete: columnCompletions }),
-    syntaxHighlighting(devfestHighlight),
-    devfestTheme,
+    syntaxHighlighting(editorHighlight),
+    editorTheme,
     EditorView.lineWrapping,
     placeholder('Enter your SQL… (Ctrl+Enter to submit)'),
     lintGutter(),

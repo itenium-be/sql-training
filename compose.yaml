@@ -19,6 +19,12 @@ services:
     build:
       context: ./sql-front
       dockerfile: Dockerfile
+      args:
+        VITE_THEME: ${THEME:-devfest}
+        VITE_EVENT_NAME: ${EVENT_NAME:-DevFest Paris}
+        VITE_EVENT_YEAR: ${EVENT_YEAR:-2026}
+        VITE_EVENT_DATE: ${EVENT_DATE:-27 November 2026}
+        VITE_EVENT_VENUE: ${EVENT_VENUE:-La Fabrique de la Connaissance}
     restart: always
     networks:
       - trainnet

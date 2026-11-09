@@ -26,6 +26,18 @@ Everything goes through the nginx reverse proxy on port 80 (`HTTP_PORT` to chang
 The databases are not exposed outside of Docker.
 Players query with a read-only `player` user and every query is killed after 5 seconds.
 
+### Event & theme
+
+```sh
+THEME=synthwave EVENT_NAME="Devoxx" EVENT_YEAR=2027 EVENT_DATE="8 October 2027" EVENT_VENUE="Kinepolis Antwerp" \
+  API_KEY=my-secret docker compose up -d --build
+```
+
+Themes: `devfest` (default, warm gold), `terminal` (green CRT), `synthwave` (neon), `blueprint` (technical drawing), `brutalist` (light, yellow/black).
+
+Preview a theme in the browser with `?theme=<name>` (remembered in localStorage, `?theme=default` resets).
+For `npm run dev`, set the same values as `VITE_THEME`, `VITE_EVENT_NAME`, ... in `sql-front/.env.local`.
+
 ### Reset
 
 ```sh
