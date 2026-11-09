@@ -65,7 +65,7 @@ layout: default
 <div class="zone-gain">You gain</div>
 <div class="award-grid">
   <div class="award" v-click><div class="chip" style="color:var(--c-correct)"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div><div class="l"><b>Correct</b><span>A right answer</span></div><div class="bonus" style="color:var(--c-correct)">base</div></div>
-  <div class="award" v-click><div class="chip" style="color:var(--df-gold)"><svg viewBox="0 0 24 24"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg></div><div class="l"><b>Fastest</b><span>Least time on the clock</span></div><div class="bonus">+6</div></div>
+  <div class="award" v-click><div class="chip" style="color:var(--df-gold)"><svg viewBox="0 0 24 24"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg></div><div class="l"><b>Fastest</b><span>Time starts when first viewing the question</span></div><div class="bonus">+6</div></div>
   <div class="award" v-click><div class="chip" style="color:var(--df-orange-1)"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div><div class="l"><b>Shortest</b><span>Fewest chars</span></div><div class="bonus">+6</div></div>
   <div class="award" v-click><div class="chip" style="color:var(--c-leanest)"><svg viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6"/></svg></div><div class="l"><b>Leanest</b><span>Fewest reads</span></div><div class="bonus">+6</div></div>
 </div>
