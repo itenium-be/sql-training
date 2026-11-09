@@ -90,7 +90,6 @@ layout: default
     <li>Wait for the start signal</li>
   </ol>
   <div class="mt-6"><span class="cta">{{ $slidev.configs.gameUrl }}</span></div>
-  <p class="mt-6 text-sm text-[var(--df-muted)]">Play at home: <a href="https://github.com/itenium-be/sql-training" target="_blank">github.com/itenium-be/sql-training</a></p>
 </div>
 <img src="/img/exercises.jpg" class="photo-round w-64 h-64" alt="" />
 </div>
