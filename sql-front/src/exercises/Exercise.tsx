@@ -238,7 +238,7 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
           </Button>
         )}
         <Button variant="secondary" onClick={() => {reset(); dispatch({type: 'exercises/nextQuestion'})}} style={{flex: 1}}>
-          Skip
+          {solved ? 'Next' : 'Skip'}
         </Button>
       </div>
     </div>
