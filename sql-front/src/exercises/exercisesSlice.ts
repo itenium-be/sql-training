@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { ExerciseId, ExerciseModel, Score } from './exerciseModels'
+import { lastSolvedQuestion } from './lastSolved'
 
 type StoreState = {
   entities: ExerciseModel[];
@@ -42,12 +43,13 @@ const exercisesSlice = createSlice({
   initialState,
   reducers: {
     switch: (state, action) => {
-      state.currentExercise = 0;
       if (action.payload.key === 'home') {
         state.selected = null;
+        state.currentExercise = 0;
       } else {
         state.selected = action.payload.key as ExerciseId;
         state[state.selected].exampleData = action.payload.data;
+        state.currentExercise = lastSolvedQuestion(state.scores, state.userName, state.selected);
       }
     },
     nextQuestion: state => {
