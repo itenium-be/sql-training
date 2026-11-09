@@ -72,6 +72,7 @@ export const exercisesSlice = createSlice({
         exerciseid: +score.exerciseid,
         solutionlength: +score.solutionlength,
         elapsed: +score.elapsed,
+        cost: score.cost === null || score.cost === undefined ? null : +score.cost,
       }))
     }
   },

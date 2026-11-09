@@ -64,6 +64,29 @@ exRegistry.registerPath({
   responses: createApiResponse(z.record(z.string().array()), "Tables with their columns"),
 });
 
+exRegistry.registerPath({
+  method: "post",
+  path: "/exercises/cost",
+  tags: ["Exercises"],
+  requestBody: {
+    required: true,
+    content: {
+      'application/json': {
+        schema: {
+          type: 'object',
+          properties: {
+            sql: { type: 'string' },
+            game: { type: 'string' }
+          },
+          required: ['sql', 'game'],
+        },
+      },
+    },
+  },
+  responses: createApiResponse(z.object({ cost: z.number() }), "Logical page reads of the query"),
+});
+
 exRouter.post("/", exController.post);
 exRouter.post("/validate", exController.validate);
 exRouter.get("/schema", exController.schema);
+exRouter.post("/cost", exController.cost);

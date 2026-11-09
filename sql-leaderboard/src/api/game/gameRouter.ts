@@ -63,10 +63,31 @@ const submitExercise: RequestHandler = async (_req: Request, res: Response) => {
   }
 
   const solutionLength = data.solution.replace(/\s/g, '').length;
-  const values = [data.player, data.game, data.exerciseId, data.solution, solutionLength, elapsed];
-  await executeQuery('INSERT INTO game_progress (player, game, exerciseId, solution, solutionLength, elapsed) VALUES ($1, $2, $3, $4, $5, $6)', values);
-  return res.status(200).send({message: 'Registered!'});
+  const cost = await measureCost(data.game, data.solution);
+  const values = [data.player, data.game, data.exerciseId, data.solution, solutionLength, elapsed, cost];
+  await executeQuery('INSERT INTO game_progress (player, game, exerciseId, solution, solutionLength, elapsed, cost) VALUES ($1, $2, $3, $4, $5, $6, $7)', values);
+  return res.status(200).send({message: 'Registered!', cost});
 };
+
+async function measureCost(game: string, solution: string): Promise<number | null> {
+  try {
+    const res = await fetch(`${env.BACK_END_URL}/exercises/cost`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ game, sql: solution }),
+      signal: AbortSignal.timeout(15000),
+    });
+    const body = await res.json();
+    if (!body.success) {
+      console.warn('Could not measure cost', body.message);
+      return null;
+    }
+    return body.responseObject.cost;
+  } catch (err) {
+    console.error('Could not measure cost', err);
+    return null;
+  }
+}
 
 const getProgress: RequestHandler = async (_req: Request, res: Response) => {
   if (gameMode === 'init') {
@@ -74,11 +95,11 @@ const getProgress: RequestHandler = async (_req: Request, res: Response) => {
   }
 
   if (gameMode === 'end') {
-    const data = await executeQuery('SELECT player, game, exerciseId, solution, solutionLength, elapsed FROM game_progress');
+    const data = await executeQuery('SELECT player, game, exerciseId, solution, solutionLength, elapsed, cost FROM game_progress');
     return res.status(200).send(data.rows);
   }
 
-  const data = await executeQuery('SELECT player, game, exerciseId, solutionLength, elapsed FROM game_progress');
+  const data = await executeQuery('SELECT player, game, exerciseId, solutionLength, elapsed, cost FROM game_progress');
   return res.status(200).send(data.rows);
 };
 

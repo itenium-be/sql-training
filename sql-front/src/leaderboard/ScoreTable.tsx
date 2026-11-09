@@ -3,6 +3,7 @@ import { useAppSelector } from "../store";
 import { Score } from "../exercises/exerciseModels";
 import { calculateFastest } from "./FastestScores";
 import { calculateShortest } from "./ShortestSolutions";
+import { calculateEfficient } from "./MostEfficient";
 
 export function ScoreTable({scores}: {scores: Score[]}) {
   const registeredName = useAppSelector(state => state.exercises.userName);
@@ -26,16 +27,19 @@ export function ScoreTable({scores}: {scores: Score[]}) {
 
   const fastestTable = calculateFastest(exercises, scores);
   const leanestTable = calculateShortest(exercises, scores);
+  const efficientTable = calculateEfficient(exercises, scores);
 
   const totalScores = Object.entries(playerScores).map(([player, score]) => {
     const fastest = fastestTable.filter(fast => fast.player === player).length;
     const shortest = leanestTable.filter(fast => fast.player === player).length;
+    const efficient = efficientTable.filter(eff => eff.player === player).length;
     return {
       name: player,
       score,
       fastest,
       shortest,
-      total: score + fastest * 2 + shortest * 2
+      efficient,
+      total: score + fastest * 2 + shortest * 2 + efficient * 2
     };
   })
 
@@ -48,6 +52,7 @@ export function ScoreTable({scores}: {scores: Score[]}) {
           <th>Points</th>
           <th># Fastest</th>
           <th># Shortest</th>
+          <th># Efficient</th>
           <th>Total Score</th>
         </tr>
       </thead>
@@ -60,6 +65,7 @@ export function ScoreTable({scores}: {scores: Score[]}) {
               <td>{player.score}</td>
               <td>{player.fastest}</td>
               <td>{player.shortest}</td>
+              <td>{player.efficient}</td>
               <td><b>{player.total}</b></td>
             </tr>
           );

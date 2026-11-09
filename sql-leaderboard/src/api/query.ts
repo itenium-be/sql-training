@@ -15,3 +15,7 @@ export async function executeQuery(sql: string, values: any = undefined) {
   await client.end();
   return result
 }
+
+export async function migrate() {
+  await executeQuery('ALTER TABLE game_progress ADD COLUMN IF NOT EXISTS cost NUMERIC(15,0)');
+}

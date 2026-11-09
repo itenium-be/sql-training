@@ -7,7 +7,8 @@ CREATE TABLE game_progress (
   exerciseId NUMERIC(15,0),
   solution VARCHAR(900),
   solutionLength NUMERIC(15,0),
-  elapsed NUMERIC(15,0)
+  elapsed NUMERIC(15,0),
+  cost NUMERIC(15,0)
 );
 
 CREATE TABLE game_start (

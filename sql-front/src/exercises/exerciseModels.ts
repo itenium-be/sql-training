@@ -26,6 +26,8 @@ export type Score = {
   solutionlength: number;
   /** in seconds */
   elapsed: number;
+  /** Logical reads (Postgres buffers / SQL Server logical reads) */
+  cost: number | null;
 }
 
 export type ExerciseId = 'World' | 'Teachers' | 'Worldcup';
