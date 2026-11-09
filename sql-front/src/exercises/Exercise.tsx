@@ -7,11 +7,7 @@ import { config, HttpResponse } from "../config";
 import { useAppDispatch, useAppSelector } from "../store";
 import { Alert, Col, Modal, Row } from "react-bootstrap";
 import deepEqual from 'deep-equal';
-import AceEditor from "react-ace";
-
-import "ace-builds/src-noconflict/mode-sql";
-import "ace-builds/src-noconflict/theme-monokai";
-import "ace-builds/src-noconflict/ext-language_tools";
+import { SqlEditor } from "./SqlEditor";
 
 const emojis = ['🎉', '🥳', '🎊', '💯', '🌟', '🚀', '🦄', '🎈', '🎆', '🏆'];
 
@@ -210,21 +206,11 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
       )}
       <Row>
         <Col style={{paddingBottom: 12}}>
-          <AceEditor
-            mode="sql"
-            theme="monokai"
-            width="100%"
-            height="275px"
-            fontSize={18}
-            showPrintMargin={false}
-            showGutter
-            wrapEnabled
-            enableLiveAutocompletion
-            onChange={e => setSqlText(e)}
-            name="UNIQUE_ID_OF_DIV"
-            editorProps={{ enableLiveAutocompletion: true, }}
-            placeholder="Enter your SQL"
-            focus
+          <SqlEditor
+            game={currentGame ?? ''}
+            value={sqlText}
+            onChange={setSqlText}
+            onSubmit={() => { if (sqlText.trim().length && !success) handleFetch(); }}
           />
         </Col>
         <Col>

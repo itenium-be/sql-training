@@ -338,8 +338,3 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
   padding: 28px;
   margin: 24px 0 32px;
 }
-
-.ace-monokai { background-color: var(--df-bg-raised) !important; border: 1px solid var(--df-border-soft); border-radius: 12px; }
-.ace-monokai .ace_gutter { background: var(--df-surface) !important; color: var(--df-muted) !important; }
-.ace-monokai .ace_marker-layer .ace_active-line { background: rgba(233, 180, 76, 0.07) !important; }
-.ace-monokai .ace_gutter-active-line { background: rgba(233, 180, 76, 0.1) !important; }

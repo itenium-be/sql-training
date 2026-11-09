@@ -34,4 +34,36 @@ exRegistry.registerPath({
   responses: createApiResponse(z.any().array(), "Success"),
 });
 
+exRegistry.registerPath({
+  method: "post",
+  path: "/exercises/validate",
+  tags: ["Exercises"],
+  requestBody: {
+    required: true,
+    content: {
+      'application/json': {
+        schema: {
+          type: 'object',
+          properties: {
+            sql: { type: 'string' },
+            game: { type: 'string' }
+          },
+          required: ['sql', 'game'],
+        },
+      },
+    },
+  },
+  responses: createApiResponse(z.object({ message: z.string(), from: z.number(), to: z.number() }).array(), "Problems found in the SQL, without executing it"),
+});
+
+exRegistry.registerPath({
+  method: "get",
+  path: "/exercises/schema",
+  tags: ["Exercises"],
+  request: { query: z.object({ game: z.string() }) },
+  responses: createApiResponse(z.record(z.string().array()), "Tables with their columns"),
+});
+
 exRouter.post("/", exController.post);
+exRouter.post("/validate", exController.validate);
+exRouter.get("/schema", exController.schema);
