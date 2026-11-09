@@ -165,21 +165,6 @@ disabled: true
 <img src="/img/itenium-logo.png" class="brand" alt="itenium" />
 
 ---
-layout: image-right
-image: /img/laptop.jpg
----
-
-<div class="h-full flex flex-col justify-center">
-  <span class="eyebrow">Get connected</span>
-  <h1>WiFi</h1>
-  <div class="flex flex-col gap-3 text-2xl">
-    <div><span class="text-[var(--df-muted)]">Network</span> <strong>{{ $slidev.configs.wifiNetwork }}</strong></div>
-    <div><span class="text-[var(--df-muted)]">Password</span> <code>{{ $slidev.configs.wifiPassword }}</code></div>
-    <div><span class="text-[var(--df-muted)]">Then</span> <strong>{{ $slidev.configs.gameUrl }}</strong></div>
-  </div>
-</div>
-
----
 layout: center
 ---
 
