@@ -33,13 +33,20 @@ class ExController {
   public definitions: RequestHandler = async (_req: Request, res: Response) => {
     const publicExercises = exercises.map(game => ({
       ...game,
-      exercises: game.exercises.map(({ expected, hints, hintCost, expectedCost, ...exercise }) => ({
+      exercises: game.exercises.map(({ expected, hints, hintCost, expectedCost, solution, ...exercise }) => ({
         ...exercise,
         hasHint: !!hints,
-        ...penalties({ ...exercise, expected, hints, hintCost, expectedCost }),
+        ...penalties({ ...exercise, expected, hints, hintCost, expectedCost, solution }),
       })),
     }));
     return handleServiceResponse(ServiceResponse.success('Exercises', publicExercises), res);
+  };
+
+  public solutions: RequestHandler = async (_req: Request, res: Response) => {
+    const solutions = exercises.flatMap(game =>
+      game.exercises.map(ex => ({ game: game.id, exerciseId: ex.id, desc: ex.desc, points: ex.points, solution: ex.solution })),
+    );
+    return handleServiceResponse(ServiceResponse.success('Solutions', solutions), res);
   };
 
   public hint: RequestHandler = async (_req: Request, res: Response) => {

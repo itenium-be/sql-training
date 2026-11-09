@@ -8,6 +8,8 @@ export type SqlExerciseModel = {
   /** Require specific array order */
   expectedOrder: boolean;
   expectedColumns: string[];
+  /** Reference solution, only visible to the admin */
+  solution: string;
   hints?: string;
   /** Points deducted for showing the hint, default 1 */
   hintCost?: number;

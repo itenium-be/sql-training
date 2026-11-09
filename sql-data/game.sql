@@ -27,6 +27,17 @@ CREATE TABLE exercise_activity (
   PRIMARY KEY (player, game, exerciseId)
 );
 
+CREATE TABLE submissions (
+  id SERIAL PRIMARY KEY,
+  player VARCHAR(100) NOT NULL,
+  game VARCHAR(50) NOT NULL,
+  exerciseId NUMERIC(15,0) NOT NULL,
+  solution TEXT NOT NULL,
+  correct BOOLEAN NOT NULL,
+  message TEXT,
+  submittedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE settings (
   key VARCHAR(50) PRIMARY KEY,
   value TEXT NOT NULL

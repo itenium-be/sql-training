@@ -16,6 +16,11 @@ JOIN rounds r ON m.round_id=r.id JOIN events e ON r.event_id=e.id`,
       points: 9,
       expected: [["Brazil"]],
       expectedOrder: false,
+      solution: `SELECT t.name
+FROM events_teams et
+JOIN teams t ON t.id = et.team_id
+GROUP BY t.name
+HAVING COUNT(DISTINCT et.event_id) = (SELECT COUNT(*) FROM events)`,
       expectedColumns: ["team.name"],
     },
     {
@@ -24,6 +29,12 @@ JOIN rounds r ON m.round_id=r.id JOIN events e ON r.event_id=e.id`,
       points: 12,
       expected: [["France", 4]],
       expectedOrder: false,
+      solution: `SELECT TOP 1 t.name, COUNT(*) AS owngoal_count
+FROM goals g
+JOIN teams t ON t.id = g.team_id
+WHERE g.owngoal = 1
+GROUP BY t.name
+ORDER BY COUNT(*) DESC`,
       expectedColumns: ["team.name", "owngoal_count"],
     },
     {
@@ -32,6 +43,13 @@ JOIN rounds r ON m.round_id=r.id JOIN events e ON r.event_id=e.id`,
       points: 12,
       expected: [[2018, 22]],
       expectedOrder: false,
+      solution: `SELECT TOP 1 YEAR(e.start_date) AS year, COUNT(*) AS amount
+FROM goals g
+JOIN matches m ON m.id = g.match_id
+JOIN events e ON e.id = m.event_id
+WHERE g.penalty = 1
+GROUP BY YEAR(e.start_date)
+ORDER BY COUNT(*) DESC`,
       expectedColumns: ["year", "amount"],
     },
     {
@@ -48,6 +66,12 @@ JOIN rounds r ON m.round_id=r.id JOIN events e ON r.event_id=e.id`,
         ["Vidal", "Chile,Uruguay"],
       ],
       expectedOrder: false,
+      solution: `SELECT p.name, STRING_AGG(t.name, ',') WITHIN GROUP (ORDER BY t.name) AS countries
+FROM (SELECT DISTINCT person_id, team_id FROM goals) g
+JOIN persons p ON p.id = g.person_id
+JOIN teams t ON t.id = g.team_id
+GROUP BY p.id, p.name
+HAVING COUNT(*) > 1`,
       expectedColumns: ["person.name", "countries"],
     },
     {
@@ -64,6 +88,23 @@ JOIN rounds r ON m.round_id=r.id JOIN events e ON r.event_id=e.id`,
         ["Slovakia", 1],
       ],
       expectedOrder: false,
+      solution: `WITH present AS (
+  SELECT DISTINCT et.event_id, t.country_id
+  FROM events_teams et
+  JOIN teams t ON t.id = et.team_id
+), survived AS (
+  SELECT DISTINCT m.event_id, t.country_id
+  FROM matches m
+  JOIN rounds r ON r.id = m.round_id
+  JOIN teams t ON t.id IN (m.team1_id, m.team2_id)
+  WHERE r.name NOT LIKE 'Matchday%'
+)
+SELECT c.name, COUNT(*) AS times_participated
+FROM present p
+JOIN countries c ON c.id = p.country_id
+LEFT JOIN survived s ON s.event_id = p.event_id AND s.country_id = p.country_id
+GROUP BY c.name
+HAVING COUNT(s.event_id) = COUNT(*)`,
       expectedColumns: ["country.name", "times_participated"],
     },
     {
@@ -93,6 +134,23 @@ JOIN rounds r ON m.round_id=r.id JOIN events e ON r.event_id=e.id`,
         ["worldcup.2022", "Final", "2022-12-18", 108, "Y", 11],
       ],
       expectedOrder: true,
+      solution: `WITH scorer AS (
+  SELECT TOP 1 g.person_id
+  FROM goals g
+  JOIN matches m ON m.id = g.match_id
+  WHERE m.event_id IN (20, 21, 22) AND g.team_id = 1 AND g.owngoal = 0
+  GROUP BY g.person_id
+  ORDER BY COUNT(*) DESC
+)
+SELECT e.[key] AS [worldcup.YYYY], r.name AS [round.name], CONVERT(varchar(10), m.[date], 23) AS [match.date],
+  g.[minute] AS [goal.minute], CASE WHEN g.id IS NULL THEN 'N' ELSE 'Y' END AS [scored Y/N],
+  COUNT(g.id) OVER (ORDER BY m.[date]) AS total_scored_so_far
+FROM matches m
+JOIN events e ON e.id = m.event_id
+JOIN rounds r ON r.id = m.round_id
+LEFT JOIN goals g ON g.match_id = m.id AND g.team_id = 1 AND g.owngoal = 0 AND g.person_id = (SELECT person_id FROM scorer)
+WHERE m.event_id IN (20, 21, 22) AND 1 IN (m.team1_id, m.team2_id)
+ORDER BY m.[date], g.[minute]`,
       expectedColumns: [
         "worldcup.YYYY",
         "round.name",

@@ -17,6 +17,10 @@ export const teacherExercises: ExerciseModel = {
         ["Engineering", 0],
       ],
       expectedOrder: false,
+      solution: `SELECT d.name, COUNT(t.id) AS count
+FROM departments d
+LEFT JOIN teachers t ON t.dept = d.id
+GROUP BY d.name`,
       expectedColumns: ["name", "count"],
     },
     {
@@ -32,6 +36,9 @@ export const teacherExercises: ExerciseModel = {
         ["Spiregrain", "None"],
       ],
       expectedOrder: false,
+      solution: `SELECT t.name, COALESCE(d.name, 'None') AS dept_name
+FROM teachers t
+LEFT JOIN departments d ON d.id = t.dept`,
       expectedColumns: ["name", "dept_name"],
     },
     {
@@ -47,6 +54,10 @@ export const teacherExercises: ExerciseModel = {
         ["Spiregrain", "None"],
       ],
       expectedOrder: false,
+      solution: `SELECT t.name,
+  CASE WHEN d.name IN ('Computing', 'Engineering') THEN 'Sci' WHEN d.name = 'Design' THEN 'Art' ELSE 'None' END AS "department type"
+FROM teachers t
+LEFT JOIN departments d ON d.id = t.dept`,
       expectedColumns: ["name", "department type"],
     },
     {
@@ -62,6 +73,13 @@ export const teacherExercises: ExerciseModel = {
         ["Deadyawn", "+3293313345"],
       ],
       expectedOrder: false,
+      solution: `SELECT t.name, '+32' || REPLACE(COALESCE(
+  SUBSTRING(t.mobile FROM 2),
+  '9331' || SUBSTRING(t.phone FROM 5),
+  '9331' || SUBSTRING(d.phone FROM 5)
+), ' ', '') AS phone
+FROM teachers t
+LEFT JOIN departments d ON d.id = t.dept`,
       expectedColumns: ["name", "phone"],
     },
     {
@@ -74,6 +92,9 @@ export const teacherExercises: ExerciseModel = {
         ["Spiregrain", 25],
       ],
       expectedOrder: false,
+      solution: `SELECT name, EXTRACT(YEAR FROM AGE(DATE '2024-10-03', employed_at)) AS seniority
+FROM teachers
+WHERE name LIKE 'S%'`,
       expectedColumns: ["name", "seniority"],
     },
     {
@@ -82,6 +103,9 @@ export const teacherExercises: ExerciseModel = {
       points: 6,
       expected: [["Throd"]],
       expectedOrder: false,
+      solution: `SELECT name
+FROM teachers
+WHERE EXTRACT(MONTH FROM birth_date) = 10 AND EXTRACT(DAY FROM birth_date) = 3`,
       expectedColumns: ["name"],
     },
     {
@@ -96,6 +120,14 @@ export const teacherExercises: ExerciseModel = {
         [null, "Spiregrain", 1000],
       ],
       expectedOrder: true,
+      solution: `SELECT department, name, salary
+FROM (
+  SELECT d.name AS department, t.name, t.salary, RANK() OVER (PARTITION BY d.name ORDER BY t.salary DESC) AS rnk
+  FROM teachers t
+  LEFT JOIN departments d ON d.id = t.dept
+) x
+WHERE rnk <= 2
+ORDER BY department, salary DESC`,
       expectedColumns: ["department", "name", "salary"],
       hints: "You may want to look at the RANK() Window Function.",
     },
@@ -112,6 +144,16 @@ export const teacherExercises: ExerciseModel = {
         [null, "Spiregrain", 1000],
       ],
       expectedOrder: true,
+      solution: `SELECT department, name, salary
+FROM (
+  SELECT d.name AS department, t.name, t.salary, RANK() OVER (PARTITION BY d.name ORDER BY t.salary DESC) AS rnk
+  FROM teachers t
+  LEFT JOIN departments d ON d.id = t.dept
+) x
+WHERE rnk <= 2
+UNION ALL
+SELECT 'Design', NULL, NULL
+ORDER BY department, salary DESC NULLS LAST`,
       expectedColumns: ["department", "name", "salary"],
     },
   ],

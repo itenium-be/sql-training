@@ -85,6 +85,10 @@ const checkExercise: RequestHandler = async (req: Request, res: Response) => {
   }
 
   const correct = body.success && body.responseObject.correct === true;
+  await executeQuery(
+    'INSERT INTO submissions (player, game, exerciseId, solution, correct, message) VALUES ($1, $2, $3, $4, $5, $6)',
+    [player, data.game, data.exerciseId, data.solution, correct, body.message ?? null],
+  ).catch(err => console.error('Could not log submission', err));
   const rows = body.success ? body.responseObject.rows : null;
   const recording = gameMode === 'running' && !(await isSolved(player, data.game, data.exerciseId));
 
@@ -208,6 +212,18 @@ const getAdmin: RequestHandler = async (_req: Request, res: Response) => {
   return res.status(200).send({mode: gameMode, modes: gameModes});
 };
 
+const getSubmissions: RequestHandler = async (_req: Request, res: Response) => {
+  let solutions: any[] = [];
+  try {
+    const body = await callBackEnd('/exercises/solutions');
+    solutions = body.success ? body.responseObject : [];
+  } catch (err) {
+    console.error('Could not fetch reference solutions', err);
+  }
+  const result = await executeQuery('SELECT id, player, game, exerciseId, solution, correct, message, submittedAt FROM submissions ORDER BY submittedAt');
+  return res.status(200).send({solutions, submissions: result.rows});
+};
+
 const setMode: RequestHandler = async (req: Request, res: Response) => {
   const newMode = req.body?.mode;
   if (!gameModes.includes(newMode)) {
@@ -230,3 +246,4 @@ gameRouter.get("/players", getPlayers);
 gameRouter.post("/avatar", requirePlayer, setAvatar);
 gameRouter.get("/admin", requireAdmin, getAdmin);
 gameRouter.post("/admin/mode", requireAdmin, setMode);
+gameRouter.get("/admin/submissions", requireAdmin, getSubmissions);

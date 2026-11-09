@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Alert, Button, ButtonGroup, Container, Form } from 'react-bootstrap';
-import { config } from './config';
+import { adminFetch } from './adminApi';
+import { AdminSubmissions } from './AdminSubmissions';
 import { GameMode } from './game';
 
 const API_KEY_STORAGE = 'adminApiKey';
@@ -10,19 +11,6 @@ const modeDescriptions: Record<GameMode, string> = {
   running: 'Game on: submissions are scored',
   end: 'Game over: submissions closed, all solutions visible',
 };
-
-async function adminFetch(apiKey: string, path: string, body?: object) {
-  const res = await fetch(`${config.leaderboard.api}/game/admin${path}`, {
-    method: body ? 'POST' : 'GET',
-    headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey },
-    body: body ? JSON.stringify(body) : undefined,
-  });
-  const data = await res.json();
-  if (!res.ok) {
-    throw new Error(data.message ?? res.statusText);
-  }
-  return data;
-}
 
 export function Admin() {
   const [apiKey, setApiKey] = useState(() => localStorage.getItem(API_KEY_STORAGE) ?? '');
@@ -68,7 +56,7 @@ export function Admin() {
   }, []);
 
   return (
-    <Container style={{paddingTop: 15, paddingBottom: 25, maxWidth: 720}}>
+    <Container style={{paddingTop: 15, paddingBottom: 25, maxWidth: 1100}}>
       <h1>Admin</h1>
 
       {!authorized ? (
@@ -99,6 +87,8 @@ export function Admin() {
             </ButtonGroup>
             {mode && <p style={{marginTop: 12, marginBottom: 0}}>{modeDescriptions[mode]}</p>}
           </section>
+
+          <AdminSubmissions apiKey={apiKey} />
 
           <Button variant="outline-secondary" size="sm" onClick={logout}>Logout</Button>
         </>

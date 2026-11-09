@@ -133,6 +133,13 @@ exRegistry.registerPath({
   responses: createApiResponse(z.object({ hints: z.string().optional(), expected: z.any().array().optional(), expectedColumns: z.string().array().optional() }), "Internal: the hint or the expected result"),
 });
 
+exRegistry.registerPath({
+  method: "get",
+  path: "/exercises/solutions",
+  tags: ["Exercises"],
+  responses: createApiResponse(z.object({ game: z.string(), exerciseId: z.number(), desc: z.string(), points: z.number(), solution: z.string() }).array(), "Internal: the reference solution of every exercise"),
+});
+
 exRouter.post("/", exController.post);
 exRouter.post("/validate", exController.validate);
 exRouter.get("/schema", exController.schema);
@@ -140,3 +147,4 @@ exRouter.post("/cost", requireInternal, exController.cost);
 exRouter.get("/definitions", exController.definitions);
 exRouter.post("/check", requireInternal, exController.check);
 exRouter.get("/hint", requireInternal, exController.hint);
+exRouter.get("/solutions", requireInternal, exController.solutions);

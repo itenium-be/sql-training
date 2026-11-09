@@ -18,6 +18,9 @@ export const worldExercises: ExerciseModel = {
         ["United States", 51032],
       ],
       expectedOrder: false,
+      solution: `SELECT name, FLOOR(gdp / population) AS "gdp per capita"
+FROM countries
+WHERE population >= 200000000`,
       expectedColumns: ["name", "gdp per capita"],
     },
     {
@@ -26,6 +29,10 @@ export const worldExercises: ExerciseModel = {
       points: 3,
       expected: [["Mozambique"]],
       expectedOrder: false,
+      solution: `SELECT name
+FROM countries
+WHERE name ILIKE '%a%' AND name ILIKE '%e%' AND name ILIKE '%i%' AND name ILIKE '%o%' AND name ILIKE '%u%'
+  AND name NOT LIKE '% %'`,
       expectedColumns: ["name"],
     },
     {
@@ -48,6 +55,10 @@ export const worldExercises: ExerciseModel = {
         ["Saint Vincent and the Grenadines", 0.11, 0.69],
       ],
       expectedOrder: true,
+      solution: `SELECT name, ROUND(population / 1000000.0, 2) AS "population (M)", ROUND(gdp / 1000000000.0, 2) AS "gdp (B)"
+FROM countries
+WHERE continent = 'South America'
+ORDER BY gdp DESC`,
       expectedColumns: ["name", "population (M)", "gdp (B)"],
     },
     {
@@ -56,6 +67,9 @@ export const worldExercises: ExerciseModel = {
       points: 6,
       expected: [["China"], ["Japan"], ["United States"]],
       expectedOrder: false,
+      solution: `SELECT name
+FROM countries
+WHERE gdp > ALL (SELECT gdp FROM countries WHERE continent = 'Europe' AND gdp IS NOT NULL)`,
       expectedColumns: ["name"],
     },
     {
@@ -73,6 +87,10 @@ export const worldExercises: ExerciseModel = {
         ["South America", "Brazil", 8515767],
       ],
       expectedOrder: true,
+      solution: `SELECT continent, name AS country, area
+FROM countries c
+WHERE area = (SELECT MAX(area) FROM countries x WHERE x.continent = c.continent)
+ORDER BY continent`,
       expectedColumns: ["continent", "country", "area"],
     },
     {
@@ -90,6 +108,11 @@ export const worldExercises: ExerciseModel = {
         ["South America", 13, 389, "Saint Vincent and the Grenadines", 407618970, 10194],
       ],
       expectedOrder: false,
+      solution: `SELECT continent, COUNT(*) AS countries, MIN(area) AS "smallest area",
+  (SELECT name FROM countries x WHERE x.continent = c.continent ORDER BY area LIMIT 1) AS "smallest name",
+  SUM(population) AS "total population", ROUND(SUM(gdp) / SUM(population)) AS "average gdp"
+FROM countries c
+GROUP BY continent`,
       expectedColumns: ["continent", "countries", "smallest area", "smallest name", "total population", "averga gdp"],
     },
     {
@@ -105,6 +128,11 @@ export const worldExercises: ExerciseModel = {
         ["Ukraine", 43009258, "53%"],
       ],
       expectedOrder: true,
+      solution: `WITH germany AS (SELECT population FROM countries WHERE name = 'Germany')
+SELECT name, population, ROUND(100.0 * population / (SELECT population FROM germany)) || '%' AS "population % of Germany"
+FROM countries
+WHERE continent = 'Europe' AND population >= 0.5 * (SELECT population FROM germany)
+ORDER BY population DESC`,
       expectedColumns: ["name", "population", "population % of Germany"],
     },
     {
@@ -126,6 +154,12 @@ export const worldExercises: ExerciseModel = {
         [".us", "Belarus,Mauritius,Cyprus"],
       ],
       expectedOrder: true,
+      solution: `SELECT c.tld, STRING_AGG(o.name, ',' ORDER BY o.population DESC) AS "country1,country2"
+FROM countries c
+JOIN countries o ON o.id <> c.id AND LOWER(o.name) LIKE '%' || SUBSTRING(c.tld FROM 2)
+GROUP BY c.tld
+HAVING COUNT(*) > 1
+ORDER BY c.tld`,
       expectedColumns: ["tld", "country1,country2"],
     },
   ],
