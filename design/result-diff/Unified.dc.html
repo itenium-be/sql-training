@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Unified diff</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#e9b44c}a:hover{color:#f0e2c2}
+</style>
+</helmet>
+<div style="width: 1200px; height: 820px; box-sizing: border-box; padding: 40px 48px; display: flex; flex-direction: column; gap: 20px; background: #16100a; color: #d6c49e; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 15px">
+  <div style="display: flex; flex-direction: column; gap: 6px">
+    <span style="text-transform: uppercase; letter-spacing: .12em; font-size: 12px; font-weight: 700; color: #e9b44c">World · Exercise 7</span>
+    <h1 style="margin: 0; font-size: 28px; font-weight: 800; color: #f0e2c2; letter-spacing: -0.02em">European countries with more than 55 million inhabitants</h1>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; background: rgba(220, 53, 69, 0.16); border: 1px solid rgba(220, 53, 69, 0.5); color: #ffc9c9">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M15 9l-6 6M9 9l6 6"></path></svg>
+    <strong style="color: #ffe3e3">Not quite.</strong>
+    <span>Diff of your result against the expected output.</span>
+  </div>
+
+  <div style="display: flex; flex-direction: column; border: 1px solid #33271a; border-radius: 12px; overflow: hidden; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 14px">
+    <div style="display: grid; grid-template-columns: 44px 260px 200px 1fr; background: #1f170f; color: #f0e2c2; font-weight: 700; border-bottom: 1px solid #33271a">
+      <span style="padding: 10px 14px"></span>
+      <span style="padding: 10px 14px">name</span>
+      <span style="padding: 10px 14px; color: #ffb4b4; background: rgba(220, 53, 69, 0.22)">+ continent</span>
+      <span style="padding: 10px 14px">population</span>
+    </div>
+    <div style="display: grid; grid-template-columns: 44px 260px 200px 1fr; border-bottom: 1px solid #33271a">
+      <span style="padding: 9px 14px; color: #a38e66">=</span><span style="padding: 9px 14px">France</span><span style="padding: 9px 14px; color: #a38e66">Europe</span><span style="padding: 9px 14px">59.225.700</span>
+    </div>
+    <div style="display: grid; grid-template-columns: 44px 260px 200px 1fr; border-bottom: 1px solid #33271a">
+      <span style="padding: 9px 14px; color: #a38e66">=</span><span style="padding: 9px 14px">Germany</span><span style="padding: 9px 14px; color: #a38e66">Europe</span><span style="padding: 9px 14px">82.164.700</span>
+    </div>
+    <div style="display: grid; grid-template-columns: 44px 260px 200px 1fr; border-bottom: 1px solid #33271a">
+      <span style="padding: 9px 14px; color: #a38e66">=</span><span style="padding: 9px 14px">Italy</span><span style="padding: 9px 14px; color: #a38e66">Europe</span><span style="padding: 9px 14px">57.680.000</span>
+    </div>
+    <div style="display: grid; grid-template-columns: 44px 260px 200px 1fr; border-bottom: 1px solid #33271a; background: rgba(233, 180, 76, 0.1)">
+      <span style="padding: 9px 14px; color: #e9b44c; font-weight: 700">−</span><span style="padding: 9px 14px; color: #e9b44c">Russian Federation</span><span style="padding: 9px 14px; color: #a38e66"></span><span style="padding: 9px 14px; color: #e9b44c">146.934.000</span>
+    </div>
+    <div style="display: grid; grid-template-columns: 44px 260px 200px 1fr; border-bottom: 1px solid #33271a; background: rgba(220, 53, 69, 0.18)">
+      <span style="padding: 9px 14px; color: #ffb4b4; font-weight: 700">+</span><span style="padding: 9px 14px; color: #ffb4b4">Turkey</span><span style="padding: 9px 14px; color: #ffb4b4">Asia</span><span style="padding: 9px 14px; color: #ffb4b4">66.591.000</span>
+    </div>
+    <div style="display: grid; grid-template-columns: 44px 260px 200px 1fr">
+      <span style="padding: 9px 14px; color: #f0e2c2; font-weight: 700">~</span><span style="padding: 9px 14px">United Kingdom</span><span style="padding: 9px 14px; color: #a38e66">Europe</span>
+      <span style="padding: 9px 14px; display: flex; gap: 10px; align-items: center"><span style="color: #e9b44c; text-decoration: line-through">59.623.400</span><span style="color: #a38e66">→</span><span style="color: #ffe3e3; font-weight: 700; background: rgba(220, 53, 69, 0.35); padding: 1px 6px; border-radius: 4px">58.789.194</span></span>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 24px; color: #a38e66; font-size: 13px">
+    <span><strong style="color: #d6c49e">=</strong> matches</span>
+    <span><strong style="color: #e9b44c">−</strong> expected, missing from yours</span>
+    <span><strong style="color: #ffb4b4">+</strong> in yours, not expected</span>
+    <span><strong style="color: #f0e2c2">~</strong> same row, different value: expected → yours</span>
+  </div>
+
+  <p style="margin: 0; color: #a38e66; font-size: 13px; line-height: 1.5; max-width: 760px">Developer-friendly and compact: everything in one list with a gutter marker. Changed rows are paired with the closest expected row. Long results could collapse runs of "=" rows ("12 matching rows").</p>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1200,"height":820}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

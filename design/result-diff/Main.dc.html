@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Inline diff</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#e9b44c}a:hover{color:#f0e2c2}
+</style>
+</helmet>
+<div style="width: 1200px; height: 820px; box-sizing: border-box; padding: 40px 48px; display: flex; flex-direction: column; gap: 20px; background: #16100a; color: #d6c49e; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 15px">
+  <div style="display: flex; flex-direction: column; gap: 6px">
+    <span style="text-transform: uppercase; letter-spacing: .12em; font-size: 12px; font-weight: 700; color: #e9b44c">World · Exercise 7</span>
+    <h1 style="margin: 0; font-size: 28px; font-weight: 800; color: #f0e2c2; letter-spacing: -0.02em">European countries with more than 55 million inhabitants</h1>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; background: rgba(220, 53, 69, 0.16); border: 1px solid rgba(220, 53, 69, 0.5); color: #ffc9c9">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M15 9l-6 6M9 9l6 6"></path></svg>
+    <strong style="color: #ffe3e3">Not quite.</strong>
+    <span>Your result does not match the expected output.</span>
+  </div>
+
+  <div style="display: flex; flex-wrap: wrap; gap: 8px">
+    <span style="padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(220, 53, 69, 0.6); color: #ffb4b4; font-weight: 700; font-size: 13px">1 wrong value</span>
+    <span style="padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(220, 53, 69, 0.6); color: #ffb4b4; font-weight: 700; font-size: 13px">1 extra row</span>
+    <span style="padding: 6px 12px; border-radius: 999px; border: 1px dashed #e9b44c; color: #e9b44c; font-weight: 700; font-size: 13px">1 missing row</span>
+    <span style="padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(220, 53, 69, 0.6); color: #ffb4b4; font-weight: 700; font-size: 13px">1 extra column</span>
+    <span style="padding: 6px 12px; border-radius: 999px; border: 1px solid #4a3820; color: #a38e66; font-weight: 600; font-size: 13px">Sorted by all columns · order not checked</span>
+  </div>
+
+  <div style="display: flex; gap: 32px; align-items: flex-start">
+    <div style="flex: 1 1 0; display: flex; flex-direction: column; gap: 10px">
+      <h2 style="margin: 0; font-size: 18px; font-weight: 800; color: #f0e2c2">Your result</h2>
+      <table style="width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid #33271a; border-radius: 12px; overflow: hidden; font-size: 15px">
+        <thead>
+          <tr style="background: #1f170f">
+            <th style="text-align: left; padding: 10px 14px; color: #f0e2c2; border-bottom: 1px solid #33271a; width: 40px">#</th>
+            <th style="text-align: left; padding: 10px 14px; color: #f0e2c2; border-bottom: 1px solid #33271a">name</th>
+            <th style="text-align: left; padding: 10px 14px; color: #ffb4b4; background: rgba(220, 53, 69, 0.22); border-bottom: 1px solid #33271a"><span style="text-decoration: line-through">continent</span> <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em">not expected</span></th>
+            <th style="text-align: right; padding: 10px 14px; color: #f0e2c2; border-bottom: 1px solid #33271a">population</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 10px 14px; color: #a38e66; border-bottom: 1px solid #33271a">1</td>
+            <td style="padding: 10px 14px; border-bottom: 1px solid #33271a">France</td>
+            <td style="padding: 10px 14px; color: #ffb4b4; background: rgba(220, 53, 69, 0.12); border-bottom: 1px solid #33271a">Europe</td>
+            <td style="padding: 10px 14px; text-align: right; border-bottom: 1px solid #33271a">59.225.700</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 14px; color: #a38e66; border-bottom: 1px solid #33271a">2</td>
+            <td style="padding: 10px 14px; border-bottom: 1px solid #33271a">Germany</td>
+            <td style="padding: 10px 14px; color: #ffb4b4; background: rgba(220, 53, 69, 0.12); border-bottom: 1px solid #33271a">Europe</td>
+            <td style="padding: 10px 14px; text-align: right; border-bottom: 1px solid #33271a">82.164.700</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 14px; color: #a38e66; border-bottom: 1px solid #33271a">3</td>
+            <td style="padding: 10px 14px; border-bottom: 1px solid #33271a">Italy</td>
+            <td style="padding: 10px 14px; color: #ffb4b4; background: rgba(220, 53, 69, 0.12); border-bottom: 1px solid #33271a">Europe</td>
+            <td style="padding: 10px 14px; text-align: right; border-bottom: 1px solid #33271a">57.680.000</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 14px; color: #ffb4b4; background: rgba(220, 53, 69, 0.22); border-bottom: 1px solid #33271a; font-size: 11px; font-weight: 800; text-transform: uppercase">extra</td>
+            <td style="padding: 10px 14px; color: #ffb4b4; background: rgba(220, 53, 69, 0.22); border-bottom: 1px solid #33271a">Turkey</td>
+            <td style="padding: 10px 14px; color: #ffb4b4; background: rgba(220, 53, 69, 0.22); border-bottom: 1px solid #33271a">Asia</td>
+            <td style="padding: 10px 14px; text-align: right; color: #ffb4b4; background: rgba(220, 53, 69, 0.22); border-bottom: 1px solid #33271a">66.591.000</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 14px; color: #a38e66; border-bottom: 1px solid #33271a">5</td>
+            <td style="padding: 10px 14px; border-bottom: 1px solid #33271a">United Kingdom</td>
+            <td style="padding: 10px 14px; color: #ffb4b4; background: rgba(220, 53, 69, 0.12); border-bottom: 1px solid #33271a">Europe</td>
+            <td style="padding: 8px 14px; text-align: right; background: rgba(220, 53, 69, 0.3); border-bottom: 1px solid #33271a">
+              <div style="color: #ffe3e3; font-weight: 800">58.789.194</div>
+              <div style="color: #a38e66; font-size: 12px">expected 59.623.400</div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 14px; color: #e9b44c; border-top: 1px dashed #e9b44c; font-size: 11px; font-weight: 800; text-transform: uppercase">missing</td>
+            <td style="padding: 10px 14px; color: #e9b44c; font-style: italic; border-top: 1px dashed #e9b44c">Russian Federation</td>
+            <td style="padding: 10px 14px; color: #a38e66; border-top: 1px dashed #e9b44c">–</td>
+            <td style="padding: 10px 14px; text-align: right; color: #e9b44c; font-style: italic; border-top: 1px dashed #e9b44c">146.934.000</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="width: 300px; display: flex; flex-direction: column; gap: 12px; padding: 20px; border: 1px solid #33271a; border-radius: 16px; background: #1f170f">
+      <h2 style="margin: 0; font-size: 16px; font-weight: 800; color: #f0e2c2">How to read this</h2>
+      <div style="display: flex; gap: 10px; align-items: center"><span style="width: 28px; height: 20px; border-radius: 4px; background: rgba(220, 53, 69, 0.3)"></span><span>Wrong value, expected shown below it</span></div>
+      <div style="display: flex; gap: 10px; align-items: center"><span style="width: 28px; height: 20px; border-radius: 4px; background: rgba(220, 53, 69, 0.22)"></span><span>Row or column that should not be there</span></div>
+      <div style="display: flex; gap: 10px; align-items: center"><span style="width: 28px; height: 20px; border-radius: 4px; border: 1px dashed #e9b44c"></span><span>Row you are missing, in italics</span></div>
+      <p style="margin: 8px 0 0; color: #a38e66; font-size: 13px; line-height: 1.5">One table, nothing to scan across. Best when the result is small; missing rows are appended at the bottom.</p>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1200,"height":820}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

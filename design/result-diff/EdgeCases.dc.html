@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Diff edge cases</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#e9b44c}a:hover{color:#f0e2c2}
+</style>
+</helmet>
+<div style="width: 1200px; height: 820px; box-sizing: border-box; padding: 40px 48px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; background: #16100a; color: #d6c49e; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 14px">
+
+  <section style="display: flex; flex-direction: column; gap: 10px; padding: 20px; border: 1px solid #33271a; border-radius: 16px; background: #1f170f">
+    <h2 style="margin: 0; font-size: 17px; font-weight: 800; color: #f0e2c2">Wrong row order <span style="font-size: 12px; color: #a38e66; font-weight: 600">exercise requires ORDER BY</span></h2>
+    <p style="margin: 0; color: #a38e66; font-size: 13px">All rows are right, only the order is off. Not sorted for comparison; each misplaced row shows where it belongs.</p>
+    <table style="width: 100%; border-collapse: collapse">
+      <thead><tr style="color: #f0e2c2"><th style="text-align: left; padding: 8px 10px; border-bottom: 1px solid #33271a">#</th><th style="text-align: left; padding: 8px 10px; border-bottom: 1px solid #33271a">name</th><th style="text-align: right; padding: 8px 10px; border-bottom: 1px solid #33271a">population</th><th style="padding: 8px 10px; border-bottom: 1px solid #33271a"></th></tr></thead>
+      <tbody>
+        <tr style="background: rgba(220, 53, 69, 0.18)"><td style="padding: 8px 10px; color: #ffb4b4">1</td><td style="padding: 8px 10px">France</td><td style="padding: 8px 10px; text-align: right">59.225.700</td><td style="padding: 8px 10px; color: #ffb4b4; font-weight: 700; font-size: 12px">↓ belongs at #3</td></tr>
+        <tr><td style="padding: 8px 10px; color: #a38e66">2</td><td style="padding: 8px 10px">Germany</td><td style="padding: 8px 10px; text-align: right">82.164.700</td><td style="padding: 8px 10px"></td></tr>
+        <tr style="background: rgba(220, 53, 69, 0.18)"><td style="padding: 8px 10px; color: #ffb4b4">3</td><td style="padding: 8px 10px">Russian Federation</td><td style="padding: 8px 10px; text-align: right">146.934.000</td><td style="padding: 8px 10px; color: #ffb4b4; font-weight: 700; font-size: 12px">↑ belongs at #1</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 10px; padding: 20px; border: 1px solid #33271a; border-radius: 16px; background: #1f170f">
+    <h2 style="margin: 0; font-size: 17px; font-weight: 800; color: #f0e2c2">Columns in a different order</h2>
+    <p style="margin: 0; color: #a38e66; font-size: 13px">Values are right but the columns are swapped. Instead of painting every cell red, flag the headers once.</p>
+    <div style="display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 10px; border: 1px solid #e9b44c; color: #e9b44c; font-weight: 700; font-size: 13px">Expected column order: name, population</div>
+    <table style="width: 100%; border-collapse: collapse">
+      <thead><tr><th style="text-align: right; padding: 8px 10px; color: #e9b44c; border-bottom: 2px solid #e9b44c">population ⇄</th><th style="text-align: left; padding: 8px 10px; color: #e9b44c; border-bottom: 2px solid #e9b44c">⇄ name</th></tr></thead>
+      <tbody>
+        <tr><td style="padding: 8px 10px; text-align: right">59.225.700</td><td style="padding: 8px 10px">France</td></tr>
+        <tr><td style="padding: 8px 10px; text-align: right">82.164.700</td><td style="padding: 8px 10px">Germany</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 10px; padding: 20px; border: 1px solid #33271a; border-radius: 16px; background: #1f170f">
+    <h2 style="margin: 0; font-size: 17px; font-weight: 800; color: #f0e2c2">Missing column</h2>
+    <p style="margin: 0; color: #a38e66; font-size: 13px">A ghost column with the expected values, same treatment as a missing row.</p>
+    <table style="width: 100%; border-collapse: collapse">
+      <thead><tr><th style="text-align: left; padding: 8px 10px; color: #f0e2c2; border-bottom: 1px solid #33271a">name</th><th style="text-align: right; padding: 8px 10px; color: #e9b44c; font-style: italic; border: 1px dashed #e9b44c; border-bottom-style: solid">population <span style="font-size: 11px; font-weight: 800; text-transform: uppercase; font-style: normal">missing</span></th></tr></thead>
+      <tbody>
+        <tr><td style="padding: 8px 10px">France</td><td style="padding: 8px 10px; text-align: right; color: #e9b44c; font-style: italic; border-left: 1px dashed #e9b44c; border-right: 1px dashed #e9b44c">59.225.700</td></tr>
+        <tr><td style="padding: 8px 10px">Germany</td><td style="padding: 8px 10px; text-align: right; color: #e9b44c; font-style: italic; border: 1px dashed #e9b44c; border-top: 0">82.164.700</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 10px; padding: 20px; border: 1px solid #33271a; border-radius: 16px; background: #1f170f">
+    <h2 style="margin: 0; font-size: 17px; font-weight: 800; color: #f0e2c2">Way too many rows</h2>
+    <p style="margin: 0; color: #a38e66; font-size: 13px">239 returned, 5 expected: a diff is noise. Lead with the counts and show matched rows first, then a capped list of extras.</p>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+      <div style="padding: 10px 12px; border-radius: 10px; border: 1px solid #33271a; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 22px; font-weight: 800; color: #f0e2c2">5 / 5</span><span style="font-size: 12px; color: #a38e66">expected rows found</span></div>
+      <div style="padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(220, 53, 69, 0.6); display: flex; flex-direction: column; gap: 2px"><span style="font-size: 22px; font-weight: 800; color: #ffb4b4">234</span><span style="font-size: 12px; color: #a38e66">extra rows</span></div>
+      <div style="padding: 10px 12px; border-radius: 10px; border: 1px solid #33271a; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 22px; font-weight: 800; color: #f0e2c2">0</span><span style="font-size: 12px; color: #a38e66">missing rows</span></div>
+    </div>
+    <p style="margin: 0; font-size: 13px; color: #d6c49e">Hint: your <strong style="color: #f0e2c2">WHERE</strong> is probably missing a condition.</p>
+    <span style="font-size: 13px; color: #a38e66">Showing the 5 matches + first 20 extras · <a href="#">show all 239</a></span>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1200,"height":820}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

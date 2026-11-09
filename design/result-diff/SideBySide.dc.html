@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Side by side diff</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#e9b44c}a:hover{color:#f0e2c2}
+</style>
+</helmet>
+<div style="width: 1200px; height: 820px; box-sizing: border-box; padding: 40px 48px; display: flex; flex-direction: column; gap: 20px; background: #16100a; color: #d6c49e; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 15px">
+  <div style="display: flex; flex-direction: column; gap: 6px">
+    <span style="text-transform: uppercase; letter-spacing: .12em; font-size: 12px; font-weight: 700; color: #e9b44c">World · Exercise 7</span>
+    <h1 style="margin: 0; font-size: 28px; font-weight: 800; color: #f0e2c2; letter-spacing: -0.02em">European countries with more than 55 million inhabitants</h1>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; background: rgba(220, 53, 69, 0.16); border: 1px solid rgba(220, 53, 69, 0.5); color: #ffc9c9">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M15 9l-6 6M9 9l6 6"></path></svg>
+    <strong style="color: #ffe3e3">Not quite.</strong>
+    <span>5 rows returned, 5 expected · 4 match · 1 wrong value · 1 extra · 1 missing · 1 extra column</span>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px">
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <h2 style="margin: 0; font-size: 18px; font-weight: 800; color: #f0e2c2">Your result</h2>
+      <table style="width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid #33271a; border-radius: 12px; overflow: hidden">
+        <thead>
+          <tr style="background: #1f170f">
+            <th style="text-align: left; padding: 10px 14px; color: #f0e2c2; border-bottom: 1px solid #33271a">name</th>
+            <th style="text-align: left; padding: 10px 14px; color: #ffb4b4; background: rgba(220, 53, 69, 0.22); border-bottom: 1px solid #33271a">continent</th>
+            <th style="text-align: right; padding: 10px 14px; color: #f0e2c2; border-bottom: 1px solid #33271a">population</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td style="padding: 10px 14px; border-bottom: 1px solid #33271a">France</td><td style="padding: 10px 14px; color: #ffb4b4; background: rgba(220, 53, 69, 0.12); border-bottom: 1px solid #33271a">Europe</td><td style="padding: 10px 14px; text-align: right; border-bottom: 1px solid #33271a">59.225.700</td></tr>
+          <tr><td style="padding: 10px 14px; border-bottom: 1px solid #33271a">Germany</td><td style="padding: 10px 14px; color: #ffb4b4; background: rgba(220, 53, 69, 0.12); border-bottom: 1px solid #33271a">Europe</td><td style="padding: 10px 14px; text-align: right; border-bottom: 1px solid #33271a">82.164.700</td></tr>
+          <tr><td style="padding: 10px 14px; border-bottom: 1px solid #33271a">Italy</td><td style="padding: 10px 14px; color: #ffb4b4; background: rgba(220, 53, 69, 0.12); border-bottom: 1px solid #33271a">Europe</td><td style="padding: 10px 14px; text-align: right; border-bottom: 1px solid #33271a">57.680.000</td></tr>
+          <tr><td style="padding: 10px 14px; color: #a38e66; border-bottom: 1px solid #33271a; background: repeating-linear-gradient(135deg, transparent 0 8px, rgba(233, 180, 76, 0.07) 8px 16px)" colspan="3"><span style="font-size: 12px; font-weight: 700; color: #e9b44c">no matching row</span></td></tr>
+          <tr><td style="padding: 10px 14px; color: #ffb4b4; background: rgba(220, 53, 69, 0.22); border-bottom: 1px solid #33271a">Turkey</td><td style="padding: 10px 14px; color: #ffb4b4; background: rgba(220, 53, 69, 0.22); border-bottom: 1px solid #33271a">Asia</td><td style="padding: 10px 14px; text-align: right; color: #ffb4b4; background: rgba(220, 53, 69, 0.22); border-bottom: 1px solid #33271a">66.591.000</td></tr>
+          <tr><td style="padding: 10px 14px">United Kingdom</td><td style="padding: 10px 14px; color: #ffb4b4; background: rgba(220, 53, 69, 0.12)">Europe</td><td style="padding: 10px 14px; text-align: right; color: #ffe3e3; font-weight: 800; background: rgba(220, 53, 69, 0.3)">58.789.194</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <h2 style="margin: 0; font-size: 18px; font-weight: 800; color: #f0e2c2">Expected <span style="font-size: 12px; font-weight: 700; color: #a38e66">−1 point</span></h2>
+      <table style="width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid #33271a; border-radius: 12px; overflow: hidden">
+        <thead>
+          <tr style="background: #1f170f">
+            <th style="text-align: left; padding: 10px 14px; color: #f0e2c2; border-bottom: 1px solid #33271a">name</th>
+            <th style="text-align: right; padding: 10px 14px; color: #f0e2c2; border-bottom: 1px solid #33271a">population</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td style="padding: 10px 14px; border-bottom: 1px solid #33271a">France</td><td style="padding: 10px 14px; text-align: right; border-bottom: 1px solid #33271a">59.225.700</td></tr>
+          <tr><td style="padding: 10px 14px; border-bottom: 1px solid #33271a">Germany</td><td style="padding: 10px 14px; text-align: right; border-bottom: 1px solid #33271a">82.164.700</td></tr>
+          <tr><td style="padding: 10px 14px; border-bottom: 1px solid #33271a">Italy</td><td style="padding: 10px 14px; text-align: right; border-bottom: 1px solid #33271a">57.680.000</td></tr>
+          <tr><td style="padding: 10px 14px; color: #e9b44c; font-weight: 700; border-bottom: 1px solid #33271a; box-shadow: inset 0 0 0 1px #e9b44c">Russian Federation</td><td style="padding: 10px 14px; text-align: right; color: #e9b44c; font-weight: 700; border-bottom: 1px solid #33271a; box-shadow: inset 0 0 0 1px #e9b44c">146.934.000</td></tr>
+          <tr><td style="padding: 10px 14px; color: #a38e66; border-bottom: 1px solid #33271a; background: repeating-linear-gradient(135deg, transparent 0 8px, rgba(220, 53, 69, 0.08) 8px 16px)" colspan="2"><span style="font-size: 12px; font-weight: 700; color: #ffb4b4">not expected</span></td></tr>
+          <tr><td style="padding: 10px 14px">United Kingdom</td><td style="padding: 10px 14px; text-align: right; font-weight: 800; color: #f0e2c2; box-shadow: inset 0 0 0 1px rgba(220, 53, 69, 0.6)">59.623.400</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <p style="margin: 0; color: #a38e66; font-size: 13px; line-height: 1.5; max-width: 760px">Both tables sorted the same way and padded so matching rows sit on the same line. Familiar and honest, but the eye has to jump between two tables, and wide results need twice the width.</p>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1200,"height":820}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>
