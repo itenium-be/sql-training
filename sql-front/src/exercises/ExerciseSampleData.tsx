@@ -47,7 +47,7 @@ function TableBody({data}: {data: Record<string, unknown>[]}) {
   return (
     <tbody>
       {data.map((record, index) => (
-        <tr key={String(record.id ?? index)}>
+        <tr key={index}>
           {cols.map(col => <Cell key={col} value={record[col]} />)}
         </tr>
       ))}
