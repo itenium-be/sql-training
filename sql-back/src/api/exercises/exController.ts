@@ -4,7 +4,7 @@ import { ServiceResponse } from "@/common/models/serviceResponse";
 import { StatusCodes } from "http-status-codes";
 import { checkSql, getSchema } from "./sqlCheck";
 import { CostError, measurePostgres, measureSqlServer } from "./cost";
-import { QueryError, findExercise, isCorrect, measureCost, penalties, runQuery, toObjects } from "./checker";
+import { QueryError, findExercise, isCorrect, resolveExpected, measureCost, penalties, runQuery, toObjects } from "./checker";
 import { exercises } from "./definitions/exercises";
 
 type CheckResult = {
@@ -55,8 +55,12 @@ class ExController {
       return handleServiceResponse(ServiceResponse.failure('Unknown exercise', null, StatusCodes.NOT_FOUND), res);
     }
     if (_req.query.type === 'expected') {
-      const { expected, expectedColumns } = exercise;
-      return handleServiceResponse(ServiceResponse.success('Expected result', { expected, expectedColumns }), res);
+      try {
+        const expected = await resolveExpected(String(_req.query.game), exercise);
+        return handleServiceResponse(ServiceResponse.success('Expected result', { expected, expectedColumns: exercise.expectedColumns }), res);
+      } catch (err: any) {
+        return handleServiceResponse(ServiceResponse.failure(err.message, null, StatusCodes.INTERNAL_SERVER_ERROR), res);
+      }
     }
     if (!exercise.hints) {
       return handleServiceResponse(ServiceResponse.failure('This exercise has no hint', null, StatusCodes.NOT_FOUND), res);
@@ -75,7 +79,7 @@ class ExController {
     }
     try {
       const result = await runQuery(game, query);
-      const correct = isCorrect(exercise, result);
+      const correct = isCorrect(exercise, await resolveExpected(game, exercise), result);
       const rows = toObjects(result);
       const cost = correct ? await measureCost(game, query) : null;
       return handleServiceResponse(ServiceResponse.success<CheckResult>(correct ? 'Correct' : 'Query result does not match expected output!', { correct, cost, rows, points: exercise.points, ...penalties(exercise) }), res);

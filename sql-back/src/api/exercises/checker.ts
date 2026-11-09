@@ -74,8 +74,29 @@ function rowEquals(actual: unknown[], expected: unknown[]) {
   return actual.length === expected.length && actual.every((cell, i) => cellEquals(cell, expected[i]));
 }
 
-export function isCorrect(exercise: SqlExerciseModel, { rows: actual }: QueryResult) {
-  const expected = exercise.expected;
+const dynamicCache = new Map<string, unknown[][]>();
+
+function normalizeCell(cell: unknown) {
+  return typeof cell === "string" && /^-?\d+(\.\d+)?$/.test(cell) ? Number(cell) : cell;
+}
+
+export async function resolveExpected(game: string, exercise: SqlExerciseModel): Promise<unknown[][]> {
+  if (!exercise.dynamic) {
+    return exercise.expected;
+  }
+  const key = `${game}-${exercise.id}-${new Date().toISOString().slice(0, 10)}`;
+  const cached = dynamicCache.get(key);
+  if (cached) {
+    return cached;
+  }
+  const { rows } = await runQuery(game, exercise.solution);
+  const expected = rows.map((row) => row.map(normalizeCell));
+  dynamicCache.clear();
+  dynamicCache.set(key, expected);
+  return expected;
+}
+
+export function isCorrect(exercise: SqlExerciseModel, expected: unknown[][], { rows: actual }: QueryResult) {
   if (actual.length !== expected.length) {
     return false;
   }

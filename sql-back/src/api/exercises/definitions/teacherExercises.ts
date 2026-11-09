@@ -86,13 +86,10 @@ LEFT JOIN departments d ON d.id = t.dept`,
       id: 5,
       desc: 'Select all teacher with a name starting with "S" and their seniority (in years)',
       points: 6,
-      expected: [
-        ["Shrivell", 23],
-        ["Splint", 2],
-        ["Spiregrain", 25],
-      ],
+      expected: [],
+      dynamic: true,
       expectedOrder: false,
-      solution: `SELECT name, EXTRACT(YEAR FROM AGE(DATE '2024-10-03', employed_at)) AS seniority
+      solution: `SELECT name, EXTRACT(YEAR FROM AGE(CURRENT_DATE, employed_at)) AS seniority
 FROM teachers
 WHERE name LIKE 'S%'`,
       expectedColumns: ["name", "seniority"],

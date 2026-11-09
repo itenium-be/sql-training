@@ -5,6 +5,8 @@ export type SqlExerciseModel = {
   desc: string;
   points: number;
   expected: any[][];
+  /** Expected result is computed daily by running the solution (for exercises that depend on the current date) */
+  dynamic?: boolean;
   /** Require specific array order */
   expectedOrder: boolean;
   expectedColumns: string[];
