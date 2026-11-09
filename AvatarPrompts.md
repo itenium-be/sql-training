@@ -1,6 +1,6 @@
 # Avatar Prompts
 
-Player avatars for the intro lobby. Player `id` maps to `sql-front/public/avatars/avatar-NN.png` (`(id - 1) % 60 + 1`, zero-padded).
+Player avatars for the intro lobby: `sql-front/public/avatars/avatar-NN.png`. Default is `(id - 1) % 60 + 1`; players can pick another one during `init`.
 Until an image exists, the lobby shows the player's initial instead.
 
 - Save as square PNG, ~256x256: `avatar-01.png` ... `avatar-60.png`

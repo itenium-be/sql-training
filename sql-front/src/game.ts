@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { config } from './config';
 
 export type GameMode = 'init' | 'running' | 'end';
@@ -6,47 +6,61 @@ export type GameMode = 'init' | 'running' | 'end';
 export type Player = {
   id: number;
   name: string;
+  avatar: number | null;
 };
 
 export const AVATAR_COUNT = 60;
 
-export function avatarUrl(playerId: number): string {
-  const index = ((playerId - 1) % AVATAR_COUNT + AVATAR_COUNT) % AVATAR_COUNT + 1;
+export function avatarIndex(player: Player): number {
+  return player.avatar ?? ((player.id - 1) % AVATAR_COUNT + AVATAR_COUNT) % AVATAR_COUNT + 1;
+}
+
+export function avatarUrl(index: number): string {
   return `/avatars/avatar-${String(index).padStart(2, '0')}.png`;
 }
 
-export function usePolling<T>(url: string, intervalMs: number): T | null {
+export function usePolling<T>(url: string, intervalMs: number): [T | null, () => Promise<void>] {
   const [data, setData] = useState<T | null>(null);
 
-  useEffect(() => {
-    let cancelled = false;
-    const load = async () => {
-      try {
-        const res = await fetch(url);
-        if (res.ok && !cancelled) {
-          setData(await res.json());
-        }
-      } catch (error) {
-        console.error(`Could not fetch ${url}`, error);
+  const load = useCallback(async () => {
+    try {
+      const res = await fetch(url);
+      if (res.ok) {
+        setData(await res.json());
       }
-    };
+    } catch (error) {
+      console.error(`Could not fetch ${url}`, error);
+    }
+  }, [url]);
 
+  useEffect(() => {
     load();
     const timer = setInterval(load, intervalMs);
-    return () => {
-      cancelled = true;
-      clearInterval(timer);
-    };
-  }, [url, intervalMs]);
+    return () => clearInterval(timer);
+  }, [load, intervalMs]);
 
-  return data;
+  return [data, load];
 }
 
 export function useGameMode(): GameMode | null {
-  const state = usePolling<{mode: GameMode}>(`${config.leaderboard.api}/game/state`, 3000);
+  const [state] = usePolling<{mode: GameMode}>(`${config.leaderboard.api}/game/state`, 3000);
   return state?.mode ?? null;
 }
 
-export function usePlayers(): Player[] {
-  return usePolling<Player[]>(`${config.leaderboard.api}/game/players`, 3000) ?? [];
+export function usePlayers(): [Player[], () => Promise<void>] {
+  const [players, reload] = usePolling<Player[]>(`${config.leaderboard.api}/game/players`, 3000);
+  return [players ?? [], reload];
+}
+
+export async function saveAvatar(name: string, avatar: number): Promise<string | null> {
+  const res = await fetch(`${config.leaderboard.api}/game/avatar`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, avatar }),
+  });
+  if (res.ok) {
+    return null;
+  }
+  const data = await res.json();
+  return data.message ?? res.statusText;
 }

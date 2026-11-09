@@ -1,6 +1,8 @@
 import { Button } from "react-bootstrap";
-import { ArrowIcon, CalendarIcon, DatabaseIcon, HexagonIcon } from "./layout/Icons";
-import { GameMode, usePlayers } from "./game";
+import { ArrowIcon, CalendarIcon, DatabaseIcon, HexagonIcon, PencilIcon } from "./layout/Icons";
+import { avatarIndex, GameMode, Player, usePlayers } from "./game";
+import { useState } from "react";
+import { AvatarPicker } from "./AvatarPicker";
 import { RegisterForm } from "./RegisterForm";
 import { Avatar } from "./Avatar";
 import { useAppSelector } from "./store";
@@ -42,9 +44,10 @@ export function Intro({mode, onStart}: {mode: GameMode | null, onStart: () => vo
 }
 
 function Lobby() {
-  const players = usePlayers();
+  const [players, reload] = usePlayers();
   const registeredName = useAppSelector(state => state.exercises.userName);
   const me = registeredName.toLowerCase();
+  const [editing, setEditing] = useState<Player | null>(null);
 
   return (
     <section className="df-lobby">
@@ -56,13 +59,32 @@ function Lobby() {
 
       <div className="df-eyebrow">{players.length} {players.length === 1 ? 'player' : 'players'} in the arena</div>
       <div className="df-lobby-grid">
-        {players.map(player => (
-          <div key={player.id} className={`df-lobby-player${player.name.toLowerCase() === me ? ' df-lobby-me' : ''}`}>
-            <Avatar player={player} />
-            <span className="df-lobby-name" title={player.name}>{player.name}</span>
-          </div>
-        ))}
+        {players.map(player => {
+          const isMe = player.name.toLowerCase() === me;
+          return (
+            <div key={player.id} className={`df-lobby-player${isMe ? ' df-lobby-me' : ''}`}>
+              <div className="df-avatar-wrap">
+                <Avatar key={avatarIndex(player)} index={avatarIndex(player)} label={player.name} />
+                {isMe && (
+                  <button type="button" className="df-avatar-edit" onClick={() => setEditing(player)} aria-label="Change avatar">
+                    <PencilIcon />
+                  </button>
+                )}
+              </div>
+              <span className="df-lobby-name" title={player.name}>{player.name}</span>
+            </div>
+          );
+        })}
       </div>
+
+      {editing && (
+        <AvatarPicker
+          name={editing.name}
+          current={avatarIndex(editing)}
+          onClose={() => setEditing(null)}
+          onSaved={reload}
+        />
+      )}
     </section>
   );
 }
