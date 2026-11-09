@@ -65,6 +65,11 @@ const exercisesSlice = createSlice({
         state.currentExercise = 1;
       }
     },
+    gotoQuestion: (state, action) => {
+      if (state.selected) {
+        state.currentExercise = action.payload;
+      }
+    },
     setEntities: (state, action) => {
       state.entities = action.payload;
     },

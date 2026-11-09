@@ -8,6 +8,8 @@ import { Prec } from "@codemirror/state";
 import { tags as t } from "@lezer/highlight";
 import { completeFromList } from "@codemirror/autocomplete";
 import { config } from "../config";
+import { SqlSchema } from "./schema";
+import { loadSchema } from "./loadSchema";
 
 const SUBMIT_EVENT = 'sql-editor-submit';
 
@@ -20,24 +22,6 @@ const submitKeymap = Prec.highest(keymap.of([{
 }]));
 
 type SqlProblem = { message: string; from: number; to: number };
-type SqlSchema = Record<string, string[]>;
-
-const schemaCache = new Map<string, Promise<SqlSchema>>();
-
-function loadSchema(game: string): Promise<SqlSchema> {
-  const key = game === 'Worldcup' ? 'mssql' : 'pg';
-  if (!schemaCache.has(key)) {
-    const request = fetch(`${config.api}/exercises/schema?game=${encodeURIComponent(game)}`)
-      .then(res => res.json())
-      .then(data => (data.success ? data.responseObject : {}) as SqlSchema)
-      .catch(() => {
-        schemaCache.delete(key);
-        return {};
-      });
-    schemaCache.set(key, request);
-  }
-  return schemaCache.get(key)!;
-}
 
 const devfestTheme = EditorView.theme({
   '&': {

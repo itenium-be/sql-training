@@ -5,46 +5,47 @@ import { ATTEMPTS_PER_PENALTY, ExerciseModel, ExpectedModel, SqlExerciseModel } 
 import { ExerciseSampleData, ExercisesData } from "./ExerciseSampleData";
 import { authFetch, config } from "../config";
 import { useAppDispatch, useAppSelector } from "../store";
-import { Alert, Col, Modal, Row } from "react-bootstrap";
+import { Alert } from "react-bootstrap";
 import { SqlEditor } from "./SqlEditor";
+import { SchemaPanel } from "./SchemaPanel";
 
 const emojis = ['🎉', '🥳', '🎊', '💯', '🌟', '🚀', '🦄', '🎈', '🎆', '🏆'];
 
-export function Exercise({exercise}: {exercise: ExerciseModel}) {
-  return (
-    <>
-      <h1>
-        {exercise.name}
-        <ExercisePoints exercise={exercise} />
-        <ExerciseSchema exercise={exercise} />
-      </h1>
-      <p>{exercise.desc}</p>
-
-      <h2>Example Data</h2>
-      <pre>{exercise.sampleQuery}</pre>
-      <ExerciseSampleData />
-
-      <TheExercises exercise={exercise} />
-    </>
-  )
+function useMediaQuery(query: string) {
+  const [matches, setMatches] = useState(() => window.matchMedia(query).matches);
+  useEffect(() => {
+    const mql = window.matchMedia(query);
+    const handler = () => setMatches(mql.matches);
+    handler();
+    mql.addEventListener('change', handler);
+    return () => mql.removeEventListener('change', handler);
+  }, [query]);
+  return matches;
 }
 
-function TheExercises({exercise}: {exercise: ExerciseModel}) {
+export function Exercise({exercise}: {exercise: ExerciseModel}) {
   const currentExIndex = useAppSelector(state => state.exercises.currentExercise);
   const dispatch = useAppDispatch();
 
-  return (
-    <>
-      <h2>The Exercises</h2>
-      {currentExIndex === 0 ? (
+  if (currentExIndex === 0) {
+    return (
+      <>
+        <h1>
+          {exercise.name}
+          <ExercisePoints exercise={exercise} />
+        </h1>
+        <p>{exercise.desc}</p>
+        <h2>Example Data</h2>
+        <pre>{exercise.sampleQuery}</pre>
+        <ExerciseSampleData />
         <Button variant="success" onClick={() => dispatch({type: 'exercises/firstQuestion'})}>
           Let's Start
         </Button>
-      ) : (
-        <SqlExercises exercise={exercise} />
-      )}
-    </>
-  )
+      </>
+    )
+  }
+
+  return <SqlExercises exercise={exercise} />
 }
 
 
@@ -56,6 +57,7 @@ function SqlExercises({exercise}: {exercise: ExerciseModel}) {
   if (!currentEx) {
     return (
       <>
+        <h1>{exercise.name}<ExercisePoints exercise={exercise} /></h1>
         <h2>All Done!</h2>
         <p>Pick a different tab to continue scoring points!</p>
         <Button variant="secondary" onClick={() => dispatch({type: 'exercises/firstQuestion'})}>
@@ -65,11 +67,11 @@ function SqlExercises({exercise}: {exercise: ExerciseModel}) {
     )
   }
 
-  return <SqlExercise sql={currentEx} />
+  return <SqlExercise exercise={exercise} sql={currentEx} />
 }
 
 
-function SqlExercise({sql}: {sql: SqlExerciseModel}) {
+function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExerciseModel}) {
   const [sqlText, setSqlText] = useState('');
   const [error, setError] = useState('');
   const [result, setResult] = useState<null | Record<string, unknown>[]>(null);
@@ -78,11 +80,16 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
   const [points, setPoints] = useState<number | null>(null);
   const [success, setSuccess] = useState(false);
   const [cost, setCost] = useState<number | null>(null);
+  const [resultTab, setResultTab] = useState<'result' | 'expected' | 'sample'>('result');
+  const [leftTab, setLeftTab] = useState<'exercises' | 'schema'>('exercises');
+  const narrow = useMediaQuery('(max-width: 1100px)');
   const currentGame = useAppSelector(state => state.exercises.selected);
   const registeredName = useAppSelector(state => state.exercises.userName);
-  const solved = useAppSelector(state => state.exercises.scores
-    .filter(score => score.player === registeredName)
-    .some(score => score.game === currentGame && score.exerciseid === sql.id));
+  const scores = useAppSelector(state => state.exercises.scores);
+  const solvedIds = new Set(scores
+    .filter(score => score.player === registeredName && score.game === currentGame)
+    .map(score => score.exerciseid));
+  const solved = solvedIds.has(sql.id);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -108,6 +115,12 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
     setExpected(null);
     setCost(null);
     setPoints(null);
+    setResultTab('result');
+  }
+
+  const goto = (id: number) => {
+    reset();
+    dispatch({type: 'exercises/gotoQuestion', payload: id});
   }
 
   const handleFetch = async () => {
@@ -127,6 +140,7 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
       }
 
       setResult(data.rows);
+      setResultTab('result');
       if (!data.correct) {
         const penalty = data.attempts ? ` (wrong attempt #${data.attempts}, every ${ATTEMPTS_PER_PENALTY} cost a point)` : '';
         setError(`${data.message}${penalty}`);
@@ -160,6 +174,7 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
         setHint(data.hints);
       } else {
         setExpected(data);
+        setResultTab('expected');
       }
     } catch (err) {
       console.error(`Could not fetch ${type}`, err);
@@ -167,94 +182,168 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
     }
   };
 
-  const exerciseHeader = (
-    <>
-      <h2>
-        Exercise {sql.id}
-        <Badge bg="info" style={{marginLeft: 8, fontSize: 14}}>
-          {sql.points} point{sql.points === 1 ? '' : 's'}
-        </Badge>
-      </h2>
-      <p>{sql.desc}</p>
-    </>
-  )
+  const exercisesPanel = (
+    <div className="df-panel-body">
+      <div className="df-eyebrow">{exercise.name} · {exercise.exercises.length} exercises</div>
+      <ol className="df-exgrid">
+        {exercise.exercises.map(ex => {
+          const cls = ex.id === sql.id ? 'df-ex-current' : solvedIds.has(ex.id) ? 'df-ex-solved' : 'df-ex-todo';
+          return (
+            <li key={ex.id}>
+              <button type="button" className={cls} onClick={() => goto(ex.id)} aria-current={ex.id === sql.id}>
+                {ex.id}
+              </button>
+            </li>
+          );
+        })}
+      </ol>
+
+      <section className="df-excard">
+        <div className="df-excard-head">
+          <h2 className="df-excard-title">Exercise {sql.id}</h2>
+          <Badge bg="info">{sql.points} point{sql.points === 1 ? '' : 's'}</Badge>
+        </div>
+        <p className="df-excard-desc">{sql.desc}</p>
+        {sql.expectedColumns.length > 0 && (
+          <div className="df-excard-cols">
+            <div className="df-eyebrow df-excard-colslabel">Expected columns</div>
+            <div className="df-chips">
+              {sql.expectedColumns.map(col => <code key={col} className="df-chip">{col}</code>)}
+            </div>
+            <div className="df-excard-order">{sql.expectedOrder ? 'Order matters' : 'Any order'}</div>
+          </div>
+        )}
+      </section>
+
+      {sql.hasHint && (hint ? (
+        <section className="df-hint">
+          <div className="df-eyebrow">Hint</div>
+          <p>{hint}</p>
+        </section>
+      ) : (
+        <button type="button" className="df-reveal" onClick={() => requestHelp('hint')}>
+          <span>💡 Reveal hint</span>
+          <span className="df-cost">−{sql.hintCost} pt</span>
+        </button>
+      ))}
+
+      <div className="df-panel-nav">
+        {sql.id > 1 && (
+          <Button variant="secondary" onClick={() => {reset(); dispatch({type: 'exercises/prevQuestion'})}} style={{flex: 1}}>
+            Previous
+          </Button>
+        )}
+        <Button variant="secondary" onClick={() => {reset(); dispatch({type: 'exercises/nextQuestion'})}} style={{flex: 1}}>
+          Skip
+        </Button>
+      </div>
+    </div>
+  );
 
   if (solved) {
     return (
-      <>
-        {exerciseHeader}
-        <ExerciseSolved sql={sql} reset={reset} text="Greato success, you've already solved this one!" />
-      </>
+      <div className="df-ide">
+        <aside className="df-ide-left">{exercisesPanel}</aside>
+        <section className="df-ide-main">
+          <ExerciseSolved sql={sql} reset={reset} text="Greato success, you've already solved this one!" />
+        </section>
+        {!narrow && <aside className="df-ide-schema">{<SchemaPanel game={currentGame ?? ''} sqlText={sqlText} />}</aside>}
+      </div>
     )
   }
 
   return (
-    <>
-      {exerciseHeader}
-      {error && (
-        <Alert variant="danger" onClose={() => setError('')} dismissible>
-          {error}
-        </Alert>
-      )}
-      <Row>
-        <Col style={{paddingBottom: 12}}>
-          <SqlEditor
-            game={currentGame ?? ''}
-            value={sqlText}
-            onChange={setSqlText}
-            onSubmit={() => { if (sqlText.trim().length && !success) handleFetch(); }}
-          />
-        </Col>
-        <Col>
-          {result ? (
-            <div style={{maxHeight: 275, overflowY: 'auto'}}>
-              <ExercisesData data={result} />
-            </div>
-          ) : (
-            <p></p>
-          )}
-        </Col>
-      </Row>
+    <div className="df-ide">
+      <aside className="df-ide-left">
+        {narrow && (
+          <div className="df-paneltabs" role="tablist">
+            <button type="button" role="tab" aria-selected={leftTab === 'exercises'} onClick={() => setLeftTab('exercises')}>Exercises</button>
+            <button type="button" role="tab" aria-selected={leftTab === 'schema'} onClick={() => setLeftTab('schema')}>Schema</button>
+          </div>
+        )}
+        {!narrow || leftTab === 'exercises'
+          ? exercisesPanel
+          : <SchemaPanel game={currentGame ?? ''} sqlText={sqlText} />}
+      </aside>
 
-      {success ? (
-        <ExerciseSolved sql={sql} reset={reset} cost={cost} points={points} />
-      ) : (
-        <>
-          <Button variant="primary" onClick={handleFetch} style={{marginRight: 16}} disabled={!sqlText.length}>
-            Submit
-          </Button>
-          <Button variant="secondary" onClick={() => {reset(); dispatch({type: 'exercises/nextQuestion'})}} className="float-end">
-            Skip Question
-          </Button>
-          {sql.id > 1 && (
-            <Button variant="secondary" onClick={() => {reset(); dispatch({type: 'exercises/prevQuestion'})}} className="float-end" style={{marginRight: 12}}>
-              Back
-            </Button>
-          )}
-          {result && !expected && (
-            <Button variant="secondary" onClick={() => requestHelp('expected')} className="float-end" style={{marginRight: 12}}>
-              Show Expected Result (−{sql.expectedCost} pt)
-            </Button>
-          )}
-          {sql.hasHint && !hint && (
-            <Button variant="secondary" onClick={() => requestHelp('hint')} className="float-end" style={{marginRight: 12}}>
-              Show Hint (−{sql.hintCost} pt)
-            </Button>
-          )}
-          {hint && (
-            <div style={{paddingTop: 25}}>
-              <h2>Hint</h2>
-              <p>{hint}</p>
+      <section className="df-ide-main">
+        {error && (
+          <Alert variant="danger" onClose={() => setError('')} dismissible>
+            {error}
+          </Alert>
+        )}
+
+        {success ? (
+          <ExerciseSolved sql={sql} reset={reset} cost={cost} points={points} />
+        ) : (
+          <>
+            <div className="df-editor">
+              <div className="df-editor-head">
+                <span className="df-editor-dialect">{currentGame === 'Worldcup' ? 'SQL Server' : 'PostgreSQL'}</span>
+                <Button variant="primary" onClick={handleFetch} disabled={!sqlText.length} className="df-editor-submit">
+                  Submit&nbsp;&nbsp;⌘↵
+                </Button>
+              </div>
+              <SqlEditor
+                game={currentGame ?? ''}
+                value={sqlText}
+                onChange={setSqlText}
+                onSubmit={() => { if (sqlText.trim().length && !success) handleFetch(); }}
+              />
             </div>
-          )}
-          {expected && (
-            <ExpectedTable expected={expected} />
-          )}
-        </>
-      )}
-    </>
+
+            <div className="df-results">
+              <div className="df-rtabs" role="tablist">
+                <button type="button" role="tab" aria-selected={resultTab === 'result'} onClick={() => setResultTab('result')}>Your result</button>
+                <button type="button" role="tab" aria-selected={resultTab === 'expected'} onClick={() => setResultTab('expected')}>
+                  {expected ? 'Expected' : '🔒 Expected'}
+                </button>
+                <button type="button" role="tab" aria-selected={resultTab === 'sample'} onClick={() => setResultTab('sample')}>Sample data</button>
+              </div>
+              <div className="df-results-body">
+                {resultTab === 'result' && (
+                  result ? <ExercisesData data={result} /> : <p className="df-results-empty">Run your query to see your result here.</p>
+                )}
+                {resultTab === 'expected' && (
+                  expected
+                    ? <ExercisesData data={expectedRows(expected)} />
+                    : <RevealExpected cost={sql.expectedCost} onReveal={() => requestHelp('expected')} />
+                )}
+                {resultTab === 'sample' && <ExerciseSampleData />}
+              </div>
+            </div>
+          </>
+        )}
+      </section>
+
+      {!narrow && <aside className="df-ide-schema">{<SchemaPanel game={currentGame ?? ''} sqlText={sqlText} />}</aside>}
+    </div>
   )
 }
+
+
+function RevealExpected({cost, onReveal}: {cost: number, onReveal: () => void}) {
+  return (
+    <div className="df-locked">
+      <div className="df-locked-icon">🔒</div>
+      <div className="df-locked-title">Expected result is hidden</div>
+      <p className="df-locked-text">Reveal the expected rows to compare them against yours. Revealing costs {cost} point{cost === 1 ? '' : 's'} on this exercise.</p>
+      <Button variant="primary" onClick={onReveal}>
+        Reveal expected result&nbsp;&nbsp;<span className="df-cost-inline">−{cost} pt</span>
+      </Button>
+    </div>
+  )
+}
+
+
+function expectedRows(expected: ExpectedModel): Record<string, unknown>[] {
+  return expected.expected.map(record => {
+    const obj: Record<string, unknown> = {};
+    expected.expectedColumns.forEach((colName, index) => obj[colName] = record[index]);
+    return obj;
+  });
+}
+
 
 function ExerciseSolved({sql, reset, text, cost, points}: {sql: SqlExerciseModel, reset: () => void, text?: string, cost?: number | null, points?: number | null}) {
   const scored = points ?? sql.points;
@@ -279,22 +368,6 @@ function ExerciseSolved({sql, reset, text, cost, points}: {sql: SqlExerciseModel
 }
 
 
-function ExpectedTable({expected}: {expected: ExpectedModel}) {
-  const data = expected.expected.map(record => {
-    const obj: Record<string, unknown> = {};
-    expected.expectedColumns.forEach((colName, index) => obj[colName] = record[index])
-    return obj;
-  });
-
-  return (
-    <div style={{paddingTop: 25}}>
-      <h2>Expected Result</h2>
-      <ExercisesData data={data} />
-    </div>
-  )
-}
-
-
 function ExercisePoints({exercise}: {exercise: ExerciseModel}) {
   const totalPoints = exercise.exercises.reduce((pts, ex) => ex.points + pts, 0);
 
@@ -307,38 +380,5 @@ function ExercisePoints({exercise}: {exercise: ExerciseModel}) {
         {totalPoints} points
       </Badge>
     </small>
-  )
-}
-
-
-
-function ExerciseSchema({exercise}: {exercise: ExerciseModel}) {
-  const [show, setShow] = useState(false);
-
-  if (!exercise.schema) {
-    return null;
-  }
-
-  return (
-    <>
-      <Button variant="info" className="float-end" style={{marginRight: 16, marginTop: 16}} onClick={() => setShow(true)}>
-        View Database Schema
-      </Button>
-      {show && (
-        <Modal show fullscreen onHide={() => setShow(false)}>
-          <Modal.Header closeButton>
-            <Modal.Title>{exercise.id}</Modal.Title>
-          </Modal.Header>
-
-          <Modal.Body>
-            <img src={`/${exercise.id}.png`} />
-          </Modal.Body>
-
-          <Modal.Footer>
-            <Button variant="secondary" onClick={() => setShow(false)}>Close</Button>
-          </Modal.Footer>
-        </Modal>
-      )}
-    </>
   )
 }
