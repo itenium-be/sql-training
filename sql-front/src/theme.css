@@ -404,7 +404,7 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
 }
 
 .df-footer strong { color: var(--df-cream); }
-.df-footer a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.df-footer a { color: inherit; text-decoration: none; }
 .df-footer a:hover strong { color: var(--df-gold); }
 
 .df-register {
