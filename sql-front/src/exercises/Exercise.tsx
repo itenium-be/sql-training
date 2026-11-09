@@ -190,7 +190,8 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
       <div className="df-eyebrow">{exercise.name} · {exercise.exercises.length} exercises</div>
       <ol className="df-exgrid">
         {exercise.exercises.map(ex => {
-          const cls = ex.id === sql.id ? 'df-ex-current' : solvedIds.has(ex.id) ? 'df-ex-solved' : 'df-ex-todo';
+          const state = solvedIds.has(ex.id) ? 'df-ex-solved' : 'df-ex-todo';
+          const cls = ex.id === sql.id ? `${state} df-ex-current` : state;
           return (
             <li key={ex.id}>
               <button type="button" className={cls} onClick={() => goto(ex.id)} aria-current={ex.id === sql.id}>
