@@ -20,7 +20,7 @@ JOIN rounds r ON m.round_id=r.id JOIN events e ON r.event_id=e.id`,
     },
     {
       id: 2,
-      desc: 'Which country has "scored" the most owngoals? Also select how many.',
+      desc: "Which country benefited from the most own goals by its opponents? Also select how many.",
       points: 12,
       expected: [["France", 4]],
       expectedOrder: false,
