@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Waiting room — mockups</title>
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+:root{
+  --bg:#16100a; --bg-raised:#1f170f; --surface:#241a11;
+  --border:#4a3820; --border-soft:#33271a;
+  --cream:#f0e2c2; --text:#d6c49e; --muted:#a38e66;
+  --gold:#e9b44c; --gold-deep:#c99a3e; --copper:#c47a35;
+  --orange-1:#d8862f; --orange-2:#b2472a; --ink:#1b1a2e;
+  --font:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--font);color:var(--text);background:var(--bg)}
+
+/* mockup chrome */
+.doc-head{max-width:1100px;margin:0 auto;padding:40px 24px 8px}
+.doc-head h1{font-size:1.6rem;color:var(--cream);margin:0 0 6px}
+.doc-head p{color:var(--muted);margin:0;max-width:760px;line-height:1.5}
+.board-label{max-width:1180px;margin:48px auto 0;padding:0 24px;display:flex;align-items:baseline;gap:12px}
+.board-label .tag{font-family:var(--mono);font-size:.8rem;font-weight:700;color:var(--ink);background:var(--gold);border-radius:6px;padding:2px 9px}
+.board-label h2{font-size:1.15rem;color:var(--cream);margin:0;font-weight:800;letter-spacing:-.01em}
+.board-label small{color:var(--muted);margin-left:auto;font-size:.85rem}
+.board{position:relative;min-height:720px;margin:14px auto;max-width:1180px;border:1px solid var(--border-soft);border-radius:22px;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:48px 36px;
+  background:radial-gradient(820px 460px at 50% 36%,rgba(201,154,62,.13),transparent 70%),var(--bg)}
+.deco{position:absolute;color:var(--gold);opacity:.06;pointer-events:none}
+
+/* shared atoms */
+.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-weight:700;font-size:.82rem;color:var(--gold)}
+h1.title{font-weight:800;line-height:1.1;letter-spacing:-.03em;margin:14px 0 0;font-size:clamp(2rem,4.6vw,3.2rem);color:var(--cream);padding-bottom:.08em}
+.grad{background:linear-gradient(90deg,var(--gold-deep),var(--cream) 45%,var(--gold) 80%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{color:var(--muted);font-size:1.05rem;margin:12px 0 0}
+.count{font-size:.82rem;text-transform:uppercase;letter-spacing:.14em;font-weight:700;color:var(--gold)}
+.dot-anim{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--gold);margin-right:8px;vertical-align:middle;animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+.roster{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:18px;width:100%}
+.player{display:flex;flex-direction:column;align-items:center;gap:7px;min-width:0}
+.ava{width:66px;height:66px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:800;color:var(--ink);font-size:1.3rem;
+  border:2px solid var(--border);background:conic-gradient(from 210deg,#e9b44c,#c47a35,#b2472a,#e9b44c)}
+.player.me .ava{border-color:var(--gold);box-shadow:0 0 0 4px rgba(233,180,76,.25)}
+.pname{max-width:100%;color:var(--cream);font-weight:700;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.player.me .pname{color:var(--gold)}
+.ava-strip{display:flex;gap:-10px;align-items:center}
+.ava-strip .ava{width:52px;height:52px;font-size:1rem;margin-left:-12px;border:2px solid var(--bg)}
+.ava-strip .ava:first-child{margin-left:0}
+.ava-more{width:52px;height:52px;border-radius:50%;margin-left:-12px;border:2px solid var(--bg);background:var(--surface);color:var(--gold);display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem}
+
+/* meme card */
+.meme{position:relative;border:1px solid var(--border);border-radius:18px;overflow:hidden;background:var(--bg-raised);box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.meme-head{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border-soft)}
+.meme-head .lbl{font-family:var(--mono);font-size:.78rem;color:var(--muted);letter-spacing:.06em}
+.meme-img{display:block;width:100%;height:100%;object-fit:contain;background:#0d0906}
+.shuffle{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--border);border-radius:999px;
+  background:rgba(233,180,76,.1);color:var(--gold);font:700 .85rem var(--font);padding:8px 16px;cursor:pointer}
+.shuffle:hover{border-color:var(--gold);background:rgba(233,180,76,.18)}
+.shuffle svg{width:17px;height:17px}
+.shuffle-ico{width:40px;height:40px;padding:0;border-radius:50%}
+.shuffle-float{position:absolute;top:10px;right:10px;z-index:2;background:rgba(22,16,10,.82);backdrop-filter:blur(3px)}
+
+@media(max-width:820px){.split{grid-template-columns:1fr!important}}
+</style>
+</head>
+<body>
+
+<div class="doc-head">
+  <h1>Waiting room — three directions</h1>
+  <p>Screen 3 (intro → register → <b>waiting</b> → game). "The arena is filling up": your status, the roster filling in live, and a random meme with a shuffle toggle to pass the time. Pick one, or mix.</p>
+</div>
+
+<!-- ═══ A · roster left, meme right ═══ -->
+<div class="board-label"><span class="tag">A</span><h2>Roster left, meme right</h2><small>balanced · two columns</small></div>
+<section class="board">
+  <svg class="deco" style="top:8%;left:5%" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 2l8.66 5v10L12 22l-8.66-5V7z"/></svg>
+  <div class="split" style="display:grid;grid-template-columns:1.1fr 1fr;gap:44px;align-items:center;width:100%;max-width:1040px;text-align:left">
+    <div>
+      <div class="eyebrow">The arena is filling up</div>
+      <h1 class="title">You're in, <span class="grad">Wouter</span>!</h1>
+      <p class="lead"><span class="dot-anim"></span>Waiting for the game to start…</p>
+      <div class="count" style="margin:26px 0 14px">8 players in the arena</div>
+      <div class="roster">
+        <div class="player me"><span class="ava">W</span><span class="pname">Wouter</span></div>
+        <div class="player"><span class="ava">A</span><span class="pname">Amira</span></div>
+        <div class="player"><span class="ava">J</span><span class="pname">Jonas</span></div>
+        <div class="player"><span class="ava">L</span><span class="pname">Lena</span></div>
+        <div class="player"><span class="ava">S</span><span class="pname">Sven</span></div>
+        <div class="player"><span class="ava">M</span><span class="pname">Marie</span></div>
+        <div class="player"><span class="ava">T</span><span class="pname">Tariq</span></div>
+        <div class="player"><span class="ava">D</span><span class="pname">Dieter</span></div>
+      </div>
+    </div>
+    <div class="meme" style="height:420px;display:flex;flex-direction:column">
+      <div class="meme-head"><span class="lbl">meme_while_you_wait.png</span>
+        <button class="shuffle" style="margin-left:auto">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+          Shuffle
+        </button>
+      </div>
+      <img class="meme-img" style="flex:1" src="../../sql-front/public/memes/sql-7.png" alt="SQL meme">
+    </div>
+  </div>
+</section>
+
+<!-- ═══ B · meme centerpiece ═══ -->
+<div class="board-label"><span class="tag">B</span><h2>Meme centerpiece</h2><small>meme-forward · roster strip below</small></div>
+<section class="board">
+  <div class="eyebrow">The arena is filling up</div>
+  <h1 class="title">You're in, <span class="grad">Wouter</span>!</h1>
+  <p class="lead"><span class="dot-anim"></span>Waiting for the game to start…</p>
+
+  <div class="meme" style="width:min(560px,100%);margin-top:28px">
+    <img class="meme-img" style="max-height:380px" src="../../sql-front/public/memes/sql-3.png" alt="SQL meme">
+    <button class="shuffle shuffle-ico shuffle-float" title="Shuffle meme">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+    </button>
+  </div>
+
+  <div class="count" style="margin:30px 0 14px">8 in the arena</div>
+  <div class="ava-strip">
+    <span class="ava" style="border-color:var(--gold);box-shadow:0 0 0 3px rgba(233,180,76,.25)">W</span>
+    <span class="ava">A</span><span class="ava">J</span><span class="ava">L</span><span class="ava">S</span><span class="ava">M</span>
+    <span class="ava-more">+2</span>
+  </div>
+</section>
+
+<!-- ═══ C · one lobby card ═══ -->
+<div class="board-label"><span class="tag">C</span><h2>One waiting-room card</h2><small>cohesive · everything framed</small></div>
+<section class="board">
+  <div class="meme" style="width:min(680px,100%);box-shadow:0 28px 70px rgba(0,0,0,.5)">
+    <div class="meme-head" style="padding:16px 20px">
+      <div style="text-align:left">
+        <div class="eyebrow" style="font-size:.72rem">The arena is filling up</div>
+        <div style="color:var(--cream);font-weight:800;font-size:1.15rem;margin-top:2px">You're in, Wouter!</div>
+      </div>
+      <span style="margin-left:auto" class="count"><span class="dot-anim"></span>waiting…</span>
+    </div>
+    <div style="position:relative;background:#0d0906">
+      <img class="meme-img" style="max-height:340px" src="../../sql-front/public/memes/sql-12.png" alt="SQL meme">
+      <button class="shuffle shuffle-ico shuffle-float" title="Shuffle meme">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+      </button>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;padding:16px 20px;border-top:1px solid var(--border-soft)">
+      <div class="ava-strip">
+        <span class="ava" style="border-color:var(--gold);box-shadow:0 0 0 3px rgba(233,180,76,.25)">W</span>
+        <span class="ava">A</span><span class="ava">J</span><span class="ava">L</span><span class="ava">S</span>
+        <span class="ava-more">+3</span>
+      </div>
+      <span class="count" style="margin-left:auto">8 players</span>
+    </div>
+  </div>
+</section>
+
+<div style="height:48px"></div>
+</body>
+</html>
