@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { config, TOKEN_STORAGE } from './config';
+import { interpretRegister } from './registerResponse';
 import { useAppDispatch } from './store';
 
 export function useRegister() {
@@ -18,17 +19,16 @@ export function useRegister() {
         body: JSON.stringify({ name }),
       });
 
-      const data = await res.json();
-      setResponse(data.message);
-      if (res.status === 200) {
-        const registered = data.name ?? name.trim();
-        localStorage.setItem(TOKEN_STORAGE, data.token);
-        localStorage.setItem('userName', registered);
-        dispatch({ type: 'exercises/register', payload: registered });
+      const outcome = interpretRegister(res.status, await res.text(), name);
+      setResponse(outcome.message);
+      if (outcome.registered) {
+        localStorage.setItem(TOKEN_STORAGE, outcome.token);
+        localStorage.setItem('userName', outcome.name);
+        dispatch({ type: 'exercises/register', payload: outcome.name });
       }
     } catch (error) {
       console.error('Error:', error);
-      setResponse(error instanceof Error ? error.message : String(error));
+      setResponse("Couldn't reach the game server. Is it running?");
     }
   };
 
