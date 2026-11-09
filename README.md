@@ -10,9 +10,12 @@ One machine (e.g. a minipc on a dedicated router) runs everything; players only 
 ```sh
 git clone https://github.com/itenium-be/sql-training
 cd sql-training
-API_KEY=my-secret docker compose up -d --build
+./deploy.sh
 # Players browse to http://<minipc-ip-or-dns>/
 ```
+
+`deploy.sh` pulls, generates `.env` with random `API_KEY`/`INTERNAL_API_KEY` on first run, rebuilds and starts everything, waits until it responds and prints the URLs.
+Re-run it to update. `./deploy.sh --reset` wipes all data first.
 
 Everything goes through the nginx reverse proxy on port 80 (`HTTP_PORT` to change it):
 

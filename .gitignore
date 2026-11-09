@@ -1,3 +1,4 @@
 ~$*.pptx
 node_modules
 *.tsbuildinfo
+.env
