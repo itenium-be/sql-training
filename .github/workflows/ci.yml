@@ -75,7 +75,7 @@ jobs:
         run: |
           for i in $(seq 1 60); do
             if docker compose exec -T sqlserver /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U player -P 'Player123!' -d sportdb -Q "SELECT 1" > /dev/null 2>&1 \
-              && docker compose exec -T postgres psql -U player -d world -c "SELECT 1" > /dev/null 2>&1; then
+              && docker compose exec -T -e PGPASSWORD=player postgres psql -h localhost -U player -d world -c "SELECT 1" > /dev/null 2>&1; then
               exit 0
             fi
             sleep 10

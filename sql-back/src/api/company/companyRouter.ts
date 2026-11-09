@@ -19,7 +19,7 @@ JOIN products p ON p.id = l.product_id
 WHERE o.id <= 2
 ORDER BY o.id, l.line_no`;
 
-export const CompanySampleSchema = z.object({
+const CompanySampleSchema = z.object({
   id: z.number(),
   ordered_at: z.string(),
   status: z.string(),
