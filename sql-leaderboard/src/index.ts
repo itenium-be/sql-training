@@ -1,5 +1,9 @@
 import { env } from "./envConfig";
 import { app, logger } from "@/server";
+import { executeQuery } from "@/api/query";
+
+executeQuery("ALTER TABLE players ADD COLUMN IF NOT EXISTS avatar SMALLINT")
+  .catch(error => logger.error(error, "Could not migrate players table"));
 
 const server = app.listen(env.PORT, () => {
   const { NODE_ENV, HOST, PORT } = env;

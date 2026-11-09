@@ -6,6 +6,7 @@ import { env } from "@/envConfig";
 const gameModes = ['init', 'running', 'end'] as const;
 type GameMode = typeof gameModes[number];
 let gameMode: GameMode = 'running';
+const AVATAR_COUNT = 60;
 
 export const gameRouter: Router = express.Router();
 
@@ -84,8 +85,26 @@ const getState: RequestHandler = async (_req: Request, res: Response) => {
 };
 
 const getPlayers: RequestHandler = async (_req: Request, res: Response) => {
-  const data = await executeQuery('SELECT id, name FROM players ORDER BY id');
+  const data = await executeQuery('SELECT id, name, avatar FROM players ORDER BY id');
   return res.status(200).send(data.rows);
+};
+
+const setAvatar: RequestHandler = async (req: Request, res: Response) => {
+  if (gameMode !== 'init') {
+    return res.status(400).send({message: 'Avatars can only be changed before the game starts'});
+  }
+
+  const name = typeof req.body?.name === 'string' ? req.body.name.trim() : '';
+  const avatar = req.body?.avatar;
+  if (!Number.isInteger(avatar) || avatar < 1 || avatar > AVATAR_COUNT) {
+    return res.status(400).send({message: `Avatar must be between 1 and ${AVATAR_COUNT}`});
+  }
+
+  const result = await executeQuery('UPDATE players SET avatar=$2 WHERE LOWER(name)=LOWER($1)', [name, avatar]);
+  if (!result.rowCount) {
+    return res.status(404).send({message: 'Player not found'});
+  }
+  return res.status(200).send({message: 'Avatar updated!', avatar});
 };
 
 const requireAdmin: RequestHandler = (req: Request, res: Response, next) => {
@@ -116,5 +135,6 @@ gameRouter.post("/", submitExercise);
 gameRouter.get("/", getProgress);
 gameRouter.get("/state", getState);
 gameRouter.get("/players", getPlayers);
+gameRouter.post("/avatar", setAvatar);
 gameRouter.get("/admin", requireAdmin, getAdmin);
 gameRouter.post("/admin/mode", requireAdmin, setMode);
