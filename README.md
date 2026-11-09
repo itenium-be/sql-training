@@ -59,7 +59,7 @@ Start the databases with their ports exposed:
 docker compose -f compose.yaml -f compose.dev.yaml up -d postgres sqlserver leaderboard-db
 ```
 
-Check all reference solutions against the databases: `cd sql-back && npm run verify-solutions` (optionally pass game ids, e.g. `Company`).
+Check all reference solutions against the databases: `cd sql-back && bun run verify-solutions` (optionally pass game ids, e.g. `Company`).
 
 Set `PG_HOST="localhost"`, `PG_PORT="5175"`, `SQL_SERVER_HOST="localhost"` and `SQL_SERVER_PORT="5174"` in `sql-back/.env`.
 Copy `sql-leaderboard/.env.template` to `sql-leaderboard/.env`.
