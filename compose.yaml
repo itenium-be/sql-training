@@ -12,6 +12,13 @@ services:
       - front-end
       - back-end
       - leaderboard
+      - slides
+    networks:
+      - trainnet
+
+  slides:
+    build: ./slides
+    restart: always
     networks:
       - trainnet
 

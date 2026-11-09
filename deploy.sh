@@ -60,7 +60,6 @@ tar czf - \
   --exclude=./.env \
   --exclude='*.pptx' \
   --exclude=./design \
-  --exclude=./slides \
   --exclude=dist \
   . | ssh "$(target)" "tar xzf - -C '$MINIPC_DIR'"
 
@@ -109,3 +108,4 @@ echo
 echo "Game:        http://$MINIPC_IP/"
 echo "API:         http://$MINIPC_IP/api/"
 echo "Leaderboard: http://$MINIPC_IP/leaderboard/"
+echo "Slides:      http://$MINIPC_IP/slides/"

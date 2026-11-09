@@ -193,3 +193,16 @@ layout: center
   <h1 class="!text-8xl"><span class="gradient-gold">THANK YOU!</span></h1>
   <img src="/img/itenium-logo.png" class="h-9 mx-auto mt-6" alt="itenium" />
 </div>
+
+---
+layout: center
+---
+
+<div class="text-center">
+  <span class="eyebrow">Play at home</span>
+  <h1>Get the code</h1>
+  <img src="/img/qr-github.svg" class="w-72 h-72 mx-auto mt-4 rounded-xl" alt="QR code to github.com/itenium-be/sql-training" />
+  <p class="mt-6 text-xl"><a href="https://github.com/itenium-be/sql-training" target="_blank">github.com/itenium-be/sql-training</a></p>
+</div>
+
+<img src="/img/itenium-logo.png" class="brand" alt="itenium" />

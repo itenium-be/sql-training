@@ -63,7 +63,10 @@ export function TopNavigation() {
           <span className="df-brand-sub">DevFest Paris 2026</span>
         </span>
       </Link>
-      {registeredName && <span className="df-player" title={registeredName}>{registeredName}</span>}
+      <div className="df-header-right">
+        <a href="/slides/" className="df-slides-link" target="_blank" rel="noreferrer">Slides</a>
+        {registeredName && <span className="df-player" title={registeredName}>{registeredName}</span>}
+      </div>
     </header>
     <Nav variant="tabs" activeKey={selected ?? 'home'}>
       <Nav.Item>

@@ -24,6 +24,7 @@ Everything goes through the nginx reverse proxy on port 80 (`HTTP_PORT` to chang
 - `/` the website
 - `/api/` back-end (Swagger UI)
 - `/leaderboard/` leaderboard
+- `/slides/` slides (linked from the game header)
 
 The databases are not exposed outside of Docker.
 Players query with a read-only `player` user and every query is killed after 5 seconds.
@@ -45,6 +46,8 @@ npm install
 npm run dev     # http://localhost:3030, presenter mode at /presenter
 npm run build   # static site in slides/dist
 ```
+
+The deployed deck is built in Docker and served at `/slides/`.
 
 Set `gameUrl`, `wifiNetwork` and `wifiPassword` at the top of `slides/slides.md` before the event.
 

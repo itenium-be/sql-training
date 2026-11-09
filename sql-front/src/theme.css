@@ -227,6 +227,32 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
   max-width: 50%;
 }
 
+.df-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  max-width: 60%;
+}
+
+.df-header-right .df-player {
+  max-width: none;
+  min-width: 0;
+}
+
+.df-slides-link {
+  color: var(--df-gold);
+  font-weight: 700;
+  font-size: .9rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.df-slides-link:hover {
+  color: var(--df-cream);
+  text-decoration: underline;
+}
+
 .nav-tabs {
   --bs-nav-tabs-border-width: 0;
   gap: 8px;
