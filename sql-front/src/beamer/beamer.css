@@ -287,7 +287,6 @@
   letter-spacing: -0.02em;
   color: var(--df-cream);
 }
-.bm-subhead-note { font-size: 18px; color: var(--df-muted); }
 .bm-games {
   margin-left: auto;
   display: inline-flex;
