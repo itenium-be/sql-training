@@ -122,15 +122,15 @@ exRegistry.registerPath({
       },
     },
   },
-  responses: createApiResponse(z.object({ correct: z.boolean(), points: z.number(), cost: z.number().nullable(), rows: z.any().array() }), "Internal: executes the query and checks it against the expected result"),
+  responses: createApiResponse(z.object({ correct: z.boolean(), points: z.number(), hintCost: z.number(), expectedCost: z.number(), cost: z.number().nullable(), rows: z.any().array() }), "Internal: executes the query and checks it against the expected result"),
 });
 
 exRegistry.registerPath({
   method: "get",
   path: "/exercises/hint",
   tags: ["Exercises"],
-  request: { query: z.object({ game: z.string(), exerciseId: z.number() }) },
-  responses: createApiResponse(z.object({ hints: z.string().nullable(), expected: z.any().array(), expectedColumns: z.string().array() }), "Internal: hint and expected result"),
+  request: { query: z.object({ game: z.string(), exerciseId: z.number(), type: z.enum(["hint", "expected"]) }) },
+  responses: createApiResponse(z.object({ hints: z.string().optional(), expected: z.any().array().optional(), expectedColumns: z.string().array().optional() }), "Internal: the hint or the expected result"),
 });
 
 exRouter.post("/", exController.post);

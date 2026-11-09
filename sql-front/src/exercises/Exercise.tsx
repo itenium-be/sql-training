@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Button from 'react-bootstrap/Button';
 import Badge from 'react-bootstrap/Badge';
-import { ATTEMPTS_PER_PENALTY, ExerciseModel, HintModel, SqlExerciseModel } from "./exerciseModels";
+import { ATTEMPTS_PER_PENALTY, ExerciseModel, ExpectedModel, SqlExerciseModel } from "./exerciseModels";
 import { ExerciseSampleData, ExercisesData } from "./ExerciseSampleData";
 import { authFetch, config } from "../config";
 import { useAppDispatch, useAppSelector } from "../store";
@@ -73,7 +73,8 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
   const [sqlText, setSqlText] = useState('');
   const [error, setError] = useState('');
   const [result, setResult] = useState<null | any[]>(null);
-  const [hint, setHint] = useState<HintModel | null>(null);
+  const [hint, setHint] = useState<string | null>(null);
+  const [expected, setExpected] = useState<ExpectedModel | null>(null);
   const [points, setPoints] = useState<number | null>(null);
   const [success, setSuccess] = useState(false);
   const [cost, setCost] = useState<number | null>(null);
@@ -104,6 +105,7 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
     setResult(null);
     setSuccess(false);
     setHint(null);
+    setExpected(null);
     setCost(null);
     setPoints(null);
   }
@@ -143,20 +145,24 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
     }
   };
 
-  const showHint = async () => {
+  const requestHelp = async (type: 'hint' | 'expected') => {
     try {
       const res = await authFetch(`${config.leaderboard.api}/game/hint`, {
         method: 'POST',
-        body: JSON.stringify({ game: currentGame, exerciseId: sql.id }),
+        body: JSON.stringify({ game: currentGame, exerciseId: sql.id, type }),
       });
       const data = await res.json();
       if (!res.ok) {
         setError(data.message ?? 'Could not fetch the hint');
         return;
       }
-      setHint(data);
+      if (type === 'hint') {
+        setHint(data.hints);
+      } else {
+        setExpected(data);
+      }
     } catch (err) {
-      console.error('Could not fetch hint', err);
+      console.error(`Could not fetch ${type}`, err);
       setError('Could not fetch the hint');
     }
   };
@@ -225,13 +231,24 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
               Back
             </Button>
           )}
-          {result && !hint && (
-            <Button variant="secondary" onClick={showHint} className="float-end" style={{marginRight: 12}} title="Solving after the hint gives half the points">
-              Show Hint (½ points)
+          {result && !expected && (
+            <Button variant="secondary" onClick={() => requestHelp('expected')} className="float-end" style={{marginRight: 12}}>
+              Show Expected Result (−{sql.expectedCost} pt)
+            </Button>
+          )}
+          {sql.hasHint && !hint && (
+            <Button variant="secondary" onClick={() => requestHelp('hint')} className="float-end" style={{marginRight: 12}}>
+              Show Hint (−{sql.hintCost} pt)
             </Button>
           )}
           {hint && (
-            <HintTable hint={hint} />
+            <div style={{paddingTop: 25}}>
+              <h2>Hint</h2>
+              <p>{hint}</p>
+            </div>
+          )}
+          {expected && (
+            <ExpectedTable expected={expected} />
           )}
         </>
       )}
@@ -261,21 +278,15 @@ function ExerciseSolved({sql, reset, text, cost, points}: {sql: SqlExerciseModel
 }
 
 
-function HintTable({hint}: {hint: HintModel}) {
-  const data = hint.expected.map(record => {
+function ExpectedTable({expected}: {expected: ExpectedModel}) {
+  const data = expected.expected.map(record => {
     const obj: any = {};
-    hint.expectedColumns.forEach((colName, index) => obj[colName] = record[index])
+    expected.expectedColumns.forEach((colName, index) => obj[colName] = record[index])
     return obj;
   });
 
   return (
     <div style={{paddingTop: 25}}>
-      {hint.hints && (
-        <>
-          <h2>Hints</h2>
-          <p>{hint.hints}</p>
-        </>
-      )}
       <h2>Expected Result</h2>
       <ExercisesData data={data} />
     </div>

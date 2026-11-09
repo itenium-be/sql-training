@@ -4,12 +4,14 @@ import { ServiceResponse } from "@/common/models/serviceResponse";
 import { StatusCodes } from "http-status-codes";
 import { checkSql, getSchema } from "./sqlCheck";
 import { CostError, measurePostgres, measureSqlServer } from "./cost";
-import { QueryError, findExercise, isCorrect, measureCost, runQuery, toObjects } from "./checker";
+import { QueryError, findExercise, isCorrect, measureCost, penalties, runQuery, toObjects } from "./checker";
 import { exercises } from "./definitions/exercises";
 
 type CheckResult = {
   correct: boolean;
   points: number;
+  hintCost: number;
+  expectedCost: number;
   cost: number | null;
   rows: Record<string, unknown>[];
 };
@@ -31,7 +33,11 @@ class ExController {
   public definitions: RequestHandler = async (_req: Request, res: Response) => {
     const publicExercises = exercises.map(game => ({
       ...game,
-      exercises: game.exercises.map(({ expected, hints, ...exercise }) => exercise),
+      exercises: game.exercises.map(({ expected, hints, hintCost, expectedCost, ...exercise }) => ({
+        ...exercise,
+        hasHint: !!hints,
+        ...penalties({ ...exercise, expected, hints, hintCost, expectedCost }),
+      })),
     }));
     return handleServiceResponse(ServiceResponse.success('Exercises', publicExercises), res);
   };
@@ -41,8 +47,14 @@ class ExController {
     if (!exercise) {
       return handleServiceResponse(ServiceResponse.failure('Unknown exercise', null, StatusCodes.NOT_FOUND), res);
     }
-    const { hints, expected, expectedColumns } = exercise;
-    return handleServiceResponse(ServiceResponse.success('Hint', { hints: hints ?? null, expected, expectedColumns }), res);
+    if (_req.query.type === 'expected') {
+      const { expected, expectedColumns } = exercise;
+      return handleServiceResponse(ServiceResponse.success('Expected result', { expected, expectedColumns }), res);
+    }
+    if (!exercise.hints) {
+      return handleServiceResponse(ServiceResponse.failure('This exercise has no hint', null, StatusCodes.NOT_FOUND), res);
+    }
+    return handleServiceResponse(ServiceResponse.success('Hint', { hints: exercise.hints }), res);
   };
 
   public check: RequestHandler = async (_req: Request, res: Response) => {
@@ -59,7 +71,7 @@ class ExController {
       const correct = isCorrect(exercise, result);
       const rows = toObjects(result);
       const cost = correct ? await measureCost(game, query) : null;
-      return handleServiceResponse(ServiceResponse.success<CheckResult>(correct ? 'Correct' : 'Query result does not match expected output!', { correct, cost, rows, points: exercise.points }), res);
+      return handleServiceResponse(ServiceResponse.success<CheckResult>(correct ? 'Correct' : 'Query result does not match expected output!', { correct, cost, rows, points: exercise.points, ...penalties(exercise) }), res);
     } catch (err: any) {
       const status = err instanceof QueryError ? StatusCodes.BAD_REQUEST : StatusCodes.INTERNAL_SERVER_ERROR;
       return handleServiceResponse(ServiceResponse.failure(err.message, null, status), res);

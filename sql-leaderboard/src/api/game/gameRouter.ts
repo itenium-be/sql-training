@@ -52,9 +52,13 @@ async function callBackEnd(path: string, init?: RequestInit) {
 }
 
 async function getActivity(player: string, game: string, exerciseId: number) {
-  const result = await executeQuery('SELECT attempts, hint FROM exercise_activity WHERE player=$1 AND game=$2 AND exerciseId=$3', [player, game, exerciseId]);
+  const result = await executeQuery('SELECT attempts, hint, expected FROM exercise_activity WHERE player=$1 AND game=$2 AND exerciseId=$3', [player, game, exerciseId]);
   const row = result.rows[0];
-  return { attempts: row ? Number(row.attempts) : 0, hint: row ? row.hint === true : false };
+  return {
+    attempts: row ? Number(row.attempts) : 0,
+    hint: row?.hint === true,
+    expected: row?.expected === true,
+  };
 }
 
 async function isSolved(player: string, game: string, exerciseId: number) {
@@ -107,25 +111,27 @@ const checkExercise: RequestHandler = async (req: Request, res: Response) => {
   const elapsedResult = await executeQuery('SELECT EXTRACT(EPOCH FROM (NOW() - startTime)) AS seconds FROM game_start WHERE player=$1 AND game=$2 AND exerciseId=$3 ORDER BY startTime LIMIT 1', [player, data.game, data.exerciseId]);
   const elapsed = parseInt(elapsedResult.rows[0]?.seconds) || 0;
 
-  const { attempts, hint } = await getActivity(player, data.game, data.exerciseId);
-  const points = calculatePoints(body.responseObject.points, hint, attempts);
+  const { attempts, hint, expected } = await getActivity(player, data.game, data.exerciseId);
+  const { points: basePoints, hintCost, expectedCost } = body.responseObject;
+  const points = calculatePoints(basePoints, { hint, hintCost, expected, expectedCost }, attempts);
   const solutionLength = data.solution.replace(/\s/g, '').length;
-  const values = [player, data.game, data.exerciseId, data.solution, solutionLength, elapsed, cost, points, hint, attempts];
-  await executeQuery('INSERT INTO game_progress (player, game, exerciseId, solution, solutionLength, elapsed, cost, points, hint, attempts) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) ON CONFLICT DO NOTHING', values);
-  return res.status(200).send({correct: true, recorded: true, message: 'Registered!', rows, cost, points, hint, attempts});
+  const values = [player, data.game, data.exerciseId, data.solution, solutionLength, elapsed, cost, points, hint, expected, attempts];
+  await executeQuery('INSERT INTO game_progress (player, game, exerciseId, solution, solutionLength, elapsed, cost, points, hint, expected, attempts) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) ON CONFLICT DO NOTHING', values);
+  return res.status(200).send({correct: true, recorded: true, message: 'Registered!', rows, cost, points, hint, expected, attempts});
 };
 
 const getHint: RequestHandler = async (req: Request, res: Response) => {
   const player = (req as AuthRequest).player;
   const game = req.body?.game;
   const exerciseId = req.body?.exerciseId;
-  if (typeof game !== 'string' || !Number.isInteger(exerciseId)) {
-    return res.status(400).send({message: 'game and exerciseId are required'});
+  const type = req.body?.type;
+  if (typeof game !== 'string' || !Number.isInteger(exerciseId) || (type !== 'hint' && type !== 'expected')) {
+    return res.status(400).send({message: 'game, exerciseId and type (hint|expected) are required'});
   }
 
   let body: any;
   try {
-    body = await callBackEnd(`/exercises/hint?game=${encodeURIComponent(game)}&exerciseId=${exerciseId}`);
+    body = await callBackEnd(`/exercises/hint?game=${encodeURIComponent(game)}&exerciseId=${exerciseId}&type=${type}`);
   } catch (err) {
     console.error('Could not fetch hint', err);
     return res.status(503).send({message: 'Could not fetch the hint, try again'});
@@ -136,8 +142,8 @@ const getHint: RequestHandler = async (req: Request, res: Response) => {
 
   if (gameMode === 'running' && !(await isSolved(player, game, exerciseId))) {
     await executeQuery(
-      `INSERT INTO exercise_activity (player, game, exerciseId, hint) VALUES ($1, $2, $3, TRUE)
-       ON CONFLICT (player, game, exerciseId) DO UPDATE SET hint = TRUE`,
+      `INSERT INTO exercise_activity (player, game, exerciseId, ${type}) VALUES ($1, $2, $3, TRUE)
+       ON CONFLICT (player, game, exerciseId) DO UPDATE SET ${type} = TRUE`,
       [player, game, exerciseId],
     );
   }
@@ -146,7 +152,7 @@ const getHint: RequestHandler = async (req: Request, res: Response) => {
 
 const getMyActivity: RequestHandler = async (req: Request, res: Response) => {
   const player = (req as AuthRequest).player;
-  const result = await executeQuery('SELECT game, exerciseId, attempts, hint FROM exercise_activity WHERE player=$1', [player]);
+  const result = await executeQuery('SELECT game, exerciseId, attempts, hint, expected FROM exercise_activity WHERE player=$1', [player]);
   return res.status(200).send({player, activity: result.rows});
 };
 
@@ -156,11 +162,11 @@ const getProgress: RequestHandler = async (_req: Request, res: Response) => {
   }
 
   if (gameMode === 'end') {
-    const data = await executeQuery('SELECT player, game, exerciseId, solution, solutionLength, elapsed, cost, points, hint, attempts FROM game_progress');
+    const data = await executeQuery('SELECT player, game, exerciseId, solution, solutionLength, elapsed, cost, points, hint, expected, attempts FROM game_progress');
     return res.status(200).send(data.rows);
   }
 
-  const data = await executeQuery('SELECT player, game, exerciseId, solutionLength, elapsed, cost, points, hint, attempts FROM game_progress');
+  const data = await executeQuery('SELECT player, game, exerciseId, solutionLength, elapsed, cost, points, hint, expected, attempts FROM game_progress');
   return res.status(200).send(data.rows);
 };
 

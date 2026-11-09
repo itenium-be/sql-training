@@ -16,10 +16,14 @@ export type SqlExerciseModel = {
   /** Require specific array order */
   expectedOrder: boolean;
   expectedColumns: string[];
+  hasHint: boolean;
+  /** Points deducted for showing the hint */
+  hintCost: number;
+  /** Points deducted for showing the expected result */
+  expectedCost: number;
 }
 
-export type HintModel = {
-  hints: string | null;
+export type ExpectedModel = {
   expected: any[][];
   expectedColumns: string[];
 }
@@ -37,6 +41,7 @@ export type Score = {
   /** Points awarded after hint/attempt penalties */
   points: number | null;
   hint: boolean;
+  expected: boolean;
   attempts: number;
 }
 

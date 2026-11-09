@@ -11,6 +11,7 @@ CREATE TABLE game_progress (
   cost NUMERIC(15,0),
   points NUMERIC(15,0),
   hint BOOLEAN NOT NULL DEFAULT FALSE,
+  expected BOOLEAN NOT NULL DEFAULT FALSE,
   attempts NUMERIC(15,0) NOT NULL DEFAULT 0
 );
 
@@ -22,6 +23,7 @@ CREATE TABLE exercise_activity (
   exerciseId NUMERIC(15,0) NOT NULL,
   attempts NUMERIC(15,0) NOT NULL DEFAULT 0,
   hint BOOLEAN NOT NULL DEFAULT FALSE,
+  expected BOOLEAN NOT NULL DEFAULT FALSE,
   PRIMARY KEY (player, game, exerciseId)
 );
 

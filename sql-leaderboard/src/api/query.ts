@@ -29,6 +29,8 @@ export async function migrate() {
     hint BOOLEAN NOT NULL DEFAULT FALSE,
     PRIMARY KEY (player, game, exerciseId)
   )`);
+  await executeQuery('ALTER TABLE game_progress ADD COLUMN IF NOT EXISTS expected BOOLEAN NOT NULL DEFAULT FALSE');
+  await executeQuery('ALTER TABLE exercise_activity ADD COLUMN IF NOT EXISTS expected BOOLEAN NOT NULL DEFAULT FALSE');
   await executeQuery('CREATE UNIQUE INDEX IF NOT EXISTS game_progress_unique ON game_progress (player, game, exerciseId)');
   await executeQuery('CREATE TABLE IF NOT EXISTS settings (key VARCHAR(50) PRIMARY KEY, value TEXT NOT NULL)');
   await executeQuery('ALTER TABLE players ADD COLUMN IF NOT EXISTS avatar SMALLINT');

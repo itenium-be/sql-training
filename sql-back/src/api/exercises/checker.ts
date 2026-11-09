@@ -45,6 +45,16 @@ export function toObjects({ columns, rows }: QueryResult): Record<string, unknow
   return rows.map((row) => Object.fromEntries(keys.map((key, i) => [key, row[i]])));
 }
 
+export const DEFAULT_HINT_COST = 1;
+export const DEFAULT_EXPECTED_COST = 1;
+
+export function penalties(exercise: SqlExerciseModel) {
+  return {
+    hintCost: exercise.hints ? (exercise.hintCost ?? DEFAULT_HINT_COST) : 0,
+    expectedCost: exercise.expectedCost ?? DEFAULT_EXPECTED_COST,
+  };
+}
+
 export function findExercise(game: string, exerciseId: number): SqlExerciseModel | undefined {
   return exercises.find((ex) => ex.id === game)?.exercises.find((ex) => ex.id === exerciseId);
 }

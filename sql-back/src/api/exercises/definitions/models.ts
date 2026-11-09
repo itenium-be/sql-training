@@ -9,6 +9,10 @@ export type SqlExerciseModel = {
   expectedOrder: boolean;
   expectedColumns: string[];
   hints?: string;
+  /** Points deducted for showing the hint, default 1 */
+  hintCost?: number;
+  /** Points deducted for showing the expected result, default 1 */
+  expectedCost?: number;
 };
 
 export type ExerciseModel = {
