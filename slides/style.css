@@ -156,3 +156,20 @@
 .steps li { counter-increment: step; display: flex; align-items: center; gap: .9rem; font-size: 1.3rem; color: var(--df-cream); }
 .steps li::before { content: counter(step); flex: none; width: 2rem; height: 2rem; border-radius: 50%; border: 1px solid var(--df-gold); color: var(--df-gold); font-weight: 800; display: inline-flex; align-items: center; justify-content: center; font-size: 1rem; }
 .slidev-layout kbd { font-family: 'JetBrains Mono', monospace; font-size: .85em; padding: .05em .4em; border: 1px solid var(--df-border); border-bottom-width: 2px; border-radius: 6px; color: var(--df-cream); background: var(--df-surface); }
+
+/* Competition: award cards + penalty strip */
+:root { --c-correct: #a9c97a; --c-leanest: #f0d28a; --c-penalty: #cf6a52; }
+.zone-gain, .zone-lose { font-family: 'JetBrains Mono', monospace; font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; margin: .4rem 0 .6rem; }
+.zone-gain { color: var(--c-correct); }
+.zone-lose { color: var(--c-penalty); margin-top: 1.1rem; }
+.award-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.award { display: flex; align-items: center; gap: 1.1rem; border: 1px solid var(--df-border); border-radius: 16px; background: var(--df-bg-raised); padding: 1rem 1.2rem; }
+.award .chip { flex: none; width: 3.2rem; height: 3.2rem; border-radius: 13px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, .03); border: 1px solid var(--df-border-soft); }
+.award .chip svg { width: 1.7rem; height: 1.7rem; stroke: currentColor; fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.award .l b { display: block; color: var(--df-cream); font-size: 1.2rem; line-height: 1.15; }
+.award .l span { color: var(--df-muted); font-size: .85rem; }
+.award .bonus { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 1.3rem; color: var(--df-gold); }
+.pen-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.pen { display: flex; align-items: center; gap: .8rem; border: 1px solid rgba(207, 106, 82, .4); background: rgba(207, 106, 82, .08); border-radius: 14px; padding: .8rem 1.1rem; color: var(--df-cream); font-size: 1.05rem; }
+.pen .m { font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 1.4rem; color: var(--c-penalty); flex: none; width: 2.2rem; text-align: center; }
+.pen small { color: var(--df-muted); }
