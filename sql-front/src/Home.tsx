@@ -2,14 +2,28 @@ import { useState } from "react";
 import { Image, Row } from "react-bootstrap";
 import { useAppSelector } from "./store";
 import { RegisterForm } from "./RegisterForm";
-import { Scoreboard } from "./leaderboard/Scoreboard";
+import { Beamer } from "./beamer/Beamer";
+import { YourScores } from "./leaderboard/YourScores";
+import { AllSolutions } from "./leaderboard/AllSolutions";
 
 export function Home() {
   const registeredName = useAppSelector(state => state.exercises.userName);
+  const scores = useAppSelector(state => state.exercises.scores);
   const [meme] = useState(() => Math.floor(Math.random() * 18) + 1);
 
   if (registeredName) {
-    return <Scoreboard />;
+    return (
+      <>
+        <Beamer />
+        {scores.length > 0 && (
+          <>
+            <h2 style={{marginTop: 32}}>Your Scores</h2>
+            <YourScores scores={scores} />
+            <AllSolutions scores={scores} />
+          </>
+        )}
+      </>
+    );
   }
 
   return (

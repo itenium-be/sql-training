@@ -46,7 +46,7 @@ export function TopNavigation() {
     <Nav variant="tabs" activeKey={selected ?? 'home'}>
       <Nav.Item>
         <Nav.Link as="span" eventKey="home">
-          <Link to="/" onClick={() => dispatch(fetchData('home'))}>Home</Link>
+          <Link to="/" onClick={() => dispatch(fetchData('home'))}>Leaderboard</Link>
         </Nav.Link>
       </Nav.Item>
       {registeredName && exercises.map(ex => (
