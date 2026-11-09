@@ -1,9 +1,29 @@
-import { ReactNode } from 'react';
+import { CSSProperties, ReactNode } from 'react';
 import { PlayerRow } from '../leaderboard/leaderboardData';
 import { BoltIcon, CheckIcon, CodeIcon, LeafIcon } from '../layout/Icons';
+import { Player, avatarIndex } from '../game';
+import { avatarUrl } from '../avatars';
 
 function initial(name: string) {
   return name.trim().charAt(0).toUpperCase() || '?';
+}
+
+type Ring = 'gold' | 'you' | 'border';
+
+const ringStyle: Record<Ring, CSSProperties> = {
+  gold: {borderColor: 'var(--df-gold)', boxShadow: '0 0 0 6px rgba(233,180,76,0.2), 0 0 60px rgba(233,180,76,0.25)'},
+  you: {borderColor: 'var(--df-gold)', boxShadow: '0 0 0 5px rgba(233,180,76,0.2)'},
+  border: {borderColor: 'var(--df-gold)'},
+};
+
+function BeamerAvatar({name, players, size, ring}: {name: string; players: Player[]; size: number; ring?: Ring}) {
+  const player = players.find(p => p.name.toLowerCase() === name.toLowerCase());
+  const style = {width: size, height: size, fontSize: Math.round(size * 0.4), ...(ring ? ringStyle[ring] : {})};
+  return (
+    <span className="bm-av" style={style}>
+      {player ? <img className="bm-av-photo" src={avatarUrl(avatarIndex(player))} alt={name} /> : initial(name)}
+    </span>
+  );
 }
 
 function Badges({row}: {row: PlayerRow}) {
@@ -28,15 +48,13 @@ function CrownIcon() {
   );
 }
 
-function Spot({row, place}: {row: PlayerRow | undefined; place: 1 | 2 | 3}) {
+function Spot({row, place, players}: {row: PlayerRow | undefined; place: 1 | 2 | 3; players: Player[]}) {
   return (
     <div className={`bm-pod bm-pod-${place}`}>
       {place === 1 && <span className="bm-pod-crown"><CrownIcon /></span>}
       {row ? (
         <>
-          <span className="bm-av bm-pod-av" style={place === 1 ? {width: 116, height: 116, fontSize: 46, borderColor: 'var(--df-gold)', boxShadow: '0 0 0 6px rgba(233,180,76,0.2), 0 0 60px rgba(233,180,76,0.25)'} : {width: 92, height: 92, fontSize: 36}}>
-            {initial(row.name)}
-          </span>
+          <BeamerAvatar name={row.name} players={players} size={place === 1 ? 116 : 92} ring={place === 1 ? 'gold' : undefined} />
           <div className="bm-pod-name">{row.name}</div>
           <div className="bm-plinth">
             <div className="bm-plinth-rank">{place}</div>
@@ -53,7 +71,7 @@ function Metric({value}: {value: number}) {
   return <span className={value ? 'bm-m' : 'bm-m0'}>{value}</span>;
 }
 
-export function BeamerPlayers({rows, you}: {rows: PlayerRow[]; you: string}) {
+export function BeamerPlayers({rows, you, players, showStanding}: {rows: PlayerRow[]; you: string; players: Player[]; showStanding: boolean}) {
   const [first, second, third] = rows;
   const board = rows.slice(3);
   const youIndex = rows.findIndex(r => r.name === you);
@@ -62,9 +80,9 @@ export function BeamerPlayers({rows, you}: {rows: PlayerRow[]; you: string}) {
   return (
     <div className="bm-body">
       <div className="bm-podium">
-        <Spot row={second} place={2} />
-        <Spot row={first} place={1} />
-        <Spot row={third} place={3} />
+        <Spot row={second} place={2} players={players} />
+        <Spot row={first} place={1} players={players} />
+        <Spot row={third} place={3} players={players} />
       </div>
 
       <div className="bm-board">
@@ -76,7 +94,7 @@ export function BeamerPlayers({rows, you}: {rows: PlayerRow[]; you: string}) {
         {board.map((row, index) => (
           <div key={row.name} className={row.name === you ? 'bm-row bm-row-me' : 'bm-row'}>
             <span className="bm-rank">{index + 4}</span>
-            <span className="bm-av" style={{width: 44, height: 44, fontSize: 18, ...(row.name === you ? {borderColor: 'var(--df-gold)'} : {})}}>{initial(row.name)}</span>
+            <BeamerAvatar name={row.name} players={players} size={44} ring={row.name === you ? 'border' : undefined} />
             <span className="bm-name">{row.name}{row.name === you && <span className="bm-you"> you</span>}</span>
             <span className="bm-solved">
               <span className="bm-bar"><span style={{width: `${row.totalExercises ? Math.round(row.solved / row.totalExercises * 100) : 0}%`}} /></span>
@@ -90,9 +108,9 @@ export function BeamerPlayers({rows, you}: {rows: PlayerRow[]; you: string}) {
         ))}
       </div>
 
-      {youRow && (
+      {showStanding && youRow && (
         <div className="bm-standing">
-          <span className="bm-av" style={{width: 80, height: 80, fontSize: 32, borderColor: 'var(--df-gold)', boxShadow: '0 0 0 5px rgba(233,180,76,0.2)'}}>{initial(youRow.name)}</span>
+          <BeamerAvatar name={youRow.name} players={players} size={80} ring="you" />
           <div style={{flex: 'none'}}>
             <div className="bm-standing-sub">Your standing</div>
             <div className="bm-standing-rank">#{youIndex + 1} of {rows.length} · {youRow.total} pts</div>

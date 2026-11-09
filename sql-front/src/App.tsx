@@ -20,7 +20,7 @@ export function App() {
     return <Admin />;
   }
   if (window.location.pathname.startsWith('/beamer')) {
-    return <Beamer />;
+    return <Beamer projector />;
   }
   return <Game />;
 }

@@ -1,19 +1,15 @@
 .bm-stage {
-  position: fixed;
-  inset: 0;
-  background: #000;
+  min-height: 100vh;
+  background: var(--df-bg);
   display: flex;
-  align-items: center;
   justify-content: center;
-  overflow: hidden;
 }
 
 .bm-frame {
-  width: 1920px;
-  height: 1080px;
+  width: 100%;
+  max-width: 1920px;
+  min-height: 100vh;
   box-sizing: border-box;
-  overflow: hidden;
-  transform-origin: center center;
   font-family: var(--df-font);
   color: var(--df-text);
   background: radial-gradient(1400px 600px at 35% -10%, rgba(201, 154, 62, 0.2), transparent 70%), var(--df-bg);
@@ -22,6 +18,16 @@
   flex-direction: column;
   gap: 24px;
 }
+
+/* Embedded in the in-app leaderboard page (not the full-screen projector) */
+.bm-frame-inline {
+  min-height: 0;
+  padding: 8px 0 0;
+  background: none;
+  gap: 20px;
+}
+
+.bm-head-bare { gap: 0; }
 
 .bm-head {
   display: flex;
@@ -75,8 +81,10 @@
   gap: 24px;
   min-height: 0;
 }
+.bm-body-empty { align-items: center; justify-content: center; }
 
 .bm-av {
+  box-sizing: border-box;
   border-radius: 50%;
   border: 2px solid var(--df-border);
   background: var(--df-surface);
@@ -86,7 +94,9 @@
   align-items: center;
   justify-content: center;
   flex: none;
+  overflow: hidden;
 }
+.bm-av-photo { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
 
 /* Podium */
 .bm-podium {
@@ -278,19 +288,25 @@
   color: var(--df-cream);
 }
 .bm-subhead-note { font-size: 18px; color: var(--df-muted); }
-.bm-games { margin-left: auto; display: flex; gap: 10px; }
+.bm-games {
+  margin-left: auto;
+  display: inline-flex;
+  border: 1px solid var(--df-border);
+  border-radius: 999px;
+  overflow: hidden;
+}
 .bm-game {
   min-height: 46px;
   padding: 0 24px;
-  border-radius: 999px;
-  font: 800 20px var(--df-font);
-  border: 1px solid var(--df-border);
+  border: 0;
+  border-left: 1px solid var(--df-border);
   background: transparent;
   color: var(--df-cream);
+  font: 800 20px var(--df-font);
   cursor: pointer;
 }
+.bm-game:first-child { border-left: 0; }
 .bm-game[aria-pressed="true"] {
-  border-color: var(--df-gold);
   background: rgba(233, 180, 76, 0.16);
   color: var(--df-gold);
 }
@@ -300,8 +316,6 @@
   background: rgba(31, 23, 15, 0.8);
   border: 1px solid var(--df-border-soft);
   border-radius: 20px;
-  overflow: hidden;
-  min-height: 0;
   display: flex;
   flex-direction: column;
 }

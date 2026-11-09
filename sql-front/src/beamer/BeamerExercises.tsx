@@ -26,7 +26,7 @@ export function BeamerExercises({entities, scores, you}: {entities: ExerciseMode
       <div className="bm-subhead">
         <h2>Exercise awards</h2>
         <span className="bm-subhead-note">your awards in gold</span>
-        <div className="bm-games">
+        <div className="bm-games" role="group" aria-label="Game">
           {entities.map(g => (
             <button key={g.id} type="button" className="bm-game" aria-pressed={g.id === game} onClick={() => setGame(g.id)}>{g.id}</button>
           ))}
