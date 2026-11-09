@@ -1,9 +1,11 @@
-FROM node:26-slim
+FROM oven/bun:1.4-slim
 
 WORKDIR /usr/src/app
-COPY package*.json ./
-RUN npm ci
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile
 COPY . .
-RUN npm run build
+RUN bun run build
+
 EXPOSE 8000
-CMD npm run start
+
+CMD ["bun", "dist/index.js"]

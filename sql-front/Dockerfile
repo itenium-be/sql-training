@@ -1,12 +1,12 @@
-FROM node:26-slim
+FROM oven/bun:1.4-slim
 
-RUN npm i -g serve
+RUN bun add -g serve
 
 WORKDIR /usr/src/app
-COPY package*.json ./
-RUN npm install
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile
 COPY . .
-RUN npm run build
+RUN bun run build
 
 EXPOSE 3000
 
