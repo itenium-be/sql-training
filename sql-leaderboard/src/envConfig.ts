@@ -7,7 +7,7 @@ export const env = cleanEnv(process.env, {
   NODE_ENV: str({ testDefault: "test", choices: ["development", "production", "test"] }),
   HOST: host({ testDefault: "localhost" }),
   PORT: port({ testDefault: 8000 }),
-  API_KEY: str({ testDefault: 'secret' }),
+  API_KEY: str({ testDefault: "secret" }),
   BACK_END_URL: url({ testDefault: "http://localhost:8080" }),
   INTERNAL_API_KEY: str({ testDefault: "internal" }),
 

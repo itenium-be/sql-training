@@ -8,7 +8,10 @@
   "scripts": {
     "dev": "tsx watch --clear-screen=false src/index.ts | pino-pretty",
     "build": "tsup",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "lint": "biome check src/",
+    "lint:fix": "biome check src/ --fix",
+    "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
     "cors": "^2.8.6",
@@ -22,6 +25,7 @@
     "pino-http": "^11.0.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.6.6",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",

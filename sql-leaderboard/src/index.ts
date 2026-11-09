@@ -1,8 +1,8 @@
-import { env } from "./envConfig";
 import { app, logger } from "@/server";
 import { migrate } from "./api/query";
+import { env } from "./envConfig";
 
-migrate().catch(err => logger.error(err, "migration failed"));
+migrate().catch((err) => logger.error(err, "migration failed"));
 
 const server = app.listen(env.PORT, () => {
   const { NODE_ENV, HOST, PORT } = env;

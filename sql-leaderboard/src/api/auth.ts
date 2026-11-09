@@ -9,10 +9,9 @@ async function getSecret(): Promise<string> {
   if (secret) {
     return secret;
   }
-  await executeQuery(
-    "INSERT INTO settings (key, value) VALUES ('jwt_secret', $1) ON CONFLICT (key) DO NOTHING",
-    [randomBytes(48).toString("hex")],
-  );
+  await executeQuery("INSERT INTO settings (key, value) VALUES ('jwt_secret', $1) ON CONFLICT (key) DO NOTHING", [
+    randomBytes(48).toString("hex"),
+  ]);
   const result = await executeQuery("SELECT value FROM settings WHERE key='jwt_secret'");
   secret = result.rows[0].value as string;
   return secret;
