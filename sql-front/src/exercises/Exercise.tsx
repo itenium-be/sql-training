@@ -312,7 +312,12 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
                     ? <ExercisesData data={expectedRows(expected)} />
                     : <RevealExpected cost={sql.expectedCost} onReveal={() => requestHelp('expected')} />
                 )}
-                {resultTab === 'sample' && <ExerciseSampleData />}
+                {resultTab === 'sample' && (
+                  <>
+                    <pre className="df-sample-query">{exercise.sampleQuery}</pre>
+                    <ExerciseSampleData />
+                  </>
+                )}
               </div>
             </div>
           </>

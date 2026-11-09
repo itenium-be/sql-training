@@ -934,6 +934,16 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
 
 .df-results-body { padding: 14px; max-height: 340px; overflow: auto; }
 .df-results-body-full { max-height: none; }
+.df-sample-query {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  background: var(--df-surface);
+  border: 1px solid var(--df-border-soft);
+  border-radius: 8px;
+  color: var(--df-cream);
+  font-size: .85rem;
+  overflow-x: auto;
+}
 .df-results-empty { color: var(--df-muted); margin: 0; padding: 28px 12px; text-align: center; }
 
 .df-locked {
