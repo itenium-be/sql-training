@@ -1,3 +1,9 @@
+# Full stack with hot reload. Run with:
+#   docker compose -f compose.yaml -f compose.dev.yaml watch
+# then browse http://localhost (HTTP_PORT). File changes are synced into the
+# containers by `compose watch`, so vite HMR and `bun --watch` fire normally
+# even though the checkout lives on a 9p mount (bind mounts don't deliver
+# inotify there).
 services:
   sqlserver:
     ports:
@@ -8,3 +14,64 @@ services:
   leaderboard-db:
     ports:
       - 6000:5432
+
+  front-end:
+    command: bun run dev
+    environment:
+      VITE_PORT: 3000
+      VITE_HMR_CLIENT_PORT: 3000
+    ports:
+      - 3000:3000
+    develop:
+      watch:
+        - path: ./sql-front/src
+          action: sync
+          target: /usr/src/app/src
+        - path: ./sql-front/public
+          action: sync
+          target: /usr/src/app/public
+        - path: ./sql-front/index.html
+          action: sync
+          target: /usr/src/app/index.html
+        - path: ./sql-front/package.json
+          action: rebuild
+
+  back-end:
+    command: bun run dev
+    develop:
+      watch:
+        - path: ./sql-back/src
+          action: sync
+          target: /usr/src/app/src
+        - path: ./sql-back/package.json
+          action: rebuild
+
+  leaderboard:
+    command: bun run dev
+    develop:
+      watch:
+        - path: ./sql-leaderboard/src
+          action: sync
+          target: /usr/src/app/src
+        - path: ./sql-leaderboard/package.json
+          action: rebuild
+
+  # Slidev's dev server owns its asset paths, which don't survive nginx's
+  # /slides/ prefix strip, so in dev the deck is served straight on :3030
+  # (http://localhost:3030) rather than under http://localhost/slides/.
+  slides:
+    build:
+      target: build
+    command: bunx slidev --port 3030 --remote
+    ports:
+      - 3030:3030
+    develop:
+      watch:
+        - path: ./slides
+          action: sync
+          target: /usr/src/app
+          ignore:
+            - node_modules/
+            - dist/
+        - path: ./slides/package.json
+          action: rebuild

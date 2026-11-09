@@ -53,6 +53,19 @@ Set `gameUrl`, `wifiNetwork` and `wifiPassword` at the top of `slides/slides.md`
 
 ## Develop
 
+### Everything in Docker, hot reload
+
+```sh
+docker compose -f compose.yaml -f compose.dev.yaml watch
+# http://localhost  (slides on http://localhost:3030)
+```
+
+`compose watch` syncs changed files into the containers; vite HMR and `bun --watch` pick them up.
+
+File-change events don't cross a Windows/9p mount, so the checkout must live on a native Linux filesystem (a WSL `~/dev/...` clone, **not** `/mnt/c` or a Dropbox folder). On a 9p checkout the stack still runs but nothing reloads.
+
+### Databases only, back-ends on the host
+
 Start the databases with their ports exposed:
 
 ```sh
