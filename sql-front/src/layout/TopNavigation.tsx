@@ -43,20 +43,20 @@ export function TopNavigation() {
         )}
       </div>
     </header>
-    <Nav variant="tabs" activeKey={selected ?? 'home'}>
-      <Nav.Item>
-        <Nav.Link as="span" eventKey="home">
-          <Link to="/" onClick={() => dispatch(fetchData('home'))}>Leaderboard</Link>
-        </Nav.Link>
-      </Nav.Item>
-      {registeredName && exercises.map(ex => (
-        <Nav.Item key={ex.id}>
-          <Nav.Link as="span" eventKey={ex.id}>
-            <Link to={ex.id} onClick={() => dispatch(fetchData(ex.id))}>{ex.id}</Link>
-          </Nav.Link>
-        </Nav.Item>
-      ))}
-    </Nav>
+    <div className="df-tabs">
+      <Link to="/" onClick={() => dispatch(fetchData('home'))} className={selected ? 'df-tab' : 'df-tab df-tab-active'}>Leaderboard</Link>
+      {registeredName && (
+        <Nav variant="tabs" activeKey={selected ?? undefined}>
+          {exercises.map(ex => (
+            <Nav.Item key={ex.id}>
+              <Nav.Link as="span" eventKey={ex.id}>
+                <Link to={ex.id} onClick={() => dispatch(fetchData(ex.id))}>{ex.id}</Link>
+              </Nav.Link>
+            </Nav.Item>
+          ))}
+        </Nav>
+      )}
+    </div>
     </>
   );
 }

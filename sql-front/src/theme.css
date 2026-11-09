@@ -258,6 +258,26 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
   text-decoration: underline;
 }
 
+.df-tabs {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.df-tab {
+  display: inline-block;
+  padding: .5rem 1.2rem;
+  border: 1px solid var(--df-border);
+  border-radius: 999px;
+  color: var(--df-cream);
+  font-weight: 700;
+  text-decoration: none;
+}
+.df-tab:hover { color: var(--df-cream); border-color: var(--df-gold-deep); text-decoration: none; }
+.df-tab-active { border-color: var(--df-gold); background: rgba(233, 180, 76, 0.18); color: var(--df-gold); }
+.df-tab-active:hover { color: var(--df-gold); border-color: var(--df-gold); }
+
 .nav-tabs {
   --bs-nav-tabs-border-width: 0;
   display: inline-flex;
