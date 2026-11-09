@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { authFetch, config } from './config';
+import { AVATAR_COUNT } from './avatars';
 
 export type GameMode = 'init' | 'running' | 'end';
 
@@ -9,14 +10,8 @@ export type Player = {
   avatar: number | null;
 };
 
-export const AVATAR_COUNT = 60;
-
 export function avatarIndex(player: Player): number {
   return player.avatar ?? ((player.id - 1) % AVATAR_COUNT + AVATAR_COUNT) % AVATAR_COUNT + 1;
-}
-
-export function avatarUrl(index: number): string {
-  return `/avatars/avatar-${String(index).padStart(2, '0')}.png`;
 }
 
 async function fetchJson<T>(url: string): Promise<T | undefined> {

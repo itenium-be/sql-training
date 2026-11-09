@@ -679,11 +679,46 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
 
 .df-avatar-edit:hover { background: var(--df-cream); }
 
-.df-avatar-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
-  gap: 12px;
-  justify-items: center;
+/* ── Avatar picker (character rail + variant detail) ───────────── */
+.df-picker-body { padding: 0; }
+
+.df-picker { display: grid; grid-template-columns: 220px 1fr; min-height: 420px; }
+
+.df-picker-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px;
+  border-right: 1px solid var(--df-border-soft);
+  overflow: auto;
+  max-height: 60vh;
+}
+
+.df-picker-railitem {
+  border: 0;
+  background: transparent;
+  color: var(--df-text);
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-align: left;
+  padding: 11px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.df-picker-railitem:hover { background: rgba(233, 180, 76, 0.08); color: var(--df-cream); }
+.df-picker-railitem-on { background: rgba(233, 180, 76, 0.16); color: var(--df-gold); }
+
+.df-picker-detail { padding: 24px 26px; overflow: auto; max-height: 60vh; }
+.df-picker-title { margin: 0; font-size: 1.7rem; color: var(--df-cream); }
+.df-picker-tagline { margin: 6px 0 0; color: var(--df-muted); font-size: 1.05rem; }
+.df-picker-variants { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 24px; }
+
+@media (max-width: 560px) {
+  .df-picker { grid-template-columns: 1fr; }
+  .df-picker-rail { flex-direction: row; border-right: 0; border-bottom: 1px solid var(--df-border-soft); max-height: none; }
 }
 
 .df-avatar-option {

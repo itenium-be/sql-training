@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { avatarUrl } from './game';
+import { avatarUrl } from './avatars';
 
 export function Avatar({index, label, size = 96}: {index: number, label: string, size?: number}) {
   const [failed, setFailed] = useState(false);
