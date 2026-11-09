@@ -500,6 +500,98 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
 
 .df-regscreen-alert { max-width: 820px; width: 100%; margin-top: 20px; font-size: 1.05rem; }
 
+/* ── Waiting room (roster left, meme right) ────────────────────── */
+.df-waitgrid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 44px;
+  align-items: center;
+  width: 100%;
+  max-width: 1040px;
+  text-align: left;
+}
+
+.df-wait-left { min-width: 0; }
+
+.df-wait-title {
+  font-size: clamp(2rem, 4.6vw, 3.2rem);
+  line-height: 1.1;
+  padding-bottom: 0.08em;
+  margin: 14px 0 0;
+}
+
+.df-wait-status { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
+
+.df-wait-dot {
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--df-gold);
+  animation: df-wait-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes df-wait-pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+.df-wait-count { margin: 26px 0 14px; }
+.df-waitgrid .df-lobby-grid { grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 18px; margin-top: 0; }
+
+.df-meme {
+  display: flex;
+  flex-direction: column;
+  height: 420px;
+  border: 1px solid var(--df-border);
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--df-bg-raised);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+}
+
+.df-meme-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--df-border-soft);
+}
+
+.df-meme-label {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.78rem;
+  color: var(--df-muted);
+  letter-spacing: 0.06em;
+}
+
+.df-meme-shuffle {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--df-border);
+  border-radius: 999px;
+  background: rgba(233, 180, 76, 0.1);
+  color: var(--df-gold);
+  font: 700 0.85rem var(--df-font);
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.df-meme-shuffle:hover { border-color: var(--df-gold); background: rgba(233, 180, 76, 0.18); }
+
+.df-meme-img {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  object-fit: contain;
+  background: #0d0906;
+}
+
+@media (max-width: 820px) {
+  .df-waitgrid { grid-template-columns: 1fr; }
+  .df-meme { height: auto; }
+  .df-meme-img { max-height: 340px; }
+}
+
 .df-lobby {
   width: 100%;
   max-width: 1100px;
