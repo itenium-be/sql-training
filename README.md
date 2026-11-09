@@ -30,6 +30,17 @@ docker compose down -v
 docker compose up -d --build
 ```
 
+## Slides
+
+[Slidev](https://sli.dev) deck in `slides/`, same look as the website.
+
+```sh
+cd slides
+npm install
+npm run dev     # http://localhost:3030, presenter mode at /presenter
+npm run build   # static site in slides/dist
+```
+
 ## Develop
 
 Start the databases with their ports exposed:
