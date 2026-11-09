@@ -31,6 +31,6 @@ describe('nextMeme', () => {
 
 describe('memeUrl', () => {
   test('maps an index to its asset path', () => {
-    expect(memeUrl(7)).toBe('/memes/sql-7.png');
+    expect(memeUrl(7)).toBe('/memes/sql-7.webp');
   });
 });

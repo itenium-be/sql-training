@@ -1,7 +1,7 @@
-export const MEME_COUNT = 18;
+export const MEME_COUNT = 28;
 
 export function memeUrl(index: number): string {
-  return `/memes/sql-${index}.png`;
+  return `/memes/sql-${index}.webp`;
 }
 
 export function nextMeme(current: number, rand: () => number = Math.random): number {
