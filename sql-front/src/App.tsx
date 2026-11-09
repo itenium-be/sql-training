@@ -7,8 +7,11 @@ import { useAppDispatch, useAppSelector } from './store'
 import { Exercise } from './exercises/Exercise'
 import { useEffect, useState } from 'react'
 import { Intro } from './Intro'
+import { Register } from './Register'
+import { Waiting } from './Waiting'
 import { Admin } from './Admin'
 import { useGameMode } from './game'
+import { screenFor } from './flow'
 import { config, TOKEN_STORAGE } from './config'
 
 export function App() {
@@ -41,8 +44,15 @@ function Game() {
     dispatch(fetchData('home'));
   }, [dispatch]);
 
-  if (mode === 'init' || (!registeredName && !started)) {
-    return <Intro mode={mode} onStart={() => setStarted(true)} />;
+  const screen = screenFor(mode, !!registeredName, started);
+  if (screen === 'intro') {
+    return <Intro onStart={() => setStarted(true)} />;
+  }
+  if (screen === 'register') {
+    return <Register />;
+  }
+  if (screen === 'waiting') {
+    return <Waiting />;
   }
 
   return (

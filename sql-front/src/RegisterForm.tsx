@@ -1,34 +1,8 @@
-import { useState } from 'react';
 import { Alert, Button, Form } from 'react-bootstrap';
-import { config, TOKEN_STORAGE } from './config';
-import { useAppDispatch } from './store';
+import { useRegister } from './useRegister';
 
 export function RegisterForm() {
-  const [name, setName] = useState('');
-  const [response, setResponse] = useState('');
-  const dispatch = useAppDispatch();
-
-  const register = async () => {
-    try {
-      const res = await fetch(`${config.leaderboard.api}/game/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name }),
-      });
-
-      const data = await res.json();
-      setResponse(data.message);
-      if (res.status === 200) {
-        const registered = data.name ?? name.trim();
-        localStorage.setItem(TOKEN_STORAGE, data.token);
-        localStorage.setItem('userName', registered);
-        dispatch({type: 'exercises/register', payload: registered});
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      setResponse(error instanceof Error ? error.message : String(error));
-    }
-  };
+  const { name, setName, response, register } = useRegister();
 
   return (
     <div className="df-register">
@@ -40,7 +14,7 @@ export function RegisterForm() {
           placeholder="Your name"
           value={name}
           onChange={e => setName(e.target.value)}
-          onKeyDown={e => { if (e.key === 'Enter' && name.trim()) register(); }}
+          onKeyDown={e => { if (e.key === 'Enter') register(); }}
           autoFocus
         />
       </Form.Group>

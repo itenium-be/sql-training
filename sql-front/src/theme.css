@@ -414,6 +414,91 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
   margin: 24px 0 32px;
 }
 
+/* ── Register screen (INSERT INTO players) ─────────────────────── */
+.df-regscreen-title { font-size: clamp(2.2rem, 6vw, 3.6rem); margin: 18px 0 0; }
+
+.df-sqlcard {
+  width: 100%;
+  max-width: 620px;
+  margin-top: 34px;
+  text-align: left;
+  background: var(--df-bg-raised);
+  border: 1px solid var(--df-gold-deep);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+}
+
+.df-sqlcard-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--df-border-soft);
+}
+
+.df-sqlcard-dot { width: 11px; height: 11px; border-radius: 50%; }
+
+.df-sqlcard-file {
+  margin-left: auto;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--df-muted);
+  border: 1px solid var(--df-border);
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+
+.df-sqlcard-code {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: clamp(0.9rem, 2.4vw, 1.05rem);
+  line-height: 2;
+  padding: 22px 20px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0 18px;
+}
+
+.df-sqlcard-ln { color: var(--df-muted); opacity: 0.5; text-align: right; user-select: none; }
+.df-sql-kw { color: var(--df-gold); }
+.df-sql-str { color: var(--df-copper); }
+
+.df-sql-input {
+  font: inherit;
+  color: var(--df-cream);
+  background: rgba(233, 180, 76, 0.12);
+  border: 0;
+  border-bottom: 1px solid var(--df-gold-deep);
+  border-radius: 4px 4px 0 0;
+  padding: 1px 6px;
+  outline: none;
+  min-width: 9ch;
+}
+
+.df-sql-input::placeholder { color: var(--df-muted); }
+.df-sql-input:focus { background: rgba(233, 180, 76, 0.2); border-bottom-color: var(--df-gold); }
+
+.df-sqlcard-foot {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-top: 1px solid var(--df-border-soft);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.df-sqlcard-result {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.82rem;
+  color: #a9c97a;
+}
+
+.df-sqlcard-run { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; }
+
+.df-regscreen-alert { max-width: 620px; width: 100%; margin-top: 18px; }
+.df-regscreen-hint { color: var(--df-muted); font-size: 0.9rem; margin-top: 22px; }
+.df-regscreen-hint strong { color: var(--df-cream); }
+
 .df-lobby {
   width: 100%;
   max-width: 1100px;
