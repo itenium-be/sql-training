@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { ExerciseId, ExerciseModel, Score } from '../exercises/exerciseModels';
 import { exerciseAwards } from '../leaderboard/leaderboardData';
 import { BoltIcon, CodeIcon, LeafIcon } from '../layout/Icons';
@@ -16,8 +15,7 @@ function Holder({name, value, you}: {name: string | undefined; value: string; yo
   );
 }
 
-export function BeamerExercises({entities, scores, you}: {entities: ExerciseModel[]; scores: Score[]; you: string}) {
-  const [game, setGame] = useState<ExerciseId>(entities[0]?.id ?? 'World');
+export function BeamerExercises({entities, scores, you, game}: {entities: ExerciseModel[]; scores: Score[]; you: string; game: ExerciseId}) {
   const awards = exerciseAwards(entities, scores, game);
   const totalPlayers = new Set(scores.map(s => s.player)).size;
 
@@ -25,11 +23,6 @@ export function BeamerExercises({entities, scores, you}: {entities: ExerciseMode
     <div className="bm-body">
       <div className="bm-subhead">
         <h2>Exercise awards</h2>
-        <div className="bm-games" role="group" aria-label="Game">
-          {entities.map(g => (
-            <button key={g.id} type="button" className="bm-game" aria-pressed={g.id === game} onClick={() => setGame(g.id)}>{g.id}</button>
-          ))}
-        </div>
       </div>
 
       <div className="bm-awards">

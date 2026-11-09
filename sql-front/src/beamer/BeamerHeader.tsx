@@ -1,8 +1,18 @@
 import { DatabaseIcon } from '../layout/Icons';
+import { ExerciseId, ExerciseModel } from '../exercises/exerciseModels';
 
 export type BeamerView = 'players' | 'exercises';
 
-export function BeamerHeader({view, onSwitch, bare = false}: {view: BeamerView; onSwitch: (view: BeamerView) => void; bare?: boolean}) {
+type Props = {
+  view: BeamerView;
+  onSwitch: (view: BeamerView) => void;
+  bare?: boolean;
+  entities?: ExerciseModel[];
+  game?: ExerciseId;
+  onGame?: (game: ExerciseId) => void;
+};
+
+export function BeamerHeader({view, onSwitch, bare = false, entities = [], game, onGame}: Props) {
   return (
     <header className={bare ? 'bm-head bm-head-bare' : 'bm-head'}>
       {!bare && (
@@ -14,9 +24,18 @@ export function BeamerHeader({view, onSwitch, bare = false}: {view: BeamerView; 
           </div>
         </>
       )}
-      <div className="bm-toggle" role="tablist">
-        <button type="button" role="tab" aria-selected={view === 'players'} onClick={() => onSwitch('players')}>Players</button>
-        <button type="button" role="tab" aria-selected={view === 'exercises'} onClick={() => onSwitch('exercises')}>Exercises</button>
+      <div className="bm-head-right">
+        {view === 'exercises' && onGame && (
+          <div className="bm-games" role="group" aria-label="Game">
+            {entities.map(g => (
+              <button key={g.id} type="button" className="bm-game" aria-pressed={g.id === game} onClick={() => onGame(g.id)}>{g.id}</button>
+            ))}
+          </div>
+        )}
+        <div className="bm-toggle" role="tablist">
+          <button type="button" role="tab" aria-selected={view === 'players'} onClick={() => onSwitch('players')}>Players</button>
+          <button type="button" role="tab" aria-selected={view === 'exercises'} onClick={() => onSwitch('exercises')}>Exercises</button>
+        </div>
       </div>
     </header>
   );
