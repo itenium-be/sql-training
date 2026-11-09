@@ -15,8 +15,8 @@ export function Register() {
 
       <div className="df-eyebrow">Join the showdown</div>
       <h1 className="df-title df-regscreen-title">
-        <span className="df-title-plain">Claim </span>
-        <span className="df-gradient-gold">your row</span>
+        <span className="df-title-plain">Add yourself </span>
+        <span className="df-gradient-gold">to the table</span>
       </h1>
 
       <div className="df-sqlcard">
