@@ -137,7 +137,7 @@ ORDER BY population DESC`,
     },
     {
       id: 8,
-      desc: 'Get confusing top level domains: tld that are the start or end of a different country name, sorted by tld. Select the tld and a "," separated list of matching country names, sort the country names descending by population.',
+      desc: 'Get confusing top level domains: tld (without the dot) that are the end of the name of at least two other countries, sorted by tld. Select the tld and a "," separated list of matching country names, sort the country names descending by population.',
       points: 12,
       expected: [
         [".al", "Nepal,Senegal,Portugal"],
