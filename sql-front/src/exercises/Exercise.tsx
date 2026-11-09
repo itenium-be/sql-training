@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import Button from 'react-bootstrap/Button';
 import Badge from 'react-bootstrap/Badge';
-import { ExerciseModel, SqlExerciseModel } from "./exerciseModels";
+import { ATTEMPTS_PER_PENALTY, ExerciseModel, HintModel, SqlExerciseModel } from "./exerciseModels";
 import { ExerciseSampleData, ExercisesData } from "./ExerciseSampleData";
-import { config, HttpResponse } from "../config";
+import { authFetch, config } from "../config";
 import { useAppDispatch, useAppSelector } from "../store";
 import { Alert, Col, Modal, Row } from "react-bootstrap";
 import { SqlEditor } from "./SqlEditor";
@@ -73,7 +73,8 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
   const [sqlText, setSqlText] = useState('');
   const [error, setError] = useState('');
   const [result, setResult] = useState<null | any[]>(null);
-  const [hint, setHint] = useState(false);
+  const [hint, setHint] = useState<HintModel | null>(null);
+  const [points, setPoints] = useState<number | null>(null);
   const [success, setSuccess] = useState(false);
   const [cost, setCost] = useState<number | null>(null);
   const currentGame = useAppSelector(state => state.exercises.selected);
@@ -85,17 +86,10 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
 
   useEffect(() => {
     const startExercise = async () => {
-      const postData = {
-        player: localStorage.getItem('userName'),
-        game: currentGame,
-        exerciseId: sql.id,
-      };
-
       try {
-        await fetch(`${config.leaderboard.api}/game/start`, {
+        await authFetch(`${config.leaderboard.api}/game/start`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(postData),
+          body: JSON.stringify({ game: currentGame, exerciseId: sql.id }),
         });
       } catch (err) {
         console.error('Could not start timer for exercise', err);
@@ -109,8 +103,9 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
     setError('');
     setResult(null);
     setSuccess(false);
-    setHint(false);
+    setHint(null);
     setCost(null);
+    setPoints(null);
   }
 
   const handleFetch = async () => {
@@ -119,54 +114,50 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
       setResult(null);
       setSuccess(false);
 
-      const res = await fetch(`${config.api}/exercises/check`, {
+      const res = await authFetch(`${config.leaderboard.api}/game/check`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          sql: sqlText,
-          game: currentGame,
-          exerciseId: sql.id,
-        }),
+        body: JSON.stringify({ game: currentGame, exerciseId: sql.id, solution: sqlText }),
       });
-      const data: HttpResponse = await res.json();
-      if (!data.success) {
-        setError(data.message);
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.message ?? 'Unable to check your solution 😭');
         return;
       }
 
-      setResult(data.responseObject.rows);
-      if (!data.responseObject.correct) {
-        setError(data.message);
+      setResult(data.rows);
+      if (!data.correct) {
+        const penalty = data.attempts ? ` (wrong attempt #${data.attempts}, every ${ATTEMPTS_PER_PENALTY} cost a point)` : '';
+        setError(`${data.message}${penalty}`);
         return;
       }
 
-      const successData = {
-        player: localStorage.getItem('userName'),
-        game: currentGame,
-        exerciseId: sql.id,
-        solution: sqlText,
-      };
-
-      try {
-        const submitRes = await fetch(`${config.leaderboard.api}/game`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(successData),
-        });
-        const submitData = await submitRes.json().catch(() => ({}));
-        if (!submitRes.ok) {
-          setError(submitData.message ?? 'Unable to submit your score 😭');
-          return;
-        }
-        setSuccess(true);
-        setCost(typeof submitData.cost === 'number' ? submitData.cost : null);
-      } catch (err) {
-        console.error('Could not submit score :(', err);
-        setError('Unable to submit your score 😭');
+      setSuccess(true);
+      setCost(typeof data.cost === 'number' ? data.cost : null);
+      setPoints(typeof data.points === 'number' ? data.points : null);
+      if (!data.recorded) {
+        setError(data.message);
       }
     } catch (error) {
       console.error(`Error executing ${sqlText}`, error);
       setError('Unexpected error!');
+    }
+  };
+
+  const showHint = async () => {
+    try {
+      const res = await authFetch(`${config.leaderboard.api}/game/hint`, {
+        method: 'POST',
+        body: JSON.stringify({ game: currentGame, exerciseId: sql.id }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.message ?? 'Could not fetch the hint');
+        return;
+      }
+      setHint(data);
+    } catch (err) {
+      console.error('Could not fetch hint', err);
+      setError('Could not fetch the hint');
     }
   };
 
@@ -220,7 +211,7 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
       </Row>
 
       {success ? (
-        <ExerciseSolved sql={sql} reset={reset} cost={cost} />
+        <ExerciseSolved sql={sql} reset={reset} cost={cost} points={points} />
       ) : (
         <>
           <Button variant="primary" onClick={handleFetch} style={{marginRight: 16}} disabled={!sqlText.length}>
@@ -234,13 +225,13 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
               Back
             </Button>
           )}
-          {result && (
-            <Button variant="secondary" onClick={() => setHint(true)} className="float-end" style={{marginRight: 12}}>
-              Show Hint
+          {result && !hint && (
+            <Button variant="secondary" onClick={showHint} className="float-end" style={{marginRight: 12}} title="Solving after the hint gives half the points">
+              Show Hint (½ points)
             </Button>
           )}
           {hint && (
-            <HintTable sql={sql} />
+            <HintTable hint={hint} />
           )}
         </>
       )}
@@ -248,7 +239,8 @@ function SqlExercise({sql}: {sql: SqlExerciseModel}) {
   )
 }
 
-function ExerciseSolved({sql, reset, text, cost}: {sql: SqlExerciseModel, reset: Function, text?: string, cost?: number | null}) {
+function ExerciseSolved({sql, reset, text, cost, points}: {sql: SqlExerciseModel, reset: Function, text?: string, cost?: number | null, points?: number | null}) {
+  const scored = points ?? sql.points;
   const dispatch = useAppDispatch();
 
   return (
@@ -261,7 +253,7 @@ function ExerciseSolved({sql, reset, text, cost}: {sql: SqlExerciseModel, reset:
         Next Question
       </Button>
       <div className="float-none" style={{marginBottom: 8}}>
-        <b>You scored {sql.points} point{sql.points === 1 ? '' : 's'}!</b>
+        <b>You scored {scored} point{scored === 1 ? '' : 's'}!</b>
         {typeof cost === 'number' && <> Your query read {cost} page{cost === 1 ? '' : 's'}.</>}
       </div>
     </Alert>
@@ -269,19 +261,19 @@ function ExerciseSolved({sql, reset, text, cost}: {sql: SqlExerciseModel, reset:
 }
 
 
-function HintTable({sql}: {sql: SqlExerciseModel}) {
-  const data = sql.expected.map(record => {
+function HintTable({hint}: {hint: HintModel}) {
+  const data = hint.expected.map(record => {
     const obj: any = {};
-    sql.expectedColumns.forEach((colName, index) => obj[colName] = record[index])
+    hint.expectedColumns.forEach((colName, index) => obj[colName] = record[index])
     return obj;
   });
 
   return (
     <div style={{paddingTop: 25}}>
-      {sql.hints && (
+      {hint.hints && (
         <>
           <h2>Hints</h2>
-          <p>{sql.hints}</p>
+          <p>{hint.hints}</p>
         </>
       )}
       <h2>Expected Result</h2>

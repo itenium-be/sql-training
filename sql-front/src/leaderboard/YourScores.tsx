@@ -25,6 +25,8 @@ export function YourScores({scores}: {scores: Score[]}) {
           <th>Game</th>
           <th>Exercise</th>
           <th>Points</th>
+          <th>Hint</th>
+          <th>Wrong Attempts</th>
           <th>Time</th>
           <th>Reads</th>
         </tr>
@@ -34,7 +36,9 @@ export function YourScores({scores}: {scores: Score[]}) {
           <tr key={yourScore.game + '-' + yourScore.exerciseid}>
             <td>{yourScore.game}-{yourScore.exerciseid}</td>
             <td>{fullGame[yourScore.game + '-' + yourScore.exerciseid].desc}</td>
-            <td>{fullGame[yourScore.game + '-' + yourScore.exerciseid].points}</td>
+            <td>{yourScore.points ?? fullGame[yourScore.game + '-' + yourScore.exerciseid].points} / {fullGame[yourScore.game + '-' + yourScore.exerciseid].points}</td>
+            <td>{yourScore.hint ? 'Yes' : '-'}</td>
+            <td>{yourScore.attempts}</td>
             <td>{formatSeconds(yourScore.elapsed)}</td>
             <td>{yourScore.cost ?? '-'}</td>
           </tr>

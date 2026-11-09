@@ -21,7 +21,7 @@ export function ScoreTable({scores}: {scores: Score[]}) {
     if (!playerScores[score.player]) {
       playerScores[score.player] = 0;
     }
-    const points = exercisesPoints[`${score.game}-${score.exerciseid}`];
+    const points = score.points ?? exercisesPoints[`${score.game}-${score.exerciseid}`];
     playerScores[score.player] += points || 0;
   });
 

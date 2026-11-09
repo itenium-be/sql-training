@@ -9,6 +9,7 @@ export const env = cleanEnv(process.env, {
   PORT: port({ devDefault: testOnly(8000) }),
   API_KEY: str({ devDefault: testOnly('secret') }),
   BACK_END_URL: url({ devDefault: testOnly("http://localhost:8080") }),
+  INTERNAL_API_KEY: str({ devDefault: testOnly("internal") }),
 
   PG_USER: str({ devDefault: testOnly("admin") }),
   PG_PASSWORD: str({ devDefault: testOnly("password") }),

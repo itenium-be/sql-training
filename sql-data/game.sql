@@ -8,7 +8,26 @@ CREATE TABLE game_progress (
   solution VARCHAR(900),
   solutionLength NUMERIC(15,0),
   elapsed NUMERIC(15,0),
-  cost NUMERIC(15,0)
+  cost NUMERIC(15,0),
+  points NUMERIC(15,0),
+  hint BOOLEAN NOT NULL DEFAULT FALSE,
+  attempts NUMERIC(15,0) NOT NULL DEFAULT 0
+);
+
+CREATE UNIQUE INDEX game_progress_unique ON game_progress (player, game, exerciseId);
+
+CREATE TABLE exercise_activity (
+  player VARCHAR(100) NOT NULL,
+  game VARCHAR(50) NOT NULL,
+  exerciseId NUMERIC(15,0) NOT NULL,
+  attempts NUMERIC(15,0) NOT NULL DEFAULT 0,
+  hint BOOLEAN NOT NULL DEFAULT FALSE,
+  PRIMARY KEY (player, game, exerciseId)
+);
+
+CREATE TABLE settings (
+  key VARCHAR(50) PRIMARY KEY,
+  value TEXT NOT NULL
 );
 
 CREATE TABLE game_start (

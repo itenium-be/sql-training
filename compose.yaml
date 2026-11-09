@@ -37,6 +37,7 @@ services:
       SQL_SERVER_PORT: 1433
       SQL_SERVER_USER: player
       SQL_SERVER_PASSWORD: Player123!
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY:-change-me-internal}
     networks:
       - trainnet
 
@@ -51,6 +52,7 @@ services:
       HOST: 0.0.0.0
       API_KEY: ${API_KEY:-secret}
       BACK_END_URL: http://back-end:8080
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY:-change-me-internal}
       PG_HOST: leaderboard-db
       PG_PORT: 5432
       PG_USER: admin

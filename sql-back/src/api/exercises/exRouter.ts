@@ -1,9 +1,18 @@
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
-import express, { type Router } from "express";
+import express, { type RequestHandler, type Router } from "express";
 import { z } from "zod";
 
 import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import { exController } from "./exController";
+import { env } from "@/common/utils/envConfig";
+
+const requireInternal: RequestHandler = (req, res, next) => {
+  if (req.header("x-internal-key") !== env.INTERNAL_API_KEY) {
+    res.status(403).send({ success: false, message: "Internal endpoint", responseObject: null, statusCode: 403 });
+    return;
+  }
+  next();
+};
 
 export const exRegistry = new OpenAPIRegistry();
 export const exRouter: Router = express.Router();
@@ -113,12 +122,21 @@ exRegistry.registerPath({
       },
     },
   },
-  responses: createApiResponse(z.object({ correct: z.boolean(), cost: z.number().nullable(), rows: z.any().array() }), "Executes the query and checks it against the expected result"),
+  responses: createApiResponse(z.object({ correct: z.boolean(), points: z.number(), cost: z.number().nullable(), rows: z.any().array() }), "Internal: executes the query and checks it against the expected result"),
+});
+
+exRegistry.registerPath({
+  method: "get",
+  path: "/exercises/hint",
+  tags: ["Exercises"],
+  request: { query: z.object({ game: z.string(), exerciseId: z.number() }) },
+  responses: createApiResponse(z.object({ hints: z.string().nullable(), expected: z.any().array(), expectedColumns: z.string().array() }), "Internal: hint and expected result"),
 });
 
 exRouter.post("/", exController.post);
 exRouter.post("/validate", exController.validate);
 exRouter.get("/schema", exController.schema);
-exRouter.post("/cost", exController.cost);
+exRouter.post("/cost", requireInternal, exController.cost);
 exRouter.get("/definitions", exController.definitions);
-exRouter.post("/check", exController.check);
+exRouter.post("/check", requireInternal, exController.check);
+exRouter.get("/hint", requireInternal, exController.hint);

@@ -1,3 +1,5 @@
+export const ATTEMPTS_PER_PENALTY = 3;
+
 export type ExerciseModel = {
   id: ExerciseId;
   name: string;
@@ -11,11 +13,15 @@ export type SqlExerciseModel = {
   id: number;
   desc: string;
   points: number;
-  expected: any[][];
   /** Require specific array order */
   expectedOrder: boolean;
   expectedColumns: string[];
-  hints?: string;
+}
+
+export type HintModel = {
+  hints: string | null;
+  expected: any[][];
+  expectedColumns: string[];
 }
 
 export type Score = {
@@ -28,6 +34,10 @@ export type Score = {
   elapsed: number;
   /** Logical reads (Postgres buffers / SQL Server logical reads) */
   cost: number | null;
+  /** Points awarded after hint/attempt penalties */
+  points: number | null;
+  hint: boolean;
+  attempts: number;
 }
 
 export type ExerciseId = 'World' | 'Teachers' | 'Worldcup';

@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
 import { Intro } from './Intro'
 import { Admin } from './Admin'
 import { useGameMode } from './game'
-import { config } from './config'
+import { config, TOKEN_STORAGE } from './config'
 
 export function App() {
   if (window.location.pathname.startsWith('/admin')) {
@@ -26,7 +26,9 @@ function Game() {
 
   useEffect(() => {
     const name = localStorage.getItem('userName');
-    if (name) {
+    if (name && !localStorage.getItem(TOKEN_STORAGE)) {
+      localStorage.removeItem('userName');
+    } else if (name) {
       dispatch({type: 'exercises/register', payload: name});
     }
 

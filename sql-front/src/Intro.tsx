@@ -79,7 +79,6 @@ function Lobby() {
 
       {editing && (
         <AvatarPicker
-          name={editing.name}
           current={avatarIndex(editing)}
           onClose={() => setEditing(null)}
           onSaved={reload}

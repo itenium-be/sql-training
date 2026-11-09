@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { config } from './config';
+import { authFetch, config } from './config';
 
 export type GameMode = 'init' | 'running' | 'end';
 
@@ -52,11 +52,10 @@ export function usePlayers(): [Player[], () => Promise<void>] {
   return [players ?? [], reload];
 }
 
-export async function saveAvatar(name: string, avatar: number): Promise<string | null> {
-  const res = await fetch(`${config.leaderboard.api}/game/avatar`, {
+export async function saveAvatar(avatar: number): Promise<string | null> {
+  const res = await authFetch(`${config.leaderboard.api}/game/avatar`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, avatar }),
+    body: JSON.stringify({ avatar }),
   });
   if (res.ok) {
     return null;

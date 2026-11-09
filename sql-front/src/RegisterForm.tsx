@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Alert, Button, Form } from 'react-bootstrap';
-import { config } from './config';
+import { config, TOKEN_STORAGE } from './config';
 import { useAppDispatch } from './store';
 
 export function RegisterForm() {
@@ -20,6 +20,7 @@ export function RegisterForm() {
       setResponse(data.message);
       if (res.status === 200) {
         const registered = data.name ?? name.trim();
+        localStorage.setItem(TOKEN_STORAGE, data.token);
         localStorage.setItem('userName', registered);
         dispatch({type: 'exercises/register', payload: registered});
       }

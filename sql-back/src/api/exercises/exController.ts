@@ -9,6 +9,7 @@ import { exercises } from "./definitions/exercises";
 
 type CheckResult = {
   correct: boolean;
+  points: number;
   cost: number | null;
   rows: Record<string, unknown>[];
 };
@@ -28,7 +29,20 @@ class ExController {
   };
 
   public definitions: RequestHandler = async (_req: Request, res: Response) => {
-    return handleServiceResponse(ServiceResponse.success('Exercises', exercises), res);
+    const publicExercises = exercises.map(game => ({
+      ...game,
+      exercises: game.exercises.map(({ expected, hints, ...exercise }) => exercise),
+    }));
+    return handleServiceResponse(ServiceResponse.success('Exercises', publicExercises), res);
+  };
+
+  public hint: RequestHandler = async (_req: Request, res: Response) => {
+    const exercise = findExercise(String(_req.query.game ?? ''), Number(_req.query.exerciseId));
+    if (!exercise) {
+      return handleServiceResponse(ServiceResponse.failure('Unknown exercise', null, StatusCodes.NOT_FOUND), res);
+    }
+    const { hints, expected, expectedColumns } = exercise;
+    return handleServiceResponse(ServiceResponse.success('Hint', { hints: hints ?? null, expected, expectedColumns }), res);
   };
 
   public check: RequestHandler = async (_req: Request, res: Response) => {
@@ -45,7 +59,7 @@ class ExController {
       const correct = isCorrect(exercise, result);
       const rows = toObjects(result);
       const cost = correct ? await measureCost(game, query) : null;
-      return handleServiceResponse(ServiceResponse.success<CheckResult>(correct ? 'Correct' : 'Query result does not match expected output!', { correct, cost, rows }), res);
+      return handleServiceResponse(ServiceResponse.success<CheckResult>(correct ? 'Correct' : 'Query result does not match expected output!', { correct, cost, rows, points: exercise.points }), res);
     } catch (err: any) {
       const status = err instanceof QueryError ? StatusCodes.BAD_REQUEST : StatusCodes.INTERNAL_SERVER_ERROR;
       return handleServiceResponse(ServiceResponse.failure(err.message, null, status), res);

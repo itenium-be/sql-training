@@ -75,6 +75,8 @@ export const exercisesSlice = createSlice({
         solutionlength: +score.solutionlength,
         elapsed: +score.elapsed,
         cost: score.cost === null || score.cost === undefined ? null : +score.cost,
+        points: score.points === null || score.points === undefined ? null : +score.points,
+        attempts: +(score.attempts ?? 0),
       }))
     }
   },

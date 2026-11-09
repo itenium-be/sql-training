@@ -4,20 +4,19 @@ import { Avatar } from './Avatar';
 import { AVATAR_COUNT, saveAvatar } from './game';
 
 type AvatarPickerProps = {
-  name: string;
   current: number;
   onClose: () => void;
   onSaved: () => void;
 };
 
-export function AvatarPicker({name, current, onClose, onSaved}: AvatarPickerProps) {
+export function AvatarPicker({current, onClose, onSaved}: AvatarPickerProps) {
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
 
   const pick = async (index: number) => {
     setSaving(true);
     try {
-      const message = await saveAvatar(name, index);
+      const message = await saveAvatar(index);
       if (message) {
         setError(message);
       } else {

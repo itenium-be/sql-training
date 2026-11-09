@@ -17,4 +17,6 @@ export const env = cleanEnv(process.env, {
   SQL_SERVER_PORT: port({ devDefault: testOnly(5174) }),
   SQL_SERVER_USER: str({ devDefault: testOnly("player") }),
   SQL_SERVER_PASSWORD: str({ devDefault: testOnly("Player123!") }),
+
+  INTERNAL_API_KEY: str({ devDefault: testOnly("internal") }),
 });
