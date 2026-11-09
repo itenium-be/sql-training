@@ -682,7 +682,7 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
 /* ── Avatar picker (character rail + variant detail) ───────────── */
 .df-picker-body { padding: 0; }
 
-.df-picker { display: grid; grid-template-columns: 220px 1fr; min-height: 420px; }
+.df-picker { display: grid; grid-template-columns: 250px 1fr; min-height: 420px; }
 
 .df-picker-rail {
   display: flex;
@@ -690,7 +690,8 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
   gap: 4px;
   padding: 10px;
   border-right: 1px solid var(--df-border-soft);
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   max-height: 60vh;
 }
 
@@ -701,11 +702,11 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
   font-family: inherit;
   font-weight: 700;
   font-size: 0.95rem;
+  line-height: 1.3;
   text-align: left;
-  padding: 11px 14px;
+  padding: 10px 14px;
   border-radius: 10px;
   cursor: pointer;
-  white-space: nowrap;
 }
 
 .df-picker-railitem:hover { background: rgba(233, 180, 76, 0.08); color: var(--df-cream); }
@@ -718,7 +719,8 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
 
 @media (max-width: 560px) {
   .df-picker { grid-template-columns: 1fr; }
-  .df-picker-rail { flex-direction: row; border-right: 0; border-bottom: 1px solid var(--df-border-soft); max-height: none; }
+  .df-picker-rail { flex-direction: row; border-right: 0; border-bottom: 1px solid var(--df-border-soft); max-height: none; overflow-x: auto; }
+  .df-picker-railitem { white-space: nowrap; }
 }
 
 .df-avatar-option {
