@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Option A: the tagline as a query</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+body{margin:0;background:#16100a}
+a{color:#e9b44c;text-decoration:none}a:hover{color:#f0e2c2}
+.code{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-ligatures:none}
+.k{color:#e9b44c;font-weight:600}.f{color:#f0d28a}.n{color:#e98a5b}.s{color:#a9c97a}.p{color:#bfae8a}.cm{color:#7d6a45;font-style:italic}
+</style>
+</helmet>
+<div style="width:100%;min-height:900px;box-sizing:border-box;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#d6c49e;background:radial-gradient(900px 520px at 50% 40%,rgba(201,154,62,0.14),transparent 70%),#16100a;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:56px 24px;gap:0">
+
+  <div style="display:inline-flex;align-items:center;gap:12px;border:1px solid #4a3820;border-radius:999px;padding:10px 22px;margin-bottom:34px;font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#e9b44c">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M3 10h18M8 2v4M16 2v4"></path></svg>
+    27 November 2026 · La Fabrique de la Connaissance
+  </div>
+
+  <h1 style="margin:0 0 20px;font-weight:800;line-height:1.02;letter-spacing:-0.035em;font-size:clamp(2.8rem,8vw,5.6rem)">
+    <span style="display:block;color:#f0e2c2">SQL Showdown</span>
+    <span style="display:block;background:linear-gradient(90deg,#c99a3e,#f0e2c2 45%,#e9b44c 80%);-webkit-background-clip:text;background-clip:text;color:transparent">DevFest Paris</span>
+    <span style="display:block;background:linear-gradient(90deg,#e9b44c,#c47a35);-webkit-background-clip:text;background-clip:text;color:transparent">Edition.</span>
+  </h1>
+
+  <p style="max-width:620px;font-size:clamp(1.05rem,2.4vw,1.3rem);color:#a38e66;margin:0 0 30px">
+    Live SQL challenges on Postgres &amp; SQL Server.
+  </p>
+
+  <!-- The value prop, written as the query it rewards -->
+  <div style="text-align:left;background:#1f170f;border:1px solid #c99a3e;border-radius:16px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.45);max-width:560px;width:100%;margin-bottom:38px">
+    <div style="display:flex;align-items:center;gap:7px;padding:11px 16px;border-bottom:1px solid #33271a">
+      <span style="width:11px;height:11px;border-radius:50%;background:#b2472a"></span>
+      <span style="width:11px;height:11px;border-radius:50%;background:#d8862f"></span>
+      <span style="width:11px;height:11px;border-radius:50%;background:#e9b44c"></span>
+      <span class="code" style="margin-left:8px;font-size:12px;color:#a38e66">how to win</span>
+    </div>
+    <div style="display:flex">
+      <div class="code" style="padding:20px 10px 20px 0;width:40px;text-align:right;color:#6f5c3a;background:#241a11;font-size:15px;line-height:1.85">1<br>2<br>3<br>4</div>
+      <pre class="code" style="margin:0;padding:20px 22px;color:#f0e2c2;white-space:pre;flex:1;font-size:16px;line-height:1.85"><span class="k">SELECT</span> you
+<span class="k">FROM</span>   leaderboard
+<span class="k">ORDER BY</span> correct <span class="k">DESC</span><span class="p">,</span> speed <span class="k">DESC</span><span class="p">,</span> lines <span class="k">ASC</span>
+<span class="k">LIMIT</span>  <span class="n">1</span><span class="p">;</span></pre>
+    </div>
+  </div>
+
+  <button type="button" style="min-height:56px;padding:0 44px;border:0;border-radius:999px;color:#fff;font:800 20px 'Plus Jakarta Sans',sans-serif;background:linear-gradient(90deg,#d8862f,#b2472a);box-shadow:0 10px 30px rgba(216,134,47,0.35);display:inline-flex;align-items:center;gap:12px;cursor:pointer">
+    Let's start
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+  </button>
+
+  <div style="margin-top:52px;font-size:14px;color:#a38e66">Brought to you by <a href="https://itenium.be" style="font-weight:700;color:#f0e2c2">itenium</a></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1200,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
