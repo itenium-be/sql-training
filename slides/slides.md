@@ -32,7 +32,7 @@ class: cover
 layout: two-cols
 ---
 
-# Intro
+# What
 
 - Score points by solving the exercises
 - +6 bonus for every record you hold
