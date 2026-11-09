@@ -915,11 +915,19 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
 }
 
 .df-timer {
-  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.75rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
-  color: var(--df-muted);
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--df-border);
+  color: var(--df-cream);
 }
+
+.df-timer-bolt { filter: drop-shadow(0 0 4px rgba(233, 180, 76, 0.5)); }
 
 .df-editor-submit { margin-left: auto; }
 .df-editor .cm-editor { border: 0 !important; border-radius: 0 !important; }

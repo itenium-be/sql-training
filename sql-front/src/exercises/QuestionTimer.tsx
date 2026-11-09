@@ -12,7 +12,7 @@ export function QuestionTimer() {
 
   return (
     <span className="df-timer" title="Time spent on this question">
-      ⚡ {formatElapsed(seconds)}
+      <span className="df-timer-bolt">⚡</span> {formatElapsed(seconds)}
     </span>
   );
 }
