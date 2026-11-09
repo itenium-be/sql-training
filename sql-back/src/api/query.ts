@@ -1,7 +1,9 @@
-import { Client, ClientConfig, QueryConfig } from "pg";
+import { Client, ClientConfig, QueryConfig, types } from "pg";
 import { env } from "@/common/utils/envConfig";
 
 const QUERY_TIMEOUT_MS = 5000;
+
+types.setTypeParser(types.builtins.INTERVAL, (value: string) => value);
 
 function pgOptions(): ClientConfig {
   return {
