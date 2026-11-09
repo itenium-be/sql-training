@@ -80,7 +80,6 @@ layout: default
 
 <div class="grid grid-cols-[1fr_auto] gap-10 items-center h-full">
 <div>
-  <span class="eyebrow">Exercises</span>
   <h1 class="!mb-2">Let’s get this <span class="gradient-copper">party</span> started!</h1>
 
   <ol class="steps">
@@ -91,7 +90,7 @@ layout: default
   </ol>
   <div class="mt-6"><span class="cta">{{ $slidev.configs.gameUrl }}</span></div>
 </div>
-<img src="/img/exercises.jpg" class="photo-round w-64 h-64" alt="" />
+<img src="/img/party-rocket.png" class="photo-round w-64 h-64" alt="Database rocket launching amid confetti" />
 </div>
 
 <img src="/img/itenium-logo.png" class="brand" alt="itenium" />
