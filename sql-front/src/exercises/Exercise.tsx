@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Button from 'react-bootstrap/Button';
 import Badge from 'react-bootstrap/Badge';
 import { ATTEMPTS_PER_PENALTY, ExerciseModel, ExpectedModel, SqlExerciseModel } from "./exerciseModels";
+import { livePoints } from "./livePoints";
 import { ExerciseSampleData, ExercisesData } from "./ExerciseSampleData";
 import { authFetch, config } from "../config";
 import { useAppDispatch, useAppSelector } from "../store";
@@ -80,6 +81,7 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
   const [hint, setHint] = useState<string | null>(null);
   const [expected, setExpected] = useState<ExpectedModel | null>(null);
   const [points, setPoints] = useState<number | null>(null);
+  const [attempts, setAttempts] = useState(0);
   const [success, setSuccess] = useState(false);
   const [cost, setCost] = useState<number | null>(null);
   const [resultTab, setResultTab] = useState<'result' | 'expected' | 'sample'>('result');
@@ -117,6 +119,7 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
     setExpected(null);
     setCost(null);
     setPoints(null);
+    setAttempts(0);
     setResultTab('result');
   }
 
@@ -144,6 +147,7 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
       setResult(data.rows);
       setResultTab('result');
       if (!data.correct) {
+        if (typeof data.attempts === 'number') setAttempts(data.attempts);
         const penalty = data.attempts ? ` (wrong attempt #${data.attempts}, every ${ATTEMPTS_PER_PENALTY} cost a point)` : '';
         setError(`${data.message}${penalty}`);
         return;
@@ -206,7 +210,7 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
       <section className="df-excard">
         <div className="df-excard-head">
           <h2 className="df-excard-title">Exercise {sql.id}</h2>
-          <Badge bg="info">{sql.points} point{sql.points === 1 ? '' : 's'}</Badge>
+          <PointsBadge sql={sql} hintUsed={hint !== null} expectedUsed={expected !== null} attempts={attempts} />
         </div>
         <p className="df-excard-desc">{sql.desc}</p>
         {sql.expectedColumns.length > 0 && (
@@ -330,6 +334,21 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
       {!narrow && <aside className="df-ide-schema">{<SchemaPanel game={currentGame ?? ''} sqlText={sqlText} />}</aside>}
     </div>
   )
+}
+
+
+function PointsBadge({sql, hintUsed, expectedUsed, attempts}: {sql: SqlExerciseModel, hintUsed: boolean, expectedUsed: boolean, attempts: number}) {
+  const live = livePoints(sql, {hintUsed, expectedUsed, attempts});
+  if (live === sql.points) {
+    return <Badge bg="info">{sql.points} point{sql.points === 1 ? '' : 's'}</Badge>;
+  }
+  return (
+    <span className="df-points-ghost" title={`Down from ${sql.points} — points spent on help and wrong attempts`}>
+      <span className="df-points-now">{live}</span>
+      <span className="df-points-max">/ {sql.points}</span>
+      <span className="df-points-unit">pts</span>
+    </span>
+  );
 }
 
 

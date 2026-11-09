@@ -829,6 +829,17 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
 }
 
 .df-excard-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+
+.df-points-ghost {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-weight: 700; font-size: 0.8rem;
+  background: var(--df-surface); border: 1px solid var(--df-border-soft);
+  border-radius: 8px; padding: 5px 11px;
+  font-variant-numeric: tabular-nums;
+}
+.df-points-ghost .df-points-now { color: var(--df-gold); font-size: 0.95rem; }
+.df-points-ghost .df-points-max,
+.df-points-ghost .df-points-unit { color: var(--df-muted); font-weight: 600; }
 .df-excard-title { margin: 0; font-size: 1.35rem; }
 .df-excard-desc { margin: 0; color: var(--df-cream); line-height: 1.5; }
 .df-excard-cols { display: flex; flex-direction: column; gap: 6px; }
