@@ -16,7 +16,7 @@ From your PC (ssh key access to the minipc, Docker on the minipc):
 
 `deploy.sh` copies the current checkout to `~/sql-training` on the minipc, rebuilds and starts everything there, waits until it responds and prints the URLs.
 The minipc IP is read from `MINIPC_IP` in `.env` (default `192.168.1.20`); if ssh fails it asks for a new IP and saves it.
-Optional: `MINIPC_USER`, `MINIPC_DIR`. Secrets (`API_KEY`, `INTERNAL_API_KEY`) are generated in `.env` on the minipc on first deploy.
+Optional: `MINIPC_USER` (default `wouter`), `MINIPC_DIR`. Secrets (`API_KEY`, `INTERNAL_API_KEY`) are generated in `.env` on the minipc on first deploy.
 `./deploy.sh --reset` wipes all data first.
 
 Everything goes through the nginx reverse proxy on port 80 (`HTTP_PORT` to change it):
