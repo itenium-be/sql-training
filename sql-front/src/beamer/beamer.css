@@ -290,23 +290,24 @@
 .bm-games {
   margin-left: auto;
   display: inline-flex;
+  gap: 4px;
+  padding: 5px;
   border: 1px solid var(--df-border);
   border-radius: 999px;
-  overflow: hidden;
 }
 .bm-game {
-  min-height: 46px;
-  padding: 0 24px;
+  padding: 10px 22px;
   border: 0;
-  border-left: 1px solid var(--df-border);
+  border-radius: 999px;
   background: transparent;
   color: var(--df-cream);
-  font: 800 20px var(--df-font);
+  font: 800 17px var(--df-font);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   cursor: pointer;
 }
-.bm-game:first-child { border-left: 0; }
 .bm-game[aria-pressed="true"] {
-  background: rgba(233, 180, 76, 0.16);
+  background: rgba(233, 180, 76, 0.18);
   color: var(--df-gold);
 }
 
