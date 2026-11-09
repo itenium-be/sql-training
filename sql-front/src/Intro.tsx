@@ -29,7 +29,7 @@ export function Intro({onStart}: {onStart: () => void}) {
         Let's start <ArrowIcon />
       </Button>
 
-      <div className="df-footer">Brought to you by <strong>itenium</strong></div>
+      <div className="df-footer">Brought to you by <a href="https://itenium.be" target="_blank" rel="noreferrer"><strong>itenium</strong></a></div>
     </main>
   );
 }
