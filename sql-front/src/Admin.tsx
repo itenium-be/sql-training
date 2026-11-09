@@ -64,7 +64,10 @@ export function Admin() {
 
   return (
     <Container style={{paddingTop: 15, paddingBottom: 25, maxWidth: 1100}}>
-      <h1>Admin</h1>
+      <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+        <h1>Admin</h1>
+        <Button href="/beamer" target="_blank" rel="noreferrer" variant="outline-primary">Open beamer ↗</Button>
+      </div>
 
       {!authorized ? (
         <div className="df-register">
