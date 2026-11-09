@@ -1,18 +1,18 @@
 import dotenv from "dotenv";
-import { cleanEnv, host, port, str, testOnly, url } from "envalid";
+import { cleanEnv, host, port, str, url } from "envalid";
 
 dotenv.config();
 
 export const env = cleanEnv(process.env, {
-  NODE_ENV: str({ devDefault: testOnly("test"), choices: ["development", "production", "test"] }),
-  HOST: host({ devDefault: testOnly("localhost") }),
-  PORT: port({ devDefault: testOnly(8000) }),
-  API_KEY: str({ devDefault: testOnly('secret') }),
-  BACK_END_URL: url({ devDefault: testOnly("http://localhost:8080") }),
-  INTERNAL_API_KEY: str({ devDefault: testOnly("internal") }),
+  NODE_ENV: str({ testDefault: "test", choices: ["development", "production", "test"] }),
+  HOST: host({ testDefault: "localhost" }),
+  PORT: port({ testDefault: 8000 }),
+  API_KEY: str({ testDefault: 'secret' }),
+  BACK_END_URL: url({ testDefault: "http://localhost:8080" }),
+  INTERNAL_API_KEY: str({ testDefault: "internal" }),
 
-  PG_USER: str({ devDefault: testOnly("admin") }),
-  PG_PASSWORD: str({ devDefault: testOnly("password") }),
-  PG_HOST: host({ devDefault: testOnly("localhost") }),
-  PG_PORT: port({ devDefault: testOnly(6000) }),
+  PG_USER: str({ testDefault: "admin" }),
+  PG_PASSWORD: str({ testDefault: "password" }),
+  PG_HOST: host({ testDefault: "localhost" }),
+  PG_PORT: port({ testDefault: 6000 }),
 });

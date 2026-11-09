@@ -1,14 +1,12 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "CommonJS",
-    "baseUrl": ".",
+    "module": "Preserve",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     },
-    "moduleResolution": "Node",
+    "moduleResolution": "Bundler",
     "outDir": "dist",
-    "importsNotUsedAsValues": "remove",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,

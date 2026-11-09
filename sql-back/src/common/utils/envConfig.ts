@@ -1,22 +1,22 @@
 import dotenv from "dotenv";
-import { cleanEnv, host, port, str, testOnly } from "envalid";
+import { cleanEnv, host, port, str } from "envalid";
 
 dotenv.config();
 
 export const env = cleanEnv(process.env, {
-  NODE_ENV: str({ devDefault: testOnly("test"), choices: ["development", "production", "test"] }),
-  HOST: host({ devDefault: testOnly("localhost") }),
-  PORT: port({ devDefault: testOnly(8080) }),
+  NODE_ENV: str({ testDefault: "test", choices: ["development", "production", "test"] }),
+  HOST: host({ testDefault: "localhost" }),
+  PORT: port({ testDefault: 8080 }),
 
-  PG_USER: str({ devDefault: testOnly("admin") }),
-  PG_PASSWORD: str({ devDefault: testOnly("password") }),
-  PG_HOST: host({ devDefault: testOnly("localhost") }),
-  PG_PORT: port({ devDefault: testOnly(5175) }),
+  PG_USER: str({ testDefault: "admin" }),
+  PG_PASSWORD: str({ testDefault: "password" }),
+  PG_HOST: host({ testDefault: "localhost" }),
+  PG_PORT: port({ testDefault: 5175 }),
 
-  SQL_SERVER_HOST: host({ devDefault: testOnly("localhost") }),
-  SQL_SERVER_PORT: port({ devDefault: testOnly(5174) }),
-  SQL_SERVER_USER: str({ devDefault: testOnly("player") }),
-  SQL_SERVER_PASSWORD: str({ devDefault: testOnly("Player123!") }),
+  SQL_SERVER_HOST: host({ testDefault: "localhost" }),
+  SQL_SERVER_PORT: port({ testDefault: 5174 }),
+  SQL_SERVER_USER: str({ testDefault: "player" }),
+  SQL_SERVER_PASSWORD: str({ testDefault: "Player123!" }),
 
-  INTERNAL_API_KEY: str({ devDefault: testOnly("internal") }),
+  INTERNAL_API_KEY: str({ testDefault: "internal" }),
 });

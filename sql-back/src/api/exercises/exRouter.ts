@@ -70,7 +70,7 @@ exRegistry.registerPath({
   path: "/exercises/schema",
   tags: ["Exercises"],
   request: { query: z.object({ game: z.string() }) },
-  responses: createApiResponse(z.record(z.string().array()), "Tables with their columns"),
+  responses: createApiResponse(z.record(z.string(), z.string().array()), "Tables with their columns"),
 });
 
 exRegistry.registerPath({

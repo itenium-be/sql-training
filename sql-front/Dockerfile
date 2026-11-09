@@ -1,4 +1,4 @@
-FROM node:22.9.0-slim
+FROM node:26-slim
 
 RUN npm i -g serve
 

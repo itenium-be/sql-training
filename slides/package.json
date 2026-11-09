@@ -10,8 +10,12 @@
   "dependencies": {
     "@fontsource/jetbrains-mono": "^5.3.0",
     "@fontsource/plus-jakarta-sans": "^5.3.0",
-    "@slidev/cli": "52.20.1",
+    "@slidev/cli": "53.1.0",
     "@slidev/theme-default": "0.25.0",
-    "vue": "^3.5.13"
+    "vue": "^3.5.45"
+  },
+  "overrides": {
+    "dompurify": "^3.4.17",
+    "image-size": "^2.1.0"
   }
 }
