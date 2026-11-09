@@ -93,12 +93,23 @@ class Existing:
         self._team_by_country = {int(r[4]): int(r[0]) for r in _rows(sql, "teams")}
         self.person_keys = {r[1] for r in _rows(sql, "persons")}
         self.season_keys = {r[1] for r in _rows(sql, "seasons")}
+        # A scorer is the same player as an existing person only when both the
+        # name and the national team match; name alone would merge namesakes.
+        id_to_name = {int(r[0]): r[2] for r in _rows(sql, "persons")}
+        self._person_by_name_team = {}
+        for r in _rows(sql, "goals"):
+            name = id_to_name.get(int(r[1]))
+            if name is not None:
+                self._person_by_name_team.setdefault((name, int(r[3])), int(r[1]))
 
     def country_id(self, name):
         return self._country_by_name.get(ALIASES.get(name, name))
 
     def team_id_for_country(self, country_id):
         return self._team_by_country.get(country_id)
+
+    def existing_person(self, name, team_id):
+        return self._person_by_name_team.get((name, team_id))
 
 
 def parse_existing(sql):
@@ -201,9 +212,13 @@ def build(existing, wc_json, year, now):
     person_id, person_rows = {}, []
     used_keys = set(existing.person_keys)
 
-    def resolve_person(name):
+    def resolve_person(name, team_id):
         if name in person_id:
             return person_id[name]
+        reused = existing.existing_person(name, team_id)
+        if reused is not None:
+            person_id[name] = reused
+            return reused
         base = slugify(name) or "unknown"
         key, i = base, 1
         while key in used_keys:
@@ -253,7 +268,7 @@ def build(existing, wc_json, year, now):
                 minute, offset = parse_minute(str(g["minute"]))
                 pen = 1 if g.get("penalty") else 0
                 og = 1 if g.get("owngoal") else 0
-                pid = resolve_person(g["name"])
+                pid = resolve_person(g["name"], team)
                 goal_rows.append(
                     f"{ids['goals']()},{pid},{mid},{team},{minute},{offset},NULL,NULL,{pen},{og}"
                 )

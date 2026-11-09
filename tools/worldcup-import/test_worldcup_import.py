@@ -135,6 +135,36 @@ WC_JSON = {
 }
 
 
+class PersonReuse(unittest.TestCase):
+    def setUp(self):
+        self.e = w.parse_existing(EXISTING)
+
+    def _build(self, scorer_name, team):
+        wc = {
+            "name": "World Cup 2026",
+            "matches": [{
+                "round": "Final", "date": "2026-07-19", "time": "15:00 UTC-4",
+                "team1": "Mexico", "team2": "USA",
+                "score": {"ft": [1, 0], "ht": [0, 0]},
+                "goals1": [{"name": scorer_name, "minute": "50"}] if team == 1 else [],
+                "goals2": [{"name": scorer_name, "minute": "50"}] if team == 2 else [],
+            }],
+        }
+        return w.build(self.e, wc, 2026, "2026-11-10 00:00:00")
+
+    def test_reuses_existing_person_on_name_and_team(self):
+        # 'L. Laurent' already scored for team 1 (person 1) -> reuse, no new person
+        sql = self._build("L. Laurent", 1)
+        self.assertNotIn("SET IDENTITY_INSERT persons ON", sql)
+        self.assertRegex(sql, r"\(\d+,1,\d+,1,50,0,")  # goal references person 1
+
+    def test_mints_new_person_for_same_name_different_team(self):
+        # same name but scoring for team 2 -> not the same player, mint a new person
+        sql = self._build("L. Laurent", 2)
+        # key 'llaurent' is taken by person 1, so the new person gets a suffix
+        self.assertIn("(2,'llaurent2','L. Laurent'", sql)
+
+
 class Build(unittest.TestCase):
     def setUp(self):
         self.e = w.parse_existing(EXISTING)

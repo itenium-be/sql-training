@@ -26,12 +26,16 @@ dataset does not carry. The run **stops** on an unknown team rather than guess;
 add it to `NEW_COUNTRIES` in `worldcup_import.py` and re-run. `ALIASES` maps an
 openfootball spelling (`USA`, `Ivory Coast`) to the name already in the file.
 
-Known trade-off: scorers
-------------------------
-openfootball goals carry only a scorer *name*, no stable player id, so a player
-cannot be matched to the same person across tournaments without fragile
-name-matching that would merge namesakes. The importer therefore creates fresh
-`persons` rows per tournament — a repeat scorer (Messi, Mbappé) gets a new id
-each edition. This mirrors the base dump, which is itself inconsistent (it holds
-both `Messi` and `Lionel Messi`). Acceptable for a JOIN-practice dataset; do not
-treat `persons` as a canonical registry.
+Scorers and player identity
+---------------------------
+openfootball goals carry only a scorer *name*, no stable player id. A new
+tournament's scorer is matched to an existing `persons` row when **both the name
+and the national team match** (`Lionel Messi` scoring for Argentina again reuses
+his row). Name alone would merge namesakes; name+team keeps `COUNT(*) GROUP BY
+person_id` leaderboards correct across editions. A name with no same-team history
+mints a new person.
+
+This does not repair splits already in the base dump — it holds both `Messi` and
+`Lionel Messi`, and both `Mbappé` and `Kylian Mbappé`, as distinct persons. An
+all-time top-scorer query still double-counts those; the importer simply stops
+adding to the problem. `persons` is not a canonical registry.

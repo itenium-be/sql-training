@@ -46,7 +46,8 @@ with `tools/worldcup-import`.
 
 - `next_match_id`/`prev_match_id` are NULL throughout the base dump; the importer
   leaves them NULL (openfootball carries no bracket linkage).
-- Scorers become fresh `persons` rows each edition — see the tool's README for
-  why cross-tournament dedup is not attempted.
+- A scorer reuses an existing `persons` row when name + national team match,
+  else a new person is minted — see the tool's README. Pre-existing splits in the
+  base dump (`Messi` vs `Lionel Messi`) are left untouched.
 - A 32-team edition (pre-2026) yields 64 matches, 8 groups; the importer adapts
   to whatever the json contains, so the only per-year work is new entrants.
