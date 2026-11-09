@@ -12,7 +12,6 @@ export function Home() {
         <h1>Good Luck {registeredName}</h1>
         <ul>
           <li>Pick one of the tabs to start exercises and score points!</li>
-          <li>ATTN: if a select has two times the same column name, the property values will be overwritten</li>
           <li><a href="/api/" target="_blank">There is a Swagger</a></li>
         </ul>
         <Scoreboard />
@@ -27,7 +26,6 @@ export function Home() {
       <ul>
         <li>Register by completing the form below</li>
         <li>Then pick one of the tabs to start exercises and score points!</li>
-        <li>ATTN: if a select has two times the same column name, the property values will be overwritten</li>
       </ul>
 
       <RegisterForm />
