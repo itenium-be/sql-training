@@ -310,7 +310,7 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
                 </button>
                 <button type="button" role="tab" aria-selected={resultTab === 'sample'} onClick={() => setResultTab('sample')}>Sample data</button>
               </div>
-              <div className={`df-results-body${resultTab === 'expected' ? ' df-results-body-full' : ''}`}>
+              <div className="df-results-body">
                 {resultTab === 'result' && (
                   result ? <ExercisesData data={result} /> : <p className="df-results-empty">Run your query to see your result here.</p>
                 )}

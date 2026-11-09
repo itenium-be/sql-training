@@ -958,8 +958,7 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
 
 .df-rtabs button[aria-selected="true"] { background: rgba(233, 180, 76, 0.16); color: var(--df-gold); }
 
-.df-results-body { padding: 14px; max-height: 340px; overflow: auto; }
-.df-results-body-full { max-height: none; }
+.df-results-body { padding: 14px; overflow-x: auto; }
 .df-sample-query {
   margin: 0 0 12px;
   padding: 10px 12px;
