@@ -1,9 +1,9 @@
-FROM node:26-slim AS build
+FROM oven/bun:1.4-slim AS build
 WORKDIR /usr/src/app
-COPY package*.json ./
-RUN npm ci
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile
 COPY . .
-RUN npx slidev build --base /slides/
+RUN bunx slidev build --base /slides/
 
 FROM nginx:1.30-alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf

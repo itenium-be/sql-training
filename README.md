@@ -1,7 +1,7 @@
 SQL Training
 ============
 
-Node: v22.1.0
+Bun: v1.4
 
 ## Host the game
 
@@ -42,9 +42,9 @@ docker compose up -d --build
 
 ```sh
 cd slides
-npm install
-npm run dev     # http://localhost:3030, presenter mode at /presenter
-npm run build   # static site in slides/dist
+bun install
+bun run dev     # http://localhost:3030, presenter mode at /presenter
+bun run build   # static site in slides/dist
 ```
 
 The deployed deck is built in Docker and served at `/slides/`.
@@ -64,13 +64,13 @@ Copy `sql-leaderboard/.env.template` to `sql-leaderboard/.env`.
 
 ```sh
 cd sql-back
-npm run dev
+bun run dev
 
 cd ../sql-leaderboard
-npm run dev
+bun run dev
 
 cd ../sql-front
-npm run dev
+bun run dev
 ```
 
 The Vite dev server proxies `/api` and `/leaderboard` to the local back-ends.
