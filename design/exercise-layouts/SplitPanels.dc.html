@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Option C: editor left, stacked panels right</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#16100a}
+a{color:#e9b44c}a:hover{color:#f0e2c2}
+.code{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:15px;line-height:1.7;font-variant-ligatures:none}
+.k{color:#e9b44c;font-weight:600}.f{color:#f0d28a}.n{color:#e98a5b}.s{color:#a9c97a}.p{color:#bfae8a}
+.tbl{border:1px solid #4a3820;border-radius:12px;background:#16100a;overflow:hidden}
+.tbl-on{border-color:#c99a3e;box-shadow:0 0 0 1px rgba(233,180,76,0.25)}
+.th{padding:6px 10px;font-weight:800;font-size:13px;color:#f0e2c2;background:#241a11;display:flex;justify-content:space-between}
+.col{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12px;padding:2px 10px;display:flex;justify-content:space-between;gap:8px}
+.fk{color:#a38e66}
+.used{color:#e9b44c}
+</style>
+</helmet>
+<div style="width: 100%; min-height: 960px; box-sizing: border-box; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; color: #d6c49e; background: radial-gradient(1200px 500px at 50% -10%, rgba(201,154,62,0.16), transparent 70%), #16100a; display: flex; flex-direction: column">
+
+  <header style="display: flex; align-items: center; gap: 24px; padding: 16px 28px; border-bottom: 1px solid #33271a; flex-wrap: wrap">
+    <div style="display: flex; align-items: center; gap: 10px">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e9b44c" stroke-width="2" stroke-linecap="round" aria-hidden="true"><ellipse cx="12" cy="5" rx="8" ry="3"></ellipse><path d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3V5"></path><path d="M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6"></path></svg>
+      <div style="line-height: 1.1"><div style="font-weight: 800; color: #f0e2c2">SQL Showdown</div><div style="font-size: 12px; font-weight: 600; color: #e9b44c">DevFest Paris 2026</div></div>
+    </div>
+    <nav style="display: flex; gap: 8px; flex-wrap: wrap" aria-label="Games">
+      <a href="#" style="padding: 8px 16px; border: 1px solid #4a3820; border-radius: 999px; color: #f0e2c2; font-weight: 700; text-decoration: none">Home</a>
+      <a href="#" style="padding: 8px 16px; border: 1px solid #4a3820; border-radius: 999px; color: #f0e2c2; font-weight: 700; text-decoration: none">World</a>
+      <a href="#" style="padding: 8px 16px; border: 1px solid #4a3820; border-radius: 999px; color: #f0e2c2; font-weight: 700; text-decoration: none">Teachers</a>
+      <a href="#" style="padding: 8px 16px; border: 1px solid #e9b44c; background: rgba(233,180,76,0.16); border-radius: 999px; color: #e9b44c; font-weight: 700; text-decoration: none">Worldcup</a>
+    </nav>
+    <div style="margin-left: auto; display: flex; gap: 10px; align-items: center">
+      <span style="padding: 6px 14px; border-radius: 999px; background: rgba(233,180,76,0.14); color: #e9b44c; font-weight: 700; font-size: 14px">7 pts · #12</span>
+      <span style="padding: 6px 14px; border: 1px solid #4a3820; border-radius: 999px; color: #f0e2c2; font-weight: 700; font-size: 14px">Wouter</span>
+    </div>
+  </header>
+
+  <main style="flex: 1; display: flex; flex-wrap: wrap; gap: 20px; padding: 20px 28px">
+
+    <section style="flex: 999 1 640px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+      <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
+        <button type="button" aria-label="Previous exercise" style="width: 44px; height: 44px; border-radius: 999px; border: 1px solid #4a3820; background: transparent; color: #f0e2c2; font-size: 18px">‹</button>
+        <div style="flex: 1; min-width: 0">
+          <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #e9b44c">Worldcup · 2 / 6 · SQL Server</div>
+          <h1 style="margin: 4px 0 0; font-size: 24px; line-height: 1.3; font-weight: 800; letter-spacing: -0.02em; color: #f0e2c2">Which country has "scored" the most owngoals? Also select how many.</h1>
+        </div>
+        <span style="padding: 6px 12px; border-radius: 999px; background: rgba(233,180,76,0.14); color: #e9b44c; font-weight: 800; font-size: 14px">3 pts</span>
+        <button type="button" aria-label="Next exercise" style="width: 44px; height: 44px; border-radius: 999px; border: 1px solid #4a3820; background: transparent; color: #f0e2c2; font-size: 18px">›</button>
+      </div>
+
+      <div style="flex: 1; background: #1f170f; border: 1px solid #c99a3e; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; min-height: 520px">
+        <div style="display: flex; flex: 1">
+          <div class="code" style="padding: 14px 12px 14px 0; width: 48px; text-align: right; color: #a38e66; background: #241a11; box-sizing: border-box">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8</div>
+          <pre class="code" style="margin: 0; padding: 14px 18px; color: #f0e2c2; white-space: pre; flex: 1"><span class="k">SELECT TOP</span> <span class="n">1</span> c<span class="p">.</span>name<span class="p">,</span> <span class="f">COUNT</span><span class="p">(*)</span> <span class="k">AS</span> owngoals
+<span class="k">FROM</span> goals g
+<span class="k">JOIN</span> teams t <span class="k">ON</span> t<span class="p">.</span>id <span class="p">=</span> g<span class="p">.</span>team_id
+<span class="k">JOIN</span> countries c <span class="k">ON</span> c<span class="p">.</span>id <span class="p">=</span> t<span class="p">.</span>country_id
+<span class="k">WHERE</span> g<span class="p">.</span>owngoal <span class="p">=</span> <span class="n">1</span>
+<span class="k">GROUP BY</span> c<span class="p">.</span>name
+<span class="k">ORDER BY</span> owngoals <span class="k">DESC</span>
+</pre>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-top: 1px solid #33271a; flex-wrap: wrap">
+          <span style="font-size: 13px; color: #a9c97a">No problems</span>
+          <span style="font-size: 13px; color: #a38e66">Leanest so far: 142 chars · yours: 168</span>
+          <button type="button" style="margin-left: auto; min-height: 44px; padding: 0 26px; border: 0; border-radius: 999px; color: #fff; font: 700 15px 'Plus Jakarta Sans', sans-serif; background: linear-gradient(90deg, #d8862f, #b2472a); box-shadow: 0 8px 24px rgba(216,134,47,0.3)">Submit  ⌘↵</button>
+        </div>
+      </div>
+    </section>
+
+    <aside style="flex: 1 1 460px; min-width: 0; display: flex; flex-direction: column; gap: 12px">
+
+      <section style="background: #1f170f; border: 1px solid #33271a; border-radius: 16px; padding: 14px 16px">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px">
+          <h2 style="margin: 0; font-size: 15px; font-weight: 800; color: #f0e2c2">▾ Schema</h2>
+          <span style="font-size: 12px; color: #a38e66">tables in your query are lit</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+          <div class="tbl tbl-on">
+            <div class="th"><span>goals</span><span class="fk">FK →</span></div>
+            <div class="col"><span class="used">team_id</span><span class="fk">teams</span></div>
+            <div class="col"><span>match_id</span><span class="fk">matches</span></div>
+            <div class="col"><span>person_id</span><span class="fk">persons</span></div>
+            <div class="col"><span>minute</span><span class="fk">int</span></div>
+            <div class="col"><span>penalty</span><span class="fk">bit</span></div>
+            <div class="col" style="padding-bottom: 6px"><span class="used">owngoal</span><span class="fk">bit</span></div>
+          </div>
+          <div class="tbl tbl-on">
+            <div class="th"><span>teams</span></div>
+            <div class="col"><span class="used">id</span><span class="fk">PK</span></div>
+            <div class="col"><span>name</span><span class="fk">varchar</span></div>
+            <div class="col"><span>code</span><span class="fk">varchar</span></div>
+            <div class="col" style="padding-bottom: 6px"><span class="used">country_id</span><span class="fk">countries</span></div>
+          </div>
+          <div class="tbl tbl-on">
+            <div class="th"><span>countries</span></div>
+            <div class="col"><span class="used">id</span><span class="fk">PK</span></div>
+            <div class="col"><span class="used">name</span><span class="fk">varchar</span></div>
+            <div class="col" style="padding-bottom: 6px"><span>code</span><span class="fk">varchar</span></div>
+          </div>
+          <div class="tbl">
+            <div class="th"><span>matches</span></div>
+            <div class="col"><span>event_id</span><span class="fk">events</span></div>
+            <div class="col"><span>round_id</span><span class="fk">rounds</span></div>
+            <div class="col" style="padding-bottom: 6px"><span>date</span><span class="fk">date</span></div>
+          </div>
+          <div class="tbl">
+            <div class="th"><span>persons</span></div>
+            <div class="col"><span>id</span><span class="fk">PK</span></div>
+            <div class="col" style="padding-bottom: 6px"><span>name</span><span class="fk">varchar</span></div>
+          </div>
+          <div class="tbl">
+            <div class="th"><span>events</span></div>
+            <div class="col"><span>key</span><span class="fk">worldcup.YYYY</span></div>
+            <div class="col" style="padding-bottom: 6px"><span>start_date</span><span class="fk">date</span></div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 12px; margin-top: 10px; font-size: 13px; flex-wrap: wrap">
+          <span style="color: #a38e66">+ rounds, seasons, groups, groups_teams, events_teams</span>
+          <a href="#" style="margin-left: auto; font-weight: 600">Full diagram</a>
+        </div>
+      </section>
+
+      <section style="background: #1f170f; border: 1px solid #33271a; border-radius: 16px; padding: 14px 16px">
+        <div style="display: flex; align-items: center; justify-content: space-between">
+          <h2 style="margin: 0; font-size: 15px; font-weight: 800; color: #f0e2c2">▾ Result</h2>
+          <div style="display: flex; gap: 4px" role="tablist">
+            <button type="button" role="tab" aria-selected="true" style="min-height: 32px; padding: 0 12px; border-radius: 999px; border: 0; background: rgba(233,180,76,0.16); color: #e9b44c; font: 700 13px 'Plus Jakarta Sans', sans-serif">Yours</button>
+            <button type="button" role="tab" aria-selected="false" style="min-height: 32px; padding: 0 12px; border-radius: 999px; border: 0; background: transparent; color: #a38e66; font: 700 13px 'Plus Jakarta Sans', sans-serif">Sample</button>
+          </div>
+        </div>
+        <div style="margin-top: 12px; border: 1px dashed #4a3820; border-radius: 12px; padding: 22px; text-align: center; color: #a38e66; font-size: 14px">Submit your query to see its result here.</div>
+      </section>
+
+      <section style="background: #1f170f; border: 1px solid #33271a; border-radius: 16px; padding: 14px 16px">
+        <div style="display: flex; align-items: center; justify-content: space-between">
+          <h2 style="margin: 0; font-size: 15px; font-weight: 800; color: #f0e2c2">▾ Expected</h2>
+          <span style="font-size: 12px; color: #a38e66">1 row</span>
+        </div>
+        <table style="width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 10px">
+          <thead><tr style="color: #e9b44c"><th style="text-align: left; padding: 6px 10px; border-bottom: 1px solid #33271a">name</th><th style="text-align: right; padding: 6px 10px; border-bottom: 1px solid #33271a">owngoals</th></tr></thead>
+          <tbody><tr><td style="padding: 8px 10px"><span style="display: inline-block; width: 110px; height: 14px; border-radius: 6px; background: #33271a"></span></td><td style="padding: 8px 10px; text-align: right"><span style="display: inline-block; width: 28px; height: 14px; border-radius: 6px; background: #33271a"></span></td></tr></tbody>
+        </table>
+        <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px">
+          <span style="font-size: 13px; color: #a38e66">Values hidden: only the shape is shown</span>
+          <button type="button" style="margin-left: auto; min-height: 36px; padding: 0 14px; border-radius: 999px; border: 1px solid #c99a3e; background: transparent; color: #e9b44c; font: 700 13px 'Plus Jakarta Sans', sans-serif">Reveal hint</button>
+        </div>
+      </section>
+
+    </aside>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":960}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

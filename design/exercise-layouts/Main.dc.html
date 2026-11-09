@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Option A: IDE layout</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#16100a}
+a{color:#e9b44c}a:hover{color:#f0e2c2}
+.code{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:15px;line-height:1.7;font-variant-ligatures:none}
+.k{color:#e9b44c;font-weight:600}.f{color:#f0d28a}.n{color:#e98a5b}.s{color:#a9c97a}.c{color:#8a7a5c;font-style:italic}.p{color:#bfae8a}
+.err{text-decoration:underline wavy #ef6b5b;text-underline-offset:4px}
+.cell{padding:8px 12px;border-bottom:1px solid #33271a;text-align:left}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+</style>
+</helmet>
+<div style="width: 100%; min-height: 960px; box-sizing: border-box; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; color: #d6c49e; background: radial-gradient(1200px 500px at 50% -10%, rgba(201,154,62,0.16), transparent 70%), #16100a; display: flex; flex-direction: column">
+
+  <header style="display: flex; align-items: center; gap: 24px; padding: 16px 28px; border-bottom: 1px solid #33271a; flex-wrap: wrap">
+    <div style="display: flex; align-items: center; gap: 10px">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e9b44c" stroke-width="2" stroke-linecap="round" aria-hidden="true"><ellipse cx="12" cy="5" rx="8" ry="3"></ellipse><path d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3V5"></path><path d="M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6"></path></svg>
+      <div style="line-height: 1.1"><div style="font-weight: 800; color: #f0e2c2">SQL Showdown</div><div style="font-size: 12px; font-weight: 600; color: #e9b44c">DevFest Paris 2026</div></div>
+    </div>
+    <nav style="display: flex; gap: 8px; flex-wrap: wrap" aria-label="Games">
+      <a href="#" style="padding: 8px 16px; border: 1px solid #4a3820; border-radius: 999px; color: #f0e2c2; font-weight: 700; text-decoration: none">Home</a>
+      <a href="#" style="padding: 8px 16px; border: 1px solid #e9b44c; background: rgba(233,180,76,0.16); border-radius: 999px; color: #e9b44c; font-weight: 700; text-decoration: none">World</a>
+      <a href="#" style="padding: 8px 16px; border: 1px solid #4a3820; border-radius: 999px; color: #f0e2c2; font-weight: 700; text-decoration: none">Teachers</a>
+      <a href="#" style="padding: 8px 16px; border: 1px solid #4a3820; border-radius: 999px; color: #f0e2c2; font-weight: 700; text-decoration: none">Worldcup</a>
+    </nav>
+    <div style="margin-left: auto; display: flex; gap: 10px; align-items: center">
+      <span style="padding: 6px 14px; border-radius: 999px; background: rgba(233,180,76,0.14); color: #e9b44c; font-weight: 700; font-size: 14px">7 pts · #12</span>
+      <span style="padding: 6px 14px; border: 1px solid #4a3820; border-radius: 999px; color: #f0e2c2; font-weight: 700; font-size: 14px">Wouter</span>
+    </div>
+  </header>
+
+  <main style="flex: 1; display: grid; grid-template-columns: 320px minmax(0, 1fr) 280px; gap: 20px; padding: 20px 28px">
+
+    <aside style="display: flex; flex-direction: column; gap: 16px; min-width: 0">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #e9b44c">Countries of the world · 8 exercises</div>
+      <ol style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 6px">
+        <li style="height: 34px; border-radius: 10px; background: rgba(169,201,122,0.18); color: #a9c97a; display: flex; align-items: center; justify-content: center; font-weight: 700">1</li>
+        <li style="height: 34px; border-radius: 10px; background: rgba(169,201,122,0.18); color: #a9c97a; display: flex; align-items: center; justify-content: center; font-weight: 700">2</li>
+        <li style="height: 34px; border-radius: 10px; border: 2px solid #e9b44c; color: #f0e2c2; display: flex; align-items: center; justify-content: center; font-weight: 800">3</li>
+        <li style="height: 34px; border-radius: 10px; border: 1px solid #33271a; color: #a38e66; display: flex; align-items: center; justify-content: center; font-weight: 700">4</li>
+        <li style="height: 34px; border-radius: 10px; border: 1px solid #33271a; color: #a38e66; display: flex; align-items: center; justify-content: center; font-weight: 700">5</li>
+        <li style="height: 34px; border-radius: 10px; border: 1px solid #33271a; color: #a38e66; display: flex; align-items: center; justify-content: center; font-weight: 700">6</li>
+        <li style="height: 34px; border-radius: 10px; border: 1px solid #33271a; color: #a38e66; display: flex; align-items: center; justify-content: center; font-weight: 700">7</li>
+        <li style="height: 34px; border-radius: 10px; border: 1px solid #33271a; color: #a38e66; display: flex; align-items: center; justify-content: center; font-weight: 700">8</li>
+      </ol>
+
+      <section style="background: #1f170f; border: 1px solid #33271a; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+        <div style="display: flex; align-items: center; justify-content: space-between">
+          <h2 style="margin: 0; font-size: 22px; font-weight: 800; color: #f0e2c2; letter-spacing: -0.02em">Exercise 3</h2>
+          <span style="padding: 4px 10px; border-radius: 999px; background: rgba(233,180,76,0.14); color: #e9b44c; font-weight: 700; font-size: 13px">2 points</span>
+        </div>
+        <p style="margin: 0; font-size: 16px; line-height: 1.55; color: #f0e2c2">For South America show population in millions and GDP in billions, both to 2 decimal places. Sort them by largest GDP.</p>
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #a38e66">Expected columns</div>
+          <div style="display: flex; gap: 6px; flex-wrap: wrap">
+            <code class="code" style="font-size: 13px; padding: 3px 8px; border-radius: 8px; background: #241a11; color: #f0e2c2">name</code>
+            <code class="code" style="font-size: 13px; padding: 3px 8px; border-radius: 8px; background: #241a11; color: #f0e2c2">population (M)</code>
+            <code class="code" style="font-size: 13px; padding: 3px 8px; border-radius: 8px; background: #241a11; color: #f0e2c2">gdp (B)</code>
+          </div>
+          <div style="font-size: 13px; color: #a38e66">13 rows · order matters</div>
+        </div>
+      </section>
+
+      <details style="background: #1f170f; border: 1px solid #33271a; border-radius: 16px; padding: 16px 20px" open>
+        <summary style="cursor: pointer; font-weight: 700; color: #e9b44c">Hint</summary>
+        <p style="margin: 10px 0 0; font-size: 14px; line-height: 1.5">Using COUNT(a), COUNT(b) will have "b" overwrite the values of "a". Use aliases!</p>
+      </details>
+
+      <div style="margin-top: auto; display: flex; gap: 8px">
+        <button type="button" style="flex: 1; min-height: 44px; border-radius: 999px; border: 1px solid #4a3820; background: transparent; color: #f0e2c2; font: 700 14px 'Plus Jakarta Sans', sans-serif">Previous</button>
+        <button type="button" style="flex: 1; min-height: 44px; border-radius: 999px; border: 1px solid #4a3820; background: transparent; color: #f0e2c2; font: 700 14px 'Plus Jakarta Sans', sans-serif">Skip</button>
+      </div>
+    </aside>
+
+    <section style="display: flex; flex-direction: column; gap: 16px; min-width: 0">
+      <div style="background: #1f170f; border: 1px solid #c99a3e; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column">
+        <div style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid #33271a">
+          <span style="font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; border: 1px solid #4a3820; color: #a38e66">PostgreSQL</span>
+          <span style="font-size: 13px; color: #ef8a7d; display: flex; align-items: center; gap: 6px"><span style="width: 8px; height: 8px; border-radius: 999px; background: #ef6b5b"></span>1 problem</span>
+          <button type="button" style="margin-left: auto; min-height: 40px; padding: 0 22px; border: 0; border-radius: 999px; color: #fff; font: 700 15px 'Plus Jakarta Sans', sans-serif; background: linear-gradient(90deg, #d8862f, #b2472a); box-shadow: 0 8px 24px rgba(216,134,47,0.3)">Submit  ⌘↵</button>
+        </div>
+        <div style="display: flex; position: relative">
+          <div class="code" style="padding: 12px 0; width: 48px; text-align: right; color: #a38e66; background: #241a11; padding-right: 12px; box-sizing: border-box">1<br>2<br>3<br>4<br>5<br>6<br>7</div>
+          <pre class="code" style="margin: 0; padding: 12px 16px; color: #f0e2c2; white-space: pre"><span class="k">SELECT</span> name<span class="p">,</span>
+       <span class="f">ROUND</span><span class="p">(</span>population <span class="p">/</span> <span class="n">1000000.0</span><span class="p">,</span> <span class="n">2</span><span class="p">)</span> <span class="k">AS</span> <span class="s">"population (M)"</span><span class="p">,</span>
+       <span class="f">ROUND</span><span class="p">(</span><span class="err">gpd</span> <span class="p">/</span> <span class="n">1000000000.0</span><span class="p">,</span> <span class="n">2</span><span class="p">)</span> <span class="k">AS</span> <span class="s">"gdp (B)"</span>
+<span class="k">FROM</span> countries
+<span class="k">WHERE</span> continent <span class="p">=</span> <span class="s">'South America'</span>
+<span class="k">ORDER BY</span> gdp <span class="k">DESC</span>
+</pre>
+          <div style="position: absolute; left: 190px; top: 112px; background: #241a11; border: 1px solid #4a3820; border-left: 3px solid #ef6b5b; border-radius: 10px; padding: 8px 12px; font-size: 13px; color: #f0e2c2; box-shadow: 0 10px 30px rgba(0,0,0,0.4)">column "gpd" does not exist<div style="font-size: 11px; color: #a38e66; margin-top: 2px">PostgreSQL</div></div>
+        </div>
+      </div>
+
+      <div style="background: #1f170f; border: 1px solid #33271a; border-radius: 16px; overflow: hidden; flex: 1; display: flex; flex-direction: column; min-height: 0">
+        <div style="display: flex; gap: 4px; padding: 8px; border-bottom: 1px solid #33271a" role="tablist">
+          <button type="button" role="tab" aria-selected="false" style="min-height: 36px; padding: 0 14px; border-radius: 999px; border: 0; background: transparent; color: #a38e66; font: 700 14px 'Plus Jakarta Sans', sans-serif">Your result</button>
+          <button type="button" role="tab" aria-selected="true" style="min-height: 36px; padding: 0 14px; border-radius: 999px; border: 0; background: rgba(233,180,76,0.16); color: #e9b44c; font: 700 14px 'Plus Jakarta Sans', sans-serif">Expected</button>
+          <button type="button" role="tab" aria-selected="false" style="min-height: 36px; padding: 0 14px; border-radius: 999px; border: 0; background: transparent; color: #a38e66; font: 700 14px 'Plus Jakarta Sans', sans-serif">Sample data</button>
+          <span style="margin-left: auto; align-self: center; font-size: 13px; color: #a38e66; padding-right: 8px">13 rows</span>
+        </div>
+        <div style="overflow: auto">
+          <table style="width: 100%; border-collapse: collapse; font-size: 14px">
+            <thead><tr style="color: #e9b44c"><th class="cell">name</th><th class="cell num">population (M)</th><th class="cell num">gdp (B)</th></tr></thead>
+            <tbody>
+              <tr><td class="cell">Brazil</td><td class="cell num">202.79</td><td class="cell num">2254.11</td></tr>
+              <tr><td class="cell">Argentina</td><td class="cell num">42.67</td><td class="cell num">477.03</td></tr>
+              <tr><td class="cell">Venezuela</td><td class="cell num">28.95</td><td class="cell num">382.42</td></tr>
+              <tr><td class="cell">Colombia</td><td class="cell num">47.66</td><td class="cell num">369.81</td></tr>
+              <tr><td class="cell">Chile</td><td class="cell num">17.77</td><td class="cell num">268.31</td></tr>
+              <tr><td class="cell">Peru</td><td class="cell num">30.48</td><td class="cell num">204.68</td></tr>
+              <tr><td class="cell" style="color: #a38e66">… 7 more</td><td class="cell"></td><td class="cell"></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <aside style="background: #1f170f; border: 1px solid #33271a; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 12px; min-width: 0">
+      <div style="display: flex; align-items: center; justify-content: space-between">
+        <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #e9b44c">Schema</div>
+        <a href="#" style="font-size: 13px; font-weight: 600">Diagram</a>
+      </div>
+      <label style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #a38e66">Filter
+        <input type="text" placeholder="table or column" style="min-height: 38px; border-radius: 999px; border: 1px solid #4a3820; background: #16100a; color: #f0e2c2; padding: 0 14px; font: 14px 'Plus Jakarta Sans', sans-serif">
+      </label>
+      <div>
+        <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; color: #f0e2c2; padding: 6px 0">▾ countries <span style="font-size: 12px; color: #a38e66; font-weight: 500">194 rows</span></div>
+        <ul class="code" style="list-style: none; margin: 0; padding: 0 0 0 16px; font-size: 13px; line-height: 2">
+          <li style="display: flex; justify-content: space-between"><span style="color: #e9b44c">id</span><span style="color: #a38e66">int · PK</span></li>
+          <li style="display: flex; justify-content: space-between"><span>name</span><span style="color: #a38e66">varchar</span></li>
+          <li style="display: flex; justify-content: space-between"><span>continent</span><span style="color: #a38e66">varchar</span></li>
+          <li style="display: flex; justify-content: space-between"><span>area</span><span style="color: #a38e66">int</span></li>
+          <li style="display: flex; justify-content: space-between; background: rgba(233,180,76,0.1); border-radius: 6px; padding: 0 4px; margin: 0 -4px"><span style="color: #f0e2c2">population</span><span style="color: #a38e66">bigint</span></li>
+          <li style="display: flex; justify-content: space-between; background: rgba(233,180,76,0.1); border-radius: 6px; padding: 0 4px; margin: 0 -4px"><span style="color: #f0e2c2">gdp</span><span style="color: #a38e66">bigint</span></li>
+          <li style="display: flex; justify-content: space-between"><span>capital</span><span style="color: #a38e66">varchar</span></li>
+          <li style="display: flex; justify-content: space-between"><span>tld</span><span style="color: #a38e66">varchar</span></li>
+        </ul>
+      </div>
+      <div style="font-weight: 700; color: #a38e66; padding: 6px 0">▸ teachers</div>
+      <div style="font-weight: 700; color: #a38e66; padding: 6px 0">▸ departments</div>
+      <p style="margin: auto 0 0; font-size: 12px; color: #a38e66; line-height: 1.5">Click a column to insert it at the cursor. Highlighted: used in your query.</p>
+    </aside>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":960}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

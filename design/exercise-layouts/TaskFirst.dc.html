@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Option B: task first, compare results</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#16100a}
+a{color:#e9b44c}a:hover{color:#f0e2c2}
+.code{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:15px;line-height:1.7;font-variant-ligatures:none}
+.k{color:#e9b44c;font-weight:600}.f{color:#f0d28a}.n{color:#e98a5b}.s{color:#a9c97a}.p{color:#bfae8a}
+.cell{padding:7px 12px;border-bottom:1px solid #33271a;text-align:left}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.bad td{background:rgba(239,107,91,0.13);color:#f6b3a9}
+.chip{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:13px;padding:4px 10px;border-radius:999px;border:1px solid #4a3820;color:#f0e2c2;background:transparent}
+</style>
+</helmet>
+<div style="width: 100%; min-height: 1080px; box-sizing: border-box; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; color: #d6c49e; background: radial-gradient(1200px 500px at 50% -10%, rgba(201,154,62,0.16), transparent 70%), #16100a; display: flex; flex-direction: column">
+
+  <header style="display: flex; align-items: center; gap: 24px; padding: 16px 40px; border-bottom: 1px solid #33271a; flex-wrap: wrap">
+    <div style="display: flex; align-items: center; gap: 10px">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e9b44c" stroke-width="2" stroke-linecap="round" aria-hidden="true"><ellipse cx="12" cy="5" rx="8" ry="3"></ellipse><path d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3V5"></path><path d="M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6"></path></svg>
+      <div style="line-height: 1.1"><div style="font-weight: 800; color: #f0e2c2">SQL Showdown</div><div style="font-size: 12px; font-weight: 600; color: #e9b44c">DevFest Paris 2026</div></div>
+    </div>
+    <nav style="display: flex; gap: 8px; flex-wrap: wrap" aria-label="Games">
+      <a href="#" style="padding: 8px 16px; border: 1px solid #4a3820; border-radius: 999px; color: #f0e2c2; font-weight: 700; text-decoration: none">Home</a>
+      <a href="#" style="padding: 8px 16px; border: 1px solid #e9b44c; background: rgba(233,180,76,0.16); border-radius: 999px; color: #e9b44c; font-weight: 700; text-decoration: none">World</a>
+      <a href="#" style="padding: 8px 16px; border: 1px solid #4a3820; border-radius: 999px; color: #f0e2c2; font-weight: 700; text-decoration: none">Teachers</a>
+      <a href="#" style="padding: 8px 16px; border: 1px solid #4a3820; border-radius: 999px; color: #f0e2c2; font-weight: 700; text-decoration: none">Worldcup</a>
+    </nav>
+    <div style="margin-left: auto; display: flex; gap: 10px; align-items: center">
+      <span style="padding: 6px 14px; border-radius: 999px; background: rgba(233,180,76,0.14); color: #e9b44c; font-weight: 700; font-size: 14px">7 pts · #12</span>
+      <span style="padding: 6px 14px; border: 1px solid #4a3820; border-radius: 999px; color: #f0e2c2; font-weight: 700; font-size: 14px">Wouter</span>
+    </div>
+  </header>
+
+  <main style="max-width: 1240px; width: 100%; margin: 0 auto; padding: 28px 40px 40px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
+
+    <section style="display: flex; gap: 32px; align-items: flex-end; flex-wrap: wrap">
+      <div style="flex: 999 1 560px; min-width: 0">
+        <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap">
+          <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #e9b44c">Countries of the world · Exercise 3 of 8</span>
+          <span style="display: flex; gap: 5px" aria-label="Progress: 2 of 8 solved">
+            <span style="width: 22px; height: 6px; border-radius: 999px; background: #a9c97a"></span>
+            <span style="width: 22px; height: 6px; border-radius: 999px; background: #a9c97a"></span>
+            <span style="width: 22px; height: 6px; border-radius: 999px; background: #e9b44c"></span>
+            <span style="width: 22px; height: 6px; border-radius: 999px; background: #33271a"></span>
+            <span style="width: 22px; height: 6px; border-radius: 999px; background: #33271a"></span>
+            <span style="width: 22px; height: 6px; border-radius: 999px; background: #33271a"></span>
+            <span style="width: 22px; height: 6px; border-radius: 999px; background: #33271a"></span>
+            <span style="width: 22px; height: 6px; border-radius: 999px; background: #33271a"></span>
+          </span>
+        </div>
+        <h1 style="margin: 10px 0 0; font-size: 30px; line-height: 1.25; font-weight: 800; letter-spacing: -0.02em; color: #f0e2c2">For South America show population in millions and GDP in billions, both to 2 decimal places. Sort them by largest GDP.</h1>
+      </div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap">
+        <span style="padding: 8px 14px; border-radius: 999px; background: rgba(233,180,76,0.14); color: #e9b44c; font-weight: 800">2 points</span>
+        <button type="button" style="min-height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid #c99a3e; background: transparent; color: #e9b44c; font: 700 14px 'Plus Jakarta Sans', sans-serif">Show hint</button>
+        <button type="button" style="min-height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid #4a3820; background: transparent; color: #f0e2c2; font: 700 14px 'Plus Jakarta Sans', sans-serif">Schema diagram</button>
+      </div>
+    </section>
+
+    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap">
+      <span style="font-size: 13px; font-weight: 700; color: #a38e66; margin-right: 4px">countries</span>
+      <button type="button" class="chip">id</button>
+      <button type="button" class="chip" style="border-color: #c99a3e; color: #e9b44c">name</button>
+      <button type="button" class="chip" style="border-color: #c99a3e; color: #e9b44c">continent</button>
+      <button type="button" class="chip">area</button>
+      <button type="button" class="chip" style="border-color: #c99a3e; color: #e9b44c">population</button>
+      <button type="button" class="chip" style="border-color: #c99a3e; color: #e9b44c">gdp</button>
+      <button type="button" class="chip">capital</button>
+      <button type="button" class="chip">tld</button>
+      <span style="font-size: 12px; color: #a38e66; margin-left: 6px">click to insert</span>
+    </div>
+
+    <div style="background: #1f170f; border: 1px solid #c99a3e; border-radius: 16px; overflow: hidden">
+      <div style="display: flex">
+        <div class="code" style="padding: 14px 12px 14px 0; width: 48px; text-align: right; color: #a38e66; background: #241a11; box-sizing: border-box">1<br>2<br>3<br>4<br>5<br>6</div>
+        <pre class="code" style="margin: 0; padding: 14px 18px; color: #f0e2c2; white-space: pre; flex: 1"><span class="k">SELECT</span> name<span class="p">,</span>
+       <span class="f">ROUND</span><span class="p">(</span>population <span class="p">/</span> <span class="n">1e6</span><span class="p">,</span> <span class="n">2</span><span class="p">)</span> <span class="k">AS</span> <span class="s">"population (M)"</span><span class="p">,</span>
+       <span class="f">ROUND</span><span class="p">(</span>gdp <span class="p">/</span> <span class="n">1e9</span><span class="p">,</span> <span class="n">2</span><span class="p">)</span> <span class="k">AS</span> <span class="s">"gdp (B)"</span>
+<span class="k">FROM</span> countries
+<span class="k">WHERE</span> continent <span class="p">=</span> <span class="s">'South America'</span>
+<span class="k">ORDER BY</span> population <span class="k">DESC</span></pre>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-top: 1px solid #33271a; flex-wrap: wrap">
+        <span style="font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; border: 1px solid #4a3820; color: #a38e66">PostgreSQL</span>
+        <span style="font-size: 13px; color: #a9c97a">No problems</span>
+        <button type="button" style="margin-left: auto; min-height: 44px; padding: 0 26px; border: 0; border-radius: 999px; color: #fff; font: 700 15px 'Plus Jakarta Sans', sans-serif; background: linear-gradient(90deg, #d8862f, #b2472a); box-shadow: 0 8px 24px rgba(216,134,47,0.3)">Submit  ⌘↵</button>
+      </div>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 14px; background: rgba(239,107,91,0.1); border: 1px solid rgba(239,107,91,0.35); color: #f6b3a9; font-weight: 600">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5M12 16.5v.01"></path></svg>
+      Close! 13 of 13 rows found, but rows 3–4 and 8–9 are in the wrong order. Check your ORDER BY.
+    </div>
+
+    <section style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px">
+      <div style="background: #1f170f; border: 1px solid #33271a; border-radius: 16px; overflow: hidden">
+        <div style="display: flex; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid #33271a"><span style="font-weight: 800; color: #f0e2c2">Your result</span><span style="font-size: 13px; color: #a38e66">13 rows · 4 ms</span></div>
+        <table style="width: 100%; border-collapse: collapse; font-size: 14px">
+          <thead><tr style="color: #e9b44c"><th class="cell">name</th><th class="cell num">population (M)</th><th class="cell num">gdp (B)</th></tr></thead>
+          <tbody>
+            <tr><td class="cell">Brazil</td><td class="cell num">202.79</td><td class="cell num">2254.11</td></tr>
+            <tr><td class="cell">Argentina</td><td class="cell num">42.67</td><td class="cell num">477.03</td></tr>
+            <tr class="bad"><td class="cell">Colombia</td><td class="cell num">47.66</td><td class="cell num">369.81</td></tr>
+            <tr class="bad"><td class="cell">Venezuela</td><td class="cell num">28.95</td><td class="cell num">382.42</td></tr>
+            <tr><td class="cell">Chile</td><td class="cell num">17.77</td><td class="cell num">268.31</td></tr>
+            <tr><td class="cell">Peru</td><td class="cell num">30.48</td><td class="cell num">204.68</td></tr>
+            <tr><td class="cell">Ecuador</td><td class="cell num">15.77</td><td class="cell num">87.50</td></tr>
+            <tr class="bad"><td class="cell">Bolivia</td><td class="cell num">10.03</td><td class="cell num">27.04</td></tr>
+            <tr class="bad"><td class="cell">Uruguay</td><td class="cell num">3.29</td><td class="cell num">49.92</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="background: #1f170f; border: 1px solid #33271a; border-radius: 16px; overflow: hidden">
+        <div style="display: flex; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid #33271a"><span style="font-weight: 800; color: #f0e2c2">Expected</span><span style="font-size: 13px; color: #a38e66">13 rows · order matters</span></div>
+        <table style="width: 100%; border-collapse: collapse; font-size: 14px">
+          <thead><tr style="color: #e9b44c"><th class="cell">name</th><th class="cell num">population (M)</th><th class="cell num">gdp (B)</th></tr></thead>
+          <tbody>
+            <tr><td class="cell">Brazil</td><td class="cell num">202.79</td><td class="cell num">2254.11</td></tr>
+            <tr><td class="cell">Argentina</td><td class="cell num">42.67</td><td class="cell num">477.03</td></tr>
+            <tr><td class="cell">Venezuela</td><td class="cell num">28.95</td><td class="cell num">382.42</td></tr>
+            <tr><td class="cell">Colombia</td><td class="cell num">47.66</td><td class="cell num">369.81</td></tr>
+            <tr><td class="cell">Chile</td><td class="cell num">17.77</td><td class="cell num">268.31</td></tr>
+            <tr><td class="cell">Peru</td><td class="cell num">30.48</td><td class="cell num">204.68</td></tr>
+            <tr><td class="cell">Ecuador</td><td class="cell num">15.77</td><td class="cell num">87.50</td></tr>
+            <tr><td class="cell">Uruguay</td><td class="cell num">3.29</td><td class="cell num">49.92</td></tr>
+            <tr><td class="cell">Bolivia</td><td class="cell num">10.03</td><td class="cell num">27.04</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1080}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>
