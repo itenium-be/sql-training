@@ -8,7 +8,8 @@ import { calculatePoints } from "./scoring";
 const gameModes = ["init", "running", "end"] as const;
 type GameMode = (typeof gameModes)[number];
 let gameMode: GameMode = "init";
-const AVATAR_COUNT = 60;
+// Sanity ceiling only; the avatar catalogue is defined in the frontend (avatars.ts).
+const MAX_AVATAR = 500;
 
 export const gameRouter: Router = express.Router();
 
@@ -233,8 +234,8 @@ const setAvatar: RequestHandler = async (req: Request, res: Response) => {
 
   const name = (req as AuthRequest).player;
   const avatar = req.body?.avatar;
-  if (!Number.isInteger(avatar) || avatar < 1 || avatar > AVATAR_COUNT) {
-    return res.status(400).send({ message: `Avatar must be between 1 and ${AVATAR_COUNT}` });
+  if (!Number.isInteger(avatar) || avatar < 1 || avatar > MAX_AVATAR) {
+    return res.status(400).send({ message: `Avatar must be between 1 and ${MAX_AVATAR}` });
   }
 
   const result = await executeQuery("UPDATE players SET avatar=$2 WHERE LOWER(name)=LOWER($1)", [name, avatar]);

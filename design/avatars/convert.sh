@@ -14,6 +14,7 @@ declare -A n
 for f in "$RAW"/laoujin2_*.png; do
   rest=$(basename "$f"); rest=${rest#laoujin2_}
   slug=$(printf '%s-%s' "$(cut -d_ -f1 <<<"$rest")" "$(cut -d_ -f2 <<<"$rest")" | tr '[:upper:]' '[:lower:]')
+  slug=${slug/#he-/the-}  # midjourney drops the leading T of "The" in some filenames
   n[$slug]=$(( ${n[$slug]:-0} + 1 ))
   cwebp -quiet -q 82 -resize "$SIZE" "$SIZE" "$f" -o "$OUT/${slug}-${n[$slug]}.webp"
 done
