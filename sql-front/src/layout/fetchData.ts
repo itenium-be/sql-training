@@ -2,7 +2,7 @@ import { AppDispatch } from '../store';
 import { config } from '../config';
 import { ExerciseId } from '../exercises/exerciseModels';
 
-export const fetchData = (key: 'home' | ExerciseId) => async (dispatch: AppDispatch) => {
+export const loadScores = () => async (dispatch: AppDispatch) => {
   try {
     const res = await fetch(`${config.leaderboard.api}/game`, {
       method: 'GET',
@@ -15,6 +15,10 @@ export const fetchData = (key: 'home' | ExerciseId) => async (dispatch: AppDispa
   } catch (error) {
     console.error('Could not fetch leaderboard', error);
   }
+};
+
+export const fetchData = (key: 'home' | ExerciseId) => async (dispatch: AppDispatch) => {
+  await dispatch(loadScores());
 
   if (key === 'home') {
     dispatch({type: 'exercises/switch', payload: {key}});

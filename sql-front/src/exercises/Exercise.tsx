@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "../store";
 import { Alert } from "react-bootstrap";
 import { SqlEditor } from "./SqlEditor";
 import { SchemaPanel } from "./SchemaPanel";
+import { loadScores } from "../layout/fetchData";
 
 const emojis = ['🎉', '🥳', '🎊', '💯', '🌟', '🚀', '🦄', '🎈', '🎆', '🏆'];
 
@@ -150,7 +151,9 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
       setSuccess(true);
       setCost(typeof data.cost === 'number' ? data.cost : null);
       setPoints(typeof data.points === 'number' ? data.points : null);
-      if (!data.recorded) {
+      if (data.recorded) {
+        dispatch(loadScores());
+      } else {
         setError(data.message);
       }
     } catch (error) {
