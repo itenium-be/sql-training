@@ -37,7 +37,7 @@ const initialState: StoreState = {
   },
 }
 
-export const exercisesSlice = createSlice({
+const exercisesSlice = createSlice({
   name: 'exercises',
   initialState,
   reducers: {

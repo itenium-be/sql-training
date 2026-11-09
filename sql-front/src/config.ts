@@ -5,13 +5,6 @@ export const config = {
   }
 }
 
-export type HttpResponse = {
-  success: boolean;
-  message: string;
-  responseObject: unknown;
-  statusCode: number;
-}
-
 export const TOKEN_STORAGE = 'token';
 
 export async function authFetch(url: string, init: RequestInit = {}): Promise<Response> {

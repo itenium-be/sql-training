@@ -1,4 +1,4 @@
-export const ATTEMPTS_PER_PENALTY = 3;
+const ATTEMPTS_PER_PENALTY = 3;
 
 export type Help = {
   hint: boolean;

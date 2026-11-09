@@ -5,25 +5,111 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  schedule:
+    - cron: "17 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
-  build:
+  check:
+    name: ${{ matrix.package }}
     runs-on: ubuntu-latest
-
+    strategy:
+      fail-fast: false
+      matrix:
+        package: [sql-back, sql-leaderboard, sql-front, slides]
     defaults:
       run:
-        working-directory: sql-back
-
+        working-directory: ${{ matrix.package }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v5
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: 20
+          bun-version: 1.4
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install
+        run: bun install --frozen-lockfile
+
+      - name: Vulnerability scan
+        run: bun audit
+
+      - name: Lint
+        if: matrix.package != 'slides'
+        run: bun run lint
+
+      - name: Typecheck
+        if: matrix.package != 'slides'
+        run: bun run typecheck
+
+      - name: Knip
+        run: bun run knip
 
       - name: Test
-        run: npm test
+        if: matrix.package != 'slides'
+        run: bun run test
+
+      - name: Build
+        run: bun run build
+
+  solutions:
+    name: Verify exercise solutions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4
+
+      - name: Start databases
+        run: docker compose -f compose.yaml -f compose.dev.yaml up -d --build postgres sqlserver
+
+      - name: Install
+        working-directory: sql-back
+        run: bun install --frozen-lockfile
+
+      - name: Wait for databases
+        run: |
+          for i in $(seq 1 60); do
+            if docker compose exec -T sqlserver /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U player -P 'Player123!' -d sportdb -Q "SELECT 1" > /dev/null 2>&1 \
+              && docker compose exec -T postgres psql -U player -d world -c "SELECT 1" > /dev/null 2>&1; then
+              exit 0
+            fi
+            sleep 10
+          done
+          docker compose logs
+          exit 1
+
+      - name: Verify solutions
+        working-directory: sql-back
+        env:
+          NODE_ENV: development
+          HOST: localhost
+          PORT: 8080
+          PG_HOST: localhost
+          PG_PORT: 5175
+          PG_USER: player
+          PG_PASSWORD: player
+          SQL_SERVER_HOST: localhost
+          SQL_SERVER_PORT: 5174
+          SQL_SERVER_USER: player
+          SQL_SERVER_PASSWORD: Player123!
+          INTERNAL_API_KEY: ci
+        run: bun run verify-solutions
+
+  trivy:
+    name: Trivy scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: fs
+          scanners: vuln,secret
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: 1

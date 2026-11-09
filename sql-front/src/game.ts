@@ -37,7 +37,7 @@ const setDefined = <T>(setter: (value: T) => void) => (value: T | undefined) => 
   }
 };
 
-export function usePolling<T>(url: string, intervalMs: number): [T | null, () => Promise<void>] {
+function usePolling<T>(url: string, intervalMs: number): [T | null, () => Promise<void>] {
   const [data, setData] = useState<T | null>(null);
 
   const load = useCallback(() => fetchJson<T>(url).then(setDefined(setData)), [url]);

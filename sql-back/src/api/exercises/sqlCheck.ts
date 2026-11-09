@@ -12,7 +12,7 @@ export type SqlSchema = Record<string, string[]>;
 const EXPLAIN_PREFIX = "EXPLAIN ";
 const schemaCache = new Map<string, SqlSchema>();
 
-export function isSqlServer(game: string) {
+function isSqlServer(game: string) {
   return game === "Worldcup";
 }
 

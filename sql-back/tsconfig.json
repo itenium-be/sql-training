@@ -11,7 +11,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["vitest/globals"]
+    "types": ["bun"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]

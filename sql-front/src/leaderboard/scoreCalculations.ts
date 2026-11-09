@@ -31,7 +31,7 @@ export function calculateFastest(exercises: ExerciseModel[], scores: Score[]) {
   fastestTable.forEach(fastest => {
     const exScores = scores
       .filter(score => score.game === fastest.game && score.exerciseid === fastest.exerciseId)
-      .sort((a, b) => b.elapsed - a.elapsed);
+      .sort((a, b) => a.elapsed - b.elapsed);
 
     if (exScores.length) {
       fastest.player = exScores[0].player;

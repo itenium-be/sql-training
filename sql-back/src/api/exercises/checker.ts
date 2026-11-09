@@ -45,8 +45,8 @@ export function toObjects({ columns, rows }: QueryResult): Record<string, unknow
   return rows.map((row) => Object.fromEntries(keys.map((key, i) => [key, row[i]])));
 }
 
-export const DEFAULT_HINT_COST = 1;
-export const DEFAULT_EXPECTED_COST = 1;
+const DEFAULT_HINT_COST = 1;
+const DEFAULT_EXPECTED_COST = 1;
 
 export function penalties(exercise: SqlExerciseModel) {
   return {
