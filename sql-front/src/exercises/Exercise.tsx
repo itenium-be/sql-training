@@ -68,7 +68,7 @@ function SqlExercises({exercise}: {exercise: ExerciseModel}) {
     )
   }
 
-  return <SqlExercise exercise={exercise} sql={currentEx} />
+  return <SqlExercise key={currentEx.id} exercise={exercise} sql={currentEx} />
 }
 
 
