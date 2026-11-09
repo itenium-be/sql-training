@@ -5,6 +5,8 @@ import { calculateFastest } from "./FastestScores";
 import { calculateShortest } from "./ShortestSolutions";
 import { calculateEfficient } from "./MostEfficient";
 
+const BONUS_POINTS = 6;
+
 export function ScoreTable({scores}: {scores: Score[]}) {
   const registeredName = useAppSelector(state => state.exercises.userName);
   const exercises = useAppSelector(state => state.exercises.entities);
@@ -39,7 +41,7 @@ export function ScoreTable({scores}: {scores: Score[]}) {
       fastest,
       shortest,
       efficient,
-      total: score + fastest * 2 + shortest * 2 + efficient * 2
+      total: score + (fastest + shortest + efficient) * BONUS_POINTS
     };
   })
 

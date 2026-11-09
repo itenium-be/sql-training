@@ -9,7 +9,7 @@ export const worldExercises: ExerciseModel = {
     {
       id: 1,
       desc: "Give the name and the floored per capita GDP for all countries with a population of at least 200 million.",
-      points: 1,
+      points: 3,
       expected: [
         ["Brazil", 11115],
         ["China", 6121],
@@ -23,7 +23,7 @@ export const worldExercises: ExerciseModel = {
     {
       id: 2,
       desc: "Find the country that has all the vowels and no spaces in its name.",
-      points: 1,
+      points: 3,
       expected: [["Mozambique"]],
       expectedOrder: false,
       expectedColumns: ["name"],
@@ -31,7 +31,7 @@ export const worldExercises: ExerciseModel = {
     {
       id: 3,
       desc: "For South America show population in millions and GDP in billions both to 2 decimal places. Sort them by largest GDP.",
-      points: 2,
+      points: 6,
       expected: [
         ["Brazil", 202.79, 2254.11],
         ["Argentina", 42.67, 477.03],
@@ -49,12 +49,11 @@ export const worldExercises: ExerciseModel = {
       ],
       expectedOrder: true,
       expectedColumns: ["name", "population (M)", "gdp (B)"],
-      hints: 'Using COUNT(a), COUNT(b) will have "b" overwrite the values of "a". Use aliases!',
     },
     {
       id: 4,
       desc: "Which countries have a GDP greater than every country in Europe?",
-      points: 2,
+      points: 6,
       expected: [["China"], ["Japan"], ["United States"]],
       expectedOrder: false,
       expectedColumns: ["name"],
@@ -62,7 +61,7 @@ export const worldExercises: ExerciseModel = {
     {
       id: 5,
       desc: "Find the largest country (by area) in each continent, show the continent, the name and the area. Sort by continent.",
-      points: 2,
+      points: 6,
       expected: [
         ["Africa", "Algeria", 2381741],
         ["Asia", "China", 9596961],
@@ -79,7 +78,7 @@ export const worldExercises: ExerciseModel = {
     {
       id: 6,
       desc: "List the continents with the amount of countries in it, the country with the smallest area and its name, the total population and the rounded average gdp per capita.",
-      points: 3,
+      points: 9,
       expected: [
         ["Africa", 53, 452, "Seychelles", 1016091005, 1783],
         ["Asia", 46, 300, "Maldives", 4317455576, 5571],
@@ -96,7 +95,7 @@ export const worldExercises: ExerciseModel = {
     {
       id: 7,
       desc: "Show the name and the population of each country in Europe. Also show the population as the rounded percentage of the population of Germany. Only take the countries where the population is at least 50% and sort by largest %.",
-      points: 3,
+      points: 9,
       expected: [
         ["Germany", 80716000, "100%"],
         ["France", 65906000, "82%"],
@@ -111,7 +110,7 @@ export const worldExercises: ExerciseModel = {
     {
       id: 8,
       desc: 'Get confusing top level domains: tld that are the start or end of a different country name, sorted by tld. Select the tld and a "," separated list of matching country names, sort the country names descending by population.',
-      points: 4,
+      points: 12,
       expected: [
         [".al", "Nepal,Senegal,Portugal"],
         [".ar", "Myanmar,Madagascar,Qatar"],

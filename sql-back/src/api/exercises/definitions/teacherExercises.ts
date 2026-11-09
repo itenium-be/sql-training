@@ -10,7 +10,7 @@ export const teacherExercises: ExerciseModel = {
     {
       id: 1,
       desc: "Display the deparments and the number of staff",
-      points: 1,
+      points: 3,
       expected: [
         ["Design", 1],
         ["Computing", 3],
@@ -22,7 +22,7 @@ export const teacherExercises: ExerciseModel = {
     {
       id: 2,
       desc: 'List all teachers with their department. Display "None" if they do not belong to a department.',
-      points: 2,
+      points: 6,
       expected: [
         ["Splint", "Computing"],
         ["Throd", "Computing"],
@@ -37,7 +37,7 @@ export const teacherExercises: ExerciseModel = {
     {
       id: 3,
       desc: 'Show the name of the teacher and, depending on the department, show "Sci", "Art" or "None".',
-      points: 2,
+      points: 6,
       expected: [
         ["Splint", "Sci"],
         ["Throd", "Sci"],
@@ -52,7 +52,7 @@ export const teacherExercises: ExerciseModel = {
     {
       id: 4,
       desc: "Show all teachers and their mobile number. If they don't have one, fallback to their extension and if they don't have an office, fallback to the department extension. We need to be able to call them right away, so phone numbers must start with +32 and be without any spaces. The school number is 09 331 0000",
-      points: 4,
+      points: 12,
       expected: [
         ["Shrivell", "+32476403509"],
         ["Throd", "+32477996655"],
@@ -67,7 +67,7 @@ export const teacherExercises: ExerciseModel = {
     {
       id: 5,
       desc: 'Select all teacher with a name starting with "S" and their seniority (in years)',
-      points: 2,
+      points: 6,
       expected: [
         ["Shrivell", 23],
         ["Splint", 2],
@@ -79,7 +79,7 @@ export const teacherExercises: ExerciseModel = {
     {
       id: 6,
       desc: "Show the teacher names with a birthday today (3/10)",
-      points: 2,
+      points: 6,
       expected: [["Throd"]],
       expectedOrder: false,
       expectedColumns: ["name"],
@@ -87,7 +87,7 @@ export const teacherExercises: ExerciseModel = {
     {
       id: 7,
       desc: "Select the department name and the top 2 earners with their salary (include department-less teachers). Sort by department and highest salary.",
-      points: 5,
+      points: 15,
       expected: [
         ["Computing", "Splint", 3000],
         ["Computing", "Throd", 2000],
@@ -102,7 +102,7 @@ export const teacherExercises: ExerciseModel = {
     {
       id: 8,
       desc: 'Looking at the result of the previous exercise, there was only one record for the "Design" department. Adjust the query so that it adds an extra Design row with NULL values.',
-      points: 2,
+      points: 6,
       expected: [
         ["Computing", "Splint", 3000],
         ["Computing", "Throd", 2000],
