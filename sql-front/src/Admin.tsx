@@ -52,6 +52,11 @@ export function Admin() {
   };
 
   useEffect(() => {
+    const link = document.querySelector<HTMLLinkElement>('link[rel~="icon"][type="image/svg+xml"]');
+    if (link) link.href = '/favicon-admin.svg';
+  }, []);
+
+  useEffect(() => {
     if (storedApiKey) {
       adminFetch(storedApiKey, '').then(data => onLoginSuccess(storedApiKey, data), onLoginFailure);
     }
