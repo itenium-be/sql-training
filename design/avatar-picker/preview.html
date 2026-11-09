@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Avatar picker — mockups</title>
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+:root{
+  --bg:#16100a; --bg-raised:#1f170f; --surface:#241a11;
+  --border:#4a3820; --border-soft:#33271a;
+  --cream:#f0e2c2; --text:#d6c49e; --muted:#a38e66;
+  --gold:#e9b44c; --gold-deep:#c99a3e; --copper:#c47a35;
+  --orange-1:#d8862f; --orange-2:#b2472a; --ink:#1b1a2e;
+  --font:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--font);color:var(--text);background:var(--bg)}
+.doc-head{max-width:1100px;margin:0 auto;padding:40px 24px 8px}
+.doc-head h1{font-size:1.6rem;color:var(--cream);margin:0 0 6px}
+.doc-head p{color:var(--muted);margin:0;max-width:760px;line-height:1.5}
+.board-label{max-width:1060px;margin:48px auto 0;padding:0 24px;display:flex;align-items:baseline;gap:12px}
+.board-label .tag{font-family:var(--mono);font-size:.8rem;font-weight:700;color:var(--ink);background:var(--gold);border-radius:6px;padding:2px 9px}
+.board-label h2{font-size:1.15rem;color:var(--cream);margin:0;font-weight:800}
+.board-label small{color:var(--muted);margin-left:auto;font-size:.85rem}
+.board{position:relative;margin:14px auto;max-width:1060px;border:1px solid var(--border-soft);border-radius:22px;overflow:hidden;
+  background:radial-gradient(720px 420px at 50% 20%,rgba(201,154,62,.12),transparent 70%),var(--bg);padding:16px}
+
+/* a modal-like surface */
+.modal{background:var(--bg-raised);border:1px solid var(--border);border-radius:18px;overflow:hidden}
+.modal-head{display:flex;align-items:center;padding:16px 22px;border-bottom:1px solid var(--border-soft)}
+.modal-head .t{font-weight:800;color:var(--cream);font-size:1.05rem}
+.modal-head .x{margin-left:auto;color:var(--muted);font-size:1.3rem;cursor:pointer;line-height:1}
+.modal-body{padding:26px 22px}
+
+.ctitle{font-weight:800;color:var(--cream);letter-spacing:-.02em;margin:0}
+.ctag{color:var(--muted);margin:6px 0 0}
+.variant{border:0;background:transparent;padding:5px;border-radius:50%;cursor:pointer;transition:transform .15s}
+.variant:hover{transform:scale(1.06)}
+.variant img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;border:2px solid var(--border);background:var(--surface)}
+.variant.sel img{border-color:var(--gold);box-shadow:0 0 0 4px rgba(233,180,76,.3)}
+
+/* A carousel */
+.car{text-align:center}
+.car-top{display:flex;align-items:center;justify-content:center;gap:22px}
+.arrow{width:46px;height:46px;flex:0 0 auto;border-radius:50%;border:1px solid var(--border);background:transparent;color:var(--gold);cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.arrow:hover{border-color:var(--gold);background:rgba(233,180,76,.1)}
+.car-head{min-width:0}
+.car .ctitle{font-size:2rem}
+.car .ctag{font-size:1.05rem}
+.car-variants{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+.car-variants .variant{width:120px;height:120px}
+.car-dots{display:flex;gap:8px;justify-content:center;margin-top:26px}
+.car-dots button{width:9px;height:9px;border-radius:50%;border:0;background:var(--border);cursor:pointer;padding:0}
+.car-dots button.on{background:var(--gold);width:22px;border-radius:999px}
+
+/* B stacked */
+.stack{display:flex;flex-direction:column;gap:14px;max-height:560px;overflow:auto;padding-right:6px}
+.srow{display:grid;grid-template-columns:230px 1fr;gap:20px;align-items:center;padding:16px;border:1px solid var(--border-soft);border-radius:14px;background:var(--surface)}
+.srow .ctitle{font-size:1.3rem}
+.srow .ctag{font-size:.9rem}
+.srow-variants{display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-end}
+.srow-variants .variant{width:72px;height:72px}
+
+/* C two-pane */
+.pane{display:grid;grid-template-columns:240px 1fr;gap:0;min-height:440px}
+.rail{border-right:1px solid var(--border-soft);padding:8px;display:flex;flex-direction:column;gap:4px;overflow:auto}
+.rail button{text-align:left;border:0;background:transparent;color:var(--text);font-weight:700;padding:11px 14px;border-radius:10px;cursor:pointer;font-size:.95rem;font-family:var(--font)}
+.rail button:hover{background:rgba(233,180,76,.08);color:var(--cream)}
+.rail button.on{background:rgba(233,180,76,.16);color:var(--gold)}
+.detail{padding:26px}
+.detail .ctitle{font-size:1.8rem}
+.detail .ctag{font-size:1.05rem}
+.detail-variants{display:flex;gap:16px;flex-wrap:wrap;margin-top:24px}
+.detail-variants .variant{width:104px;height:104px}
+</style>
+</head>
+<body>
+<div class="doc-head">
+  <h1>Avatar picker — three directions</h1>
+  <p>Each character has a title + tagline and ~4–6 variants. Taglines below are drafts. Real webp avatars (320², converted from the midjourney raws). Pick a layout.</p>
+</div>
+
+<div class="board-label"><span class="tag">A</span><h2>Carousel — one character, focused</h2><small>matches your sketch · arrows switch character</small></div>
+<section class="board"><div class="modal" id="A"></div></section>
+
+<div class="board-label"><span class="tag">B</span><h2>Stacked — all characters at once</h2><small>scan &amp; scroll</small></div>
+<section class="board"><div class="modal" id="B"></div></section>
+
+<div class="board-label"><span class="tag">C</span><h2>Two-pane — character rail + detail</h2><small>rail left, variants right</small></div>
+<section class="board"><div class="modal" id="C"></div></section>
+
+<div style="height:48px"></div>
+<script>
+const CHARS = [
+  {slug:'query-wizard',       title:'The Query Wizard',       tag:'Conjures result sets from thin air.',      n:6},
+  {slug:'dba-knight',         title:'The DBA Knight',         tag:'Shields the schema, slays the deadlock.',  n:4},
+  {slug:'deadlock-detective', title:'The Deadlock Detective', tag:"Works out who's blocking whom.",           n:4},
+  {slug:'index-ninja',        title:'The Index Ninja',        tag:'Strikes before you hit a full scan.',      n:4},
+  {slug:'join-juggler',       title:'The Join Juggler',       tag:'Keeps five tables in the air at once.',    n:4},
+  {slug:'elephant-admin',     title:'The Elephant Admin',     tag:'Never forgets a transaction.',             n:4},
+  {slug:'dolphin-diver',      title:'The Dolphin Diver',      tag:'Dives deep into MySQL waters.',            n:2},
+];
+const url = (c,i)=>`../avatars/${c.slug}-${i}.webp`;
+const variant = (c,i,sel)=>`<button class="variant${sel?' sel':''}"><img src="${url(c,i)}" alt="${c.title} ${i}"></button>`;
+const variants = (c,selIdx)=>Array.from({length:c.n},(_,k)=>variant(c,k+1,k+1===selIdx)).join('');
+
+/* A carousel */
+let ai=0, asel=2;
+const A=document.getElementById('A');
+function drawA(){
+  const c=CHARS[ai];
+  A.innerHTML=`
+    <div class="modal-head"><span class="t">Pick your avatar</span><span class="x">&times;</span></div>
+    <div class="modal-body car">
+      <div class="car-top">
+        <button class="arrow" onclick="ai=(ai-1+CHARS.length)%CHARS.length;asel=1;drawA()">&#8249;</button>
+        <div class="car-head"><h3 class="ctitle">${c.title}</h3><p class="ctag">${c.tag}</p></div>
+        <button class="arrow" onclick="ai=(ai+1)%CHARS.length;asel=1;drawA()">&#8250;</button>
+      </div>
+      <div class="car-variants">${variants(c,asel)}</div>
+      <div class="car-dots">${CHARS.map((_,k)=>`<button class="${k===ai?'on':''}" onclick="ai=${k};asel=1;drawA()"></button>`).join('')}</div>
+    </div>`;
+  A.querySelectorAll('.car-variants .variant').forEach((b,k)=>b.onclick=()=>{asel=k+1;drawA();});
+}
+drawA();
+
+/* B stacked */
+document.getElementById('B').innerHTML=`
+  <div class="modal-head"><span class="t">Pick your avatar</span><span class="x">&times;</span></div>
+  <div class="modal-body"><div class="stack">${CHARS.map((c,ci)=>`
+    <div class="srow">
+      <div><h3 class="ctitle">${c.title}</h3><p class="ctag">${c.tag}</p></div>
+      <div class="srow-variants">${variants(c, ci===0?2:0)}</div>
+    </div>`).join('')}</div></div>`;
+
+/* C two-pane */
+let ci=0;
+const C=document.getElementById('C');
+function drawC(){
+  const c=CHARS[ci];
+  C.innerHTML=`
+    <div class="modal-head"><span class="t">Pick your avatar</span><span class="x">&times;</span></div>
+    <div class="pane">
+      <div class="rail">${CHARS.map((x,k)=>`<button class="${k===ci?'on':''}" onclick="ci=${k};drawC()">${x.title}</button>`).join('')}</div>
+      <div class="detail"><h3 class="ctitle">${c.title}</h3><p class="ctag">${c.tag}</p>
+        <div class="detail-variants">${variants(c,1)}</div>
+      </div>
+    </div>`;
+}
+drawC();
+</script>
+</body>
+</html>
