@@ -52,7 +52,7 @@ export function ScoreTable({scores}: {scores: Score[]}) {
           <th>Points</th>
           <th># Fastest</th>
           <th># Shortest</th>
-          <th># Efficient</th>
+          <th># Leanest</th>
           <th>Total Score</th>
         </tr>
       </thead>

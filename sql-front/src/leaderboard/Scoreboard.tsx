@@ -29,10 +29,10 @@ export function Scoreboard() {
       <h2>Your Scores</h2>
       <YourScores scores={scores} />
 
-      <h2>Leanest Solutions</h2>
+      <h2>Shortest Solutions</h2>
       <ShortestSolutions scores={scores} />
 
-      <h2>Most Efficient Queries</h2>
+      <h2>Leanest Queries</h2>
       <MostEfficient scores={scores} />
 
       <AllSolutions scores={scores} />
