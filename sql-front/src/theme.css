@@ -415,48 +415,48 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
 }
 
 /* ── Register screen (INSERT INTO players) ─────────────────────── */
-.df-regscreen-title { font-size: clamp(2.2rem, 6vw, 3.6rem); margin: 18px 0 0; }
+.df-regscreen-title { font-size: clamp(2.8rem, 7.5vw, 4.8rem); margin: 22px 0 0; }
 
 .df-sqlcard {
   width: 100%;
-  max-width: 620px;
-  margin-top: 34px;
+  max-width: 820px;
+  margin-top: 48px;
   text-align: left;
   background: var(--df-bg-raised);
   border: 1px solid var(--df-gold-deep);
-  border-radius: 18px;
+  border-radius: 22px;
   overflow: hidden;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.45);
 }
 
 .df-sqlcard-head {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 11px 16px;
+  gap: 10px;
+  padding: 15px 22px;
   border-bottom: 1px solid var(--df-border-soft);
 }
 
-.df-sqlcard-dot { width: 11px; height: 11px; border-radius: 50%; }
+.df-sqlcard-dot { width: 14px; height: 14px; border-radius: 50%; }
 
 .df-sqlcard-file {
   margin-left: auto;
-  font-size: 0.72rem;
+  font-size: 0.85rem;
   font-weight: 700;
   color: var(--df-muted);
   border: 1px solid var(--df-border);
   border-radius: 999px;
-  padding: 3px 10px;
+  padding: 4px 14px;
 }
 
 .df-sqlcard-code {
   font-family: 'JetBrains Mono', ui-monospace, monospace;
-  font-size: clamp(0.9rem, 2.4vw, 1.05rem);
-  line-height: 2;
-  padding: 22px 20px;
+  font-size: clamp(1.15rem, 3vw, 1.5rem);
+  line-height: 2.1;
+  padding: 34px 30px;
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 0 18px;
+  gap: 0 22px;
 }
 
 .df-sqlcard-ln { color: var(--df-muted); opacity: 0.5; text-align: right; user-select: none; }
@@ -468,9 +468,9 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
   color: var(--df-cream);
   background: rgba(233, 180, 76, 0.12);
   border: 0;
-  border-bottom: 1px solid var(--df-gold-deep);
-  border-radius: 4px 4px 0 0;
-  padding: 1px 6px;
+  border-bottom: 2px solid var(--df-gold-deep);
+  border-radius: 5px 5px 0 0;
+  padding: 2px 9px;
   outline: none;
   min-width: 9ch;
 }
@@ -482,14 +482,21 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 14px 18px;
+  padding: 20px 26px;
   border-top: 1px solid var(--df-border-soft);
   background: rgba(0, 0, 0, 0.18);
 }
 
-.df-sqlcard-run { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; }
+.df-sqlcard-run {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.2rem;
+  padding: 0.8rem 2.2rem;
+}
 
-.df-regscreen-alert { max-width: 620px; width: 100%; margin-top: 18px; }
+.df-regscreen-alert { max-width: 820px; width: 100%; margin-top: 20px; font-size: 1.05rem; }
 
 .df-lobby {
   width: 100%;
