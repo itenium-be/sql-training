@@ -6,6 +6,7 @@ info: |
 gameUrl: http://TODO-HOST
 wifiNetwork: TODO-NETWORK
 wifiPassword: TODO-PASSWORD
+favicon: /favicon.png
 colorSchema: dark
 aspectRatio: 16/9
 canvasWidth: 980
@@ -14,6 +15,7 @@ fonts:
   sans: Plus Jakarta Sans
   mono: JetBrains Mono
   weights: '400,600,700,800'
+  provider: none
 layout: center
 class: cover
 ---
