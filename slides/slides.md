@@ -1,8 +1,11 @@
 ---
 theme: default
-title: SQL Training
+title: SQL Showdown · DevFest Paris
 info: |
-  itenium SQL Training: hands-on, intermediate.
+  SQL Showdown by itenium, DevFest Paris 2026.
+gameUrl: http://TODO-HOST
+wifiNetwork: TODO-NETWORK
+wifiPassword: TODO-PASSWORD
 colorSchema: dark
 aspectRatio: 16/9
 canvasWidth: 980
@@ -19,13 +22,13 @@ class: cover
 
 <div class="relative w-full">
   <img src="/img/itenium-logo.png" class="h-10 mb-8" alt="itenium" />
-  <div class="flex items-center gap-3 mb-6">
+  <div class="pill eyebrow !text-xs mb-6">27 November 2026 · La Fabrique de la Connaissance</div>
+  <h1 class="!text-7xl !mb-6 !leading-none">SQL Showdown<br><span class="gradient-gold">DevFest Paris</span> <span class="gradient-copper">edition.</span></h1>
+  <div class="flex items-center gap-3">
     <span class="pill">Hands-On</span>
     <span class="pill">Intermediate</span>
-    <span class="pill pill-gold">QA Event</span>
     <span class="pill">⏱ 2h</span>
   </div>
-  <h1 class="!text-8xl !mb-0"><span class="gradient-gold">SQL</span> Training</h1>
 </div>
 
 ---
@@ -56,12 +59,12 @@ layout: two-cols
 # Intro
 
 - Score points by solving the exercises
-- Scoreboards
-  - Most points
+- +6 bonus for every record you hold
   - Solved fastest
-  - Solved with shortest query
-  - Extra point for ⭐ the repository ;)
-- Price for most points!
+  - Shortest query
+  - Leanest query (fewest reads)
+- Extra point for ⭐ the repository ;)
+- Prize for most points!
 - There are memes!
 - Dbs: Postgres & SQL Server
 
@@ -92,14 +95,14 @@ layout: two-cols
 
 # Gotchas
 
-- There is a swagger (for db structure)
-  - Worldcup Schema!
 - Timer starts when first viewing the q
-- Column names issues
-  - `SELECT AVG(a), AVG(b)`
-- See README for a db restore
-- Pick unique and recognizable name!
-- Submit a query to enable hint button
+- Hint and expected result cost points
+- Every 3 wrong attempts: −1 point
+- Red squiggle = the database says no
+  - Autocomplete knows every table & column
+- <kbd>Ctrl</kbd>+<kbd>Enter</kbd> submits
+- Read-only databases, 5 second timeout
+- Pick a unique and recognizable name!
 - Your SQL is stored, no “cheating”
 - End game: see winning SQLs
 
@@ -126,13 +129,14 @@ layout: default
   <span class="eyebrow">Exercises</span>
   <h1 class="!mb-2">Let’s get this <span class="gradient-copper">party</span> started!</h1>
 
-```bash
-git clone https://github.com/itenium-be/sql-training
-cd sql-training
-docker compose up -d --build
-```
-
-  <div class="mt-8"><span class="cta">http://localhost:5173</span></div>
+  <ol class="steps">
+    <li>Join the WiFi <strong>{{ $slidev.configs.wifiNetwork }}</strong></li>
+    <li>Browse to the game</li>
+    <li>Pick a name and an avatar</li>
+    <li>Wait for the start signal</li>
+  </ol>
+  <div class="mt-6"><span class="cta">{{ $slidev.configs.gameUrl }}</span></div>
+  <p class="mt-6 text-sm text-[var(--df-muted)]">Play at home: <a href="https://github.com/itenium-be/sql-training" target="_blank">github.com/itenium-be/sql-training</a></p>
 </div>
 <img src="/img/exercises.jpg" class="photo-round w-64 h-64" alt="" />
 </div>
@@ -171,8 +175,9 @@ image: /img/laptop.jpg
   <span class="eyebrow">Get connected</span>
   <h1>WiFi</h1>
   <div class="flex flex-col gap-3 text-2xl">
-    <div><span class="text-[var(--df-muted)]">Network</span> <strong>ITENIUM_GAST</strong></div>
-    <div><span class="text-[var(--df-muted)]">Password</span> <code>FreeWifi</code></div>
+    <div><span class="text-[var(--df-muted)]">Network</span> <strong>{{ $slidev.configs.wifiNetwork }}</strong></div>
+    <div><span class="text-[var(--df-muted)]">Password</span> <code>{{ $slidev.configs.wifiPassword }}</code></div>
+    <div><span class="text-[var(--df-muted)]">Then</span> <strong>{{ $slidev.configs.gameUrl }}</strong></div>
   </div>
 </div>
 

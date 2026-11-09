@@ -41,6 +41,8 @@ npm run dev     # http://localhost:3030, presenter mode at /presenter
 npm run build   # static site in slides/dist
 ```
 
+Set `gameUrl`, `wifiNetwork` and `wifiPassword` at the top of `slides/slides.md` before the event.
+
 ## Develop
 
 Start the databases with their ports exposed:
