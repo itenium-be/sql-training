@@ -6,12 +6,22 @@ import { useAppDispatch, useAppSelector } from './store'
 import { Exercise } from './exercises/Exercise'
 import { useEffect, useState } from 'react'
 import { Intro } from './Intro'
+import { Admin } from './Admin'
+import { useGameMode } from './game'
 
 export function App() {
+  if (window.location.pathname.startsWith('/admin')) {
+    return <Admin />;
+  }
+  return <Game />;
+}
+
+function Game() {
   const exercises = useAppSelector(state => state.exercises.entities);
   const dispatch = useAppDispatch();
   const registeredName = useAppSelector(state => state.exercises.userName);
   const [started, setStarted] = useState(false);
+  const mode = useGameMode();
 
   useEffect(() => {
     const name = localStorage.getItem('userName');
@@ -22,8 +32,8 @@ export function App() {
     dispatch(fetchData('home'));
   }, []);
 
-  if (!registeredName && !started) {
-    return <Intro onStart={() => setStarted(true)} />;
+  if (mode === 'init' || (!registeredName && !started)) {
+    return <Intro mode={mode} onStart={() => setStarted(true)} />;
   }
 
   return (

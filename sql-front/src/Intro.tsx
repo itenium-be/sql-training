@@ -1,7 +1,11 @@
 import { Button } from "react-bootstrap";
 import { ArrowIcon, CalendarIcon, DatabaseIcon, HexagonIcon } from "./layout/Icons";
+import { GameMode, usePlayers } from "./game";
+import { RegisterForm } from "./RegisterForm";
+import { Avatar } from "./Avatar";
+import { useAppSelector } from "./store";
 
-export function Intro({onStart}: {onStart: () => void}) {
+export function Intro({mode, onStart}: {mode: GameMode | null, onStart: () => void}) {
   return (
     <main className="df-intro">
       <div className="df-intro-deco" style={{top: '8%', left: '6%'}}><DatabaseIcon size={120} /></div>
@@ -24,11 +28,41 @@ export function Intro({onStart}: {onStart: () => void}) {
         Solve fastest, write the leanest query and climb the leaderboard.
       </p>
 
-      <Button variant="primary" className="df-cta" onClick={onStart}>
-        Let's start <ArrowIcon />
-      </Button>
+      {mode === 'init' ? (
+        <Lobby />
+      ) : (
+        <Button variant="primary" className="df-cta" onClick={onStart}>
+          Let's start <ArrowIcon />
+        </Button>
+      )}
 
       <div className="df-footer">Brought to you by <strong>itenium</strong></div>
     </main>
+  );
+}
+
+function Lobby() {
+  const players = usePlayers();
+  const registeredName = useAppSelector(state => state.exercises.userName);
+  const me = registeredName.toLowerCase();
+
+  return (
+    <section className="df-lobby">
+      {registeredName ? (
+        <p className="df-lobby-status">You're in, <strong>{registeredName}</strong>! Waiting for the game to start...</p>
+      ) : (
+        <RegisterForm />
+      )}
+
+      <div className="df-eyebrow">{players.length} {players.length === 1 ? 'player' : 'players'} in the arena</div>
+      <div className="df-lobby-grid">
+        {players.map(player => (
+          <div key={player.id} className={`df-lobby-player${player.name.toLowerCase() === me ? ' df-lobby-me' : ''}`}>
+            <Avatar player={player} />
+            <span className="df-lobby-name" title={player.name}>{player.name}</span>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }

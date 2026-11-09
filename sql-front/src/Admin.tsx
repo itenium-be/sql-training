@@ -1,0 +1,110 @@
+import { useEffect, useState } from 'react';
+import { Alert, Button, ButtonGroup, Container, Form } from 'react-bootstrap';
+import { config } from './config';
+import { GameMode } from './game';
+
+const API_KEY_STORAGE = 'adminApiKey';
+
+const modeDescriptions: Record<GameMode, string> = {
+  init: 'Lobby: players register and show up on the intro page',
+  running: 'Game on: submissions are scored',
+  end: 'Game over: submissions closed, all solutions visible',
+};
+
+async function adminFetch(apiKey: string, path: string, body?: object) {
+  const res = await fetch(`${config.leaderboard.api}/game/admin${path}`, {
+    method: body ? 'POST' : 'GET',
+    headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message ?? res.statusText);
+  }
+  return data;
+}
+
+export function Admin() {
+  const [apiKey, setApiKey] = useState(() => localStorage.getItem(API_KEY_STORAGE) ?? '');
+  const [authorized, setAuthorized] = useState(false);
+  const [mode, setMode] = useState<GameMode | null>(null);
+  const [modes, setModes] = useState<GameMode[]>([]);
+  const [message, setMessage] = useState('');
+
+  const login = async (key: string) => {
+    try {
+      const data = await adminFetch(key, '');
+      localStorage.setItem(API_KEY_STORAGE, key);
+      setAuthorized(true);
+      setMode(data.mode);
+      setModes(data.modes);
+      setMessage('');
+    } catch (error: any) {
+      setAuthorized(false);
+      setMessage(error.message);
+    }
+  };
+
+  const logout = () => {
+    localStorage.removeItem(API_KEY_STORAGE);
+    setApiKey('');
+    setAuthorized(false);
+  };
+
+  const changeMode = async (newMode: GameMode) => {
+    try {
+      const data = await adminFetch(apiKey, '/mode', {mode: newMode});
+      setMode(data.mode);
+      setMessage(data.message);
+    } catch (error: any) {
+      setMessage(error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (apiKey) {
+      login(apiKey);
+    }
+  }, []);
+
+  return (
+    <Container style={{paddingTop: 15, paddingBottom: 25, maxWidth: 720}}>
+      <h1>Admin</h1>
+
+      {!authorized ? (
+        <div className="df-register">
+          <Form.Group className="mb-3">
+            <Form.Label htmlFor="apiKey">API key:</Form.Label>
+            <Form.Control
+              type="password"
+              id="apiKey"
+              value={apiKey}
+              onChange={e => setApiKey(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter' && apiKey) login(apiKey); }}
+              autoFocus
+            />
+          </Form.Group>
+          <Button variant="primary" onClick={() => login(apiKey)} disabled={!apiKey}>Login</Button>
+        </div>
+      ) : (
+        <>
+          <section className="df-register">
+            <h2 style={{marginTop: 0}}>Game mode</h2>
+            <ButtonGroup>
+              {modes.map(m => (
+                <Button key={m} variant={m === mode ? 'primary' : 'outline-primary'} onClick={() => changeMode(m)}>
+                  {m}
+                </Button>
+              ))}
+            </ButtonGroup>
+            {mode && <p style={{marginTop: 12, marginBottom: 0}}>{modeDescriptions[mode]}</p>}
+          </section>
+
+          <Button variant="outline-secondary" size="sm" onClick={logout}>Logout</Button>
+        </>
+      )}
+
+      {message && <Alert variant="info" style={{marginTop: 16}}>{message}</Alert>}
+    </Container>
+  );
+}
