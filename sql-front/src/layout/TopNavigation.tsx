@@ -5,6 +5,7 @@ import { config } from '../config';
 import { useEffect } from 'react';
 import { ExerciseId } from '../exercises/exerciseModels';
 import { DatabaseIcon } from './Icons';
+import { event } from '../event';
 
 export const fetchData = (key: 'home' | ExerciseId) => async (dispatch: AppDispatch) => {
   try {
@@ -60,7 +61,7 @@ export function TopNavigation() {
         <span className="df-brand-mark"><DatabaseIcon /></span>
         <span>
           <span className="df-brand-name">SQL Showdown</span>
-          <span className="df-brand-sub">DevFest Paris 2026</span>
+          <span className="df-brand-sub">{event.name} {event.year}</span>
         </span>
       </Link>
       <div className="df-header-right">

@@ -6,6 +6,7 @@ import { AvatarPicker } from "./AvatarPicker";
 import { RegisterForm } from "./RegisterForm";
 import { Avatar } from "./Avatar";
 import { useAppSelector } from "./store";
+import { event } from "./event";
 
 export function Intro({mode, onStart}: {mode: GameMode | null, onStart: () => void}) {
   return (
@@ -16,13 +17,13 @@ export function Intro({mode, onStart}: {mode: GameMode | null, onStart: () => vo
 
       <div className="df-pill df-eyebrow">
         <CalendarIcon size={18} />
-        <span>27 November 2026 · La Fabrique de la Connaissance</span>
+        <span>{event.date} · {event.venue}</span>
       </div>
 
       <h1 className="df-title">
         <span className="df-title-plain">SQL Showdown</span>
-        <span className="df-gradient-gold">DevFest Paris</span>
-        <span className="df-gradient-copper">Edition.</span>
+        <span className="df-gradient-1">{event.name}</span>
+        <span className="df-gradient-2">Edition.</span>
       </h1>
 
       <p className="df-lead">
