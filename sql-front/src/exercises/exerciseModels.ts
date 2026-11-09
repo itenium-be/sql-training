@@ -45,4 +45,4 @@ export type Score = {
   attempts: number;
 }
 
-export type ExerciseId = 'World' | 'Teachers' | 'Worldcup';
+export type ExerciseId = 'World' | 'Teachers' | 'Worldcup' | 'Company';

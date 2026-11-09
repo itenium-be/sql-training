@@ -7,6 +7,7 @@ import { openAPIRouter } from "@/api-docs/openAPIRouter";
 import errorHandler from "@/common/middleware/errorHandler";
 import requestLogger from "@/common/middleware/requestLogger";
 import { env } from "@/common/utils/envConfig";
+import { companyRouter } from "./api/company/companyRouter";
 import { exRouter } from "./api/exercises/exRouter";
 import { teacherRouter } from "./api/teacher/teacherRouter";
 import { worldRouter } from "./api/world/worldRouter";
@@ -35,6 +36,7 @@ app.use("/exercises", exRouter);
 app.use("/World", worldRouter);
 app.use("/Teachers", teacherRouter);
 app.use("/Worldcup", worldcupRouter);
+app.use("/Company", companyRouter);
 
 // Swagger UI
 app.use(openAPIRouter);

@@ -100,7 +100,8 @@ services:
       PGDATA: /data/postgres
     volumes:
       - ./sql-data/postgres.sql:/docker-entrypoint-initdb.d/01-init.sql
-      - ./sql-data/postgres-player.sql:/docker-entrypoint-initdb.d/02-player.sql
+      - ./sql-data/postgres-company.sql:/docker-entrypoint-initdb.d/02-company.sql
+      - ./sql-data/postgres-player.sql:/docker-entrypoint-initdb.d/03-player.sql
       - postgres:/data/postgres
     restart: always
     networks:

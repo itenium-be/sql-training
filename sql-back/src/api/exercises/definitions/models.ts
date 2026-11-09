@@ -1,4 +1,4 @@
-export type ExerciseId = "World" | "Teachers" | "Worldcup";
+export type ExerciseId = "World" | "Teachers" | "Worldcup" | "Company";
 
 export type SqlExerciseModel = {
   id: number;

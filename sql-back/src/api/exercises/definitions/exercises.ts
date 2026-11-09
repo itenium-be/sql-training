@@ -1,3 +1,4 @@
+import { companyExercises } from "./companyExercises";
 import type { ExerciseModel } from "./models";
 import { teacherExercises } from "./teacherExercises";
 import { worldcupExercises } from "./worldcupExercises";
@@ -12,4 +13,4 @@ import { worldExercises } from "./worldExercises";
 //   expectedColumns: ['', '']
 // },
 
-export const exercises: ExerciseModel[] = [worldExercises, teacherExercises, worldcupExercises];
+export const exercises: ExerciseModel[] = [worldExercises, teacherExercises, worldcupExercises, companyExercises];

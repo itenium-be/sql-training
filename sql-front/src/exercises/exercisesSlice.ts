@@ -10,6 +10,7 @@ type StoreState = {
   World: ExerciseState;
   Teachers: ExerciseState;
   Worldcup: ExerciseState;
+  Company: ExerciseState;
 }
 
 type ExerciseState = {
@@ -29,6 +30,9 @@ const initialState: StoreState = {
     exampleData: [],
   },
   Worldcup: {
+    exampleData: [],
+  },
+  Company: {
     exampleData: [],
   },
 }

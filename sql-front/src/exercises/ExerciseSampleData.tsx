@@ -62,6 +62,9 @@ function Cell({value}: {value: unknown}) {
   if (value === null)
     return <td><i>NULL</i></td>
 
+  if (typeof value === 'object')
+    return <td>{JSON.stringify(value)}</td>
+
   const text = String(value);
 
   if (typeof value === 'string' && (text.includes(' ') || text[0] === '+'))
