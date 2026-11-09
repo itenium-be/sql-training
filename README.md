@@ -28,9 +28,14 @@ Players query with a read-only `player` user and every query is killed after 5 s
 
 ### Event & theme
 
+Add to `.env` and re-run `./deploy.sh`:
+
 ```sh
-THEME=synthwave EVENT_NAME="Devoxx" EVENT_YEAR=2027 EVENT_DATE="8 October 2027" EVENT_VENUE="Kinepolis Antwerp" \
-  API_KEY=my-secret docker compose up -d --build
+THEME=synthwave
+EVENT_NAME="Devoxx"
+EVENT_YEAR=2027
+EVENT_DATE="8 October 2027"
+EVENT_VENUE="Kinepolis Antwerp"
 ```
 
 Themes: `devfest` (default, warm gold), `terminal` (green CRT), `synthwave` (neon), `blueprint` (technical drawing), `brutalist` (light, yellow/black).
