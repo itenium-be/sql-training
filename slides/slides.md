@@ -20,7 +20,7 @@ layout: center
 class: cover
 ---
 
-<img src="/img/building-bw.jpg" class="absolute right-0 top-0 h-full w-1/2 object-cover opacity-25" style="mask-image: linear-gradient(90deg, transparent, #000 60%)" alt="" />
+<img src="/img/cover-paris.jpg" class="absolute right-0 top-0 h-full w-1/2 object-cover opacity-25" style="mask-image: linear-gradient(90deg, transparent, #000 60%)" alt="" />
 
 <div class="relative w-full">
   <img src="/img/itenium-logo.png" class="h-10 mb-8" alt="itenium" />
