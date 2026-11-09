@@ -1,5 +1,5 @@
 import { Button } from "react-bootstrap";
-import { ArrowIcon, BoltIcon, CalendarIcon, CheckIcon, DatabaseIcon, HexagonIcon, PlanIcon, ScissorsIcon } from "./layout/Icons";
+import { ArrowIcon, BoltIcon, CalendarIcon, CheckIcon, CoinIcon, DatabaseIcon, HexagonIcon, LeafIcon } from "./layout/Icons";
 
 export function Intro({onStart}: {onStart: () => void}) {
   return (
@@ -37,8 +37,8 @@ export function Intro({onStart}: {onStart: () => void}) {
 const STAMPS = [
   {label: 'CORRECT', sub: 'RIGHT ANSWER', color: '#a9c97a', rotate: -7, Icon: CheckIcon},
   {label: 'FASTEST', sub: 'FIRST TO SOLVE', color: '#e9b44c', rotate: 4, Icon: BoltIcon},
-  {label: 'LEANEST', sub: 'FEWEST CHARS', color: '#d8862f', rotate: -3, Icon: ScissorsIcon},
-  {label: 'BEST PLAN', sub: 'LOWEST COST', color: '#f0d28a', rotate: 6, Icon: PlanIcon},
+  {label: 'LEANEST', sub: 'FEWEST CHARS', color: '#d8862f', rotate: -3, Icon: LeafIcon},
+  {label: 'BEST PLAN', sub: 'LOWEST COST', color: '#f0d28a', rotate: 6, Icon: CoinIcon},
 ];
 
 function Stamps() {
