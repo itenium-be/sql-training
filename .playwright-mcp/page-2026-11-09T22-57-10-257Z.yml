@@ -1,0 +1,14 @@
+- main [ref=f3e3]:
+  - generic [ref=f3e4]:
+    - generic [ref=f3e5]:
+      - generic [ref=f3e6]: The arena is filling up
+      - heading "You're in, TimerTest919!" [level=1] [ref=f3e7]:
+        - text: You're in,
+        - generic [ref=f3e8]: TimerTest919!
+      - paragraph [ref=f3e9]: Waiting for the game to start…
+      - generic [ref=f3e11]: 0 players in the arena
+    - generic [ref=f3e12]:
+      - generic [ref=f3e13]:
+        - generic [ref=f3e14]: while you wait…
+        - button "Shuffle" [ref=f3e15] [cursor=pointer]
+      - img "SQL meme" [ref=f3e18]

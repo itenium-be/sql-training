@@ -1,0 +1,13 @@
+- generic [ref=f4e3]:
+  - generic [ref=f4e4]: "[plugin:vite:import-analysis] Failed to resolve import \"./livePoints\" from \"src/exercises/Exercise.tsx\". Does the file exist?"
+  - generic [ref=f4e5]: /usr/src/app/src/exercises/Exercise.tsx:5:27
+  - generic [ref=f4e6]: "5 | import Badge from 'react-bootstrap/Badge'; 6 | import { ATTEMPTS_PER_PENALTY } from \"./exerciseModels\"; 7 | import { livePoints } from \"./livePoints\"; | ^ 8 | import { ExerciseSampleData, ExercisesData } from \"./ExerciseSampleData\"; 9 | import { authFetch, config } from \"../config\";"
+  - generic [ref=f4e7]: at _formatLog (/usr/src/app/node_modules/vite/dist/node/chunks/node.js:8861:43) at error (/usr/src/app/node_modules/vite/dist/node/chunks/node.js:8858:14) at <anonymous> (/usr/src/app/node_modules/vite/dist/node/chunks/node.js:26533:18)
+  - generic [ref=f4e8]:
+    - text: Click outside, press Esc key, or fix the code to dismiss.You can also disable this overlay by setting
+    - code [ref=f4e9]: server.hmr.overlay
+    - text: to
+    - code [ref=f4e10]: "false"
+    - text: in
+    - code [ref=f4e11]: vite.config.ts
+    - text: .

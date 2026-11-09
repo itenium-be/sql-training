@@ -1,0 +1,45 @@
+- generic [ref=e2]:
+  - heading "Thinking-time timer — placement options" [level=1] [ref=e3]
+  - paragraph [ref=e4]: All use ⚡. Each shows where the timer sits on the exercise IDE. Option A is what's currently shipped.
+  - generic [ref=e5]:
+    - heading "A · Inline muted, in the editor header (shipped)" [level=2] [ref=e6]
+    - generic [ref=e8]:
+      - generic [ref=e9]: PostgreSQL
+      - generic [ref=e10]: ⚡ 2:14
+      - button "Submit ⌘↵" [ref=e11]
+    - paragraph [ref=e13]: Quietest. Sits next to the dialect badge, reads as metadata.
+  - generic [ref=e14]:
+    - heading "B · Pill, in the editor header" [level=2] [ref=e15]
+    - generic [ref=e17]:
+      - generic [ref=e18]: PostgreSQL
+      - generic [ref=e19]:
+        - generic [ref=e20]: ⚡
+        - generic [ref=e21]: 2:14
+      - button "Submit ⌘↵" [ref=e22]
+    - paragraph [ref=e24]: Matches the dialect badge shape. A touch more present without shouting.
+  - generic [ref=e25]:
+    - heading "C · Gold, pinned just left of Submit" [level=2] [ref=e26]
+    - generic [ref=e28]:
+      - generic [ref=e29]: PostgreSQL
+      - generic [ref=e30]: ⚡ 2:14
+      - button "Submit ⌘↵" [ref=e31]
+    - paragraph [ref=e33]: Most visible. Draws the eye — good if the point is to apply gentle time pressure.
+  - generic [ref=e34]:
+    - heading "D · Floating chip on the exercise card (left panel)" [level=2] [ref=e35]
+    - generic [ref=e36]:
+      - generic [ref=e37]:
+        - text: ⚡
+        - generic [ref=e38]: 2:14
+      - generic [ref=e39]: Exercise 3
+      - heading "List all customers from Belgium" [level=3] [ref=e40]
+      - paragraph [ref=e41]: Return name and city, ordered by name.
+    - paragraph [ref=e42]: Lives with the question text, not the editor. Closest to "time on this question" semantically.
+  - generic [ref=e43]:
+    - heading "E · Full-width strip above the editor" [level=2] [ref=e44]
+    - generic [ref=e45]:
+      - generic [ref=e46]: ⚡ Thinking time
+      - generic [ref=e47]: 2:14
+    - generic [ref=e49]:
+      - generic [ref=e50]: PostgreSQL
+      - button "Submit ⌘↵" [ref=e51]
+    - paragraph [ref=e53]: Labelled and unmissable. Most "formal", takes the most vertical space.

@@ -1,0 +1,47 @@
+[     263ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/node_modules/.vite/deps/react-dom_client.js?v=e1e8dc30:15802
+[     366ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[     367ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/api/exercises/definitions:1
+[     368ms] [ERROR] Could not fetch exercises SyntaxError: Failed to execute 'json' on 'Response': Unexpected end of JSON input
+    at http://localhost:3000/src/App.tsx:50:70 @ http://localhost:3000/src/App.tsx:53
+[     369ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game:1
+[     370ms] [ERROR] Could not fetch leaderboard SyntaxError: Failed to execute 'json' on 'Response': Unexpected end of JSON input
+    at http://localhost:3000/src/layout/fetchData.ts:10:36
+    at async http://localhost:3000/src/layout/fetchData.ts:22:9 @ http://localhost:3000/src/layout/fetchData.ts:18
+[     372ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[     372ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/api/exercises/definitions:1
+[     372ms] [ERROR] Could not fetch exercises SyntaxError: Failed to execute 'json' on 'Response': Unexpected end of JSON input
+    at http://localhost:3000/src/App.tsx:50:70 @ http://localhost:3000/src/App.tsx:53
+[     372ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game:1
+[     372ms] [ERROR] Could not fetch leaderboard SyntaxError: Failed to execute 'json' on 'Response': Unexpected end of JSON input
+    at http://localhost:3000/src/layout/fetchData.ts:10:36
+    at async http://localhost:3000/src/layout/fetchData.ts:22:9 @ http://localhost:3000/src/layout/fetchData.ts:18
+[    3342ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[    6340ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[    9341ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[   12341ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[   15341ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[   18341ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[   21447ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[   24448ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[   27447ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[   30447ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[   33448ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[   36448ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[   36783ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/register:1
+[   39449ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[   42448ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[   45448ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[   48448ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[   51552ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[   54551ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[   57551ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[   60550ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[   63551ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[   66550ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[   69561ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[   72551ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[   75551ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[   78551ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[   81655ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[   84655ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1
+[   87656ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/leaderboard/game/state:1

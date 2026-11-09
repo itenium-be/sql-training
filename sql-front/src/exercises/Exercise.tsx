@@ -253,7 +253,7 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
     </div>
   );
 
-  if (solved) {
+  if (solved && !success) {
     return (
       <div className="df-ide">
         <aside className="df-ide-left">{exercisesPanel}</aside>
