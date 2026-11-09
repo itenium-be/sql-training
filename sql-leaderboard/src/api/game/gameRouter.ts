@@ -44,8 +44,17 @@ const startExercise: RequestHandler = async (req: Request, res: Response) => {
     data.game,
     data.exerciseId,
   ]);
-  return res.status(200).send({ message: "Started!" });
+  const elapsed = await firstStartElapsed(player, data.game, data.exerciseId);
+  return res.status(200).send({ message: "Started!", elapsed });
 };
+
+async function firstStartElapsed(player: string, game: string, exerciseId: number): Promise<number> {
+  const result = await executeQuery(
+    "SELECT EXTRACT(EPOCH FROM (NOW() - startTime)) AS seconds FROM game_start WHERE player=$1 AND game=$2 AND exerciseId=$3 ORDER BY startTime LIMIT 1",
+    [player, game, exerciseId],
+  );
+  return parseInt(result.rows[0]?.seconds, 10) || 0;
+}
 
 async function callBackEnd(path: string, init?: RequestInit) {
   const res = await fetch(`${env.BACK_END_URL}${path}`, {
@@ -129,11 +138,7 @@ const checkExercise: RequestHandler = async (req: Request, res: Response) => {
     return res.status(200).send({ correct: true, recorded: false, message, rows, cost });
   }
 
-  const elapsedResult = await executeQuery(
-    "SELECT EXTRACT(EPOCH FROM (NOW() - startTime)) AS seconds FROM game_start WHERE player=$1 AND game=$2 AND exerciseId=$3 ORDER BY startTime LIMIT 1",
-    [player, data.game, data.exerciseId],
-  );
-  const elapsed = parseInt(elapsedResult.rows[0]?.seconds, 10) || 0;
+  const elapsed = await firstStartElapsed(player, data.game, data.exerciseId);
 
   const { attempts, hint, expected } = await getActivity(player, data.game, data.exerciseId);
   const { points: basePoints, hintCost, expectedCost } = body.responseObject;

@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
 import { formatElapsed } from './formatElapsed';
+import { secondsSince } from './questionElapsed';
 
-export function QuestionTimer() {
-  const [start] = useState(() => Date.now());
-  const [seconds, setSeconds] = useState(0);
+export function QuestionTimer({ origin }: { origin: number }) {
+  const [seconds, setSeconds] = useState(() => secondsSince(origin, Date.now()));
 
   useEffect(() => {
-    const id = setInterval(() => setSeconds(Math.floor((Date.now() - start) / 1000)), 1000);
+    const tick = () => setSeconds(secondsSince(origin, Date.now()));
+    tick();
+    const id = setInterval(tick, 1000);
     return () => clearInterval(id);
-  }, [start]);
+  }, [origin]);
 
   return (
     <span className="df-timer" title="Time spent on this question">

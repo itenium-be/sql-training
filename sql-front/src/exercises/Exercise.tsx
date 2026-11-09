@@ -10,6 +10,7 @@ import { Alert } from "react-bootstrap";
 import { SqlEditor } from "./SqlEditor";
 import { SchemaPanel } from "./SchemaPanel";
 import { QuestionTimer } from "./QuestionTimer";
+import { originFromElapsed } from "./questionElapsed";
 import { loadScores } from "../layout/fetchData";
 
 const emojis = ['🎉', '🥳', '🎊', '💯', '🌟', '🚀', '🦄', '🎈', '🎆', '🏆'];
@@ -94,15 +95,18 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
     .filter(score => score.player === registeredName && score.game === currentGame)
     .map(score => score.exerciseid));
   const solved = solvedIds.has(sql.id);
+  const [origin, setOrigin] = useState(() => Date.now());
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     const startExercise = async () => {
       try {
-        await authFetch(`${config.leaderboard.api}/game/start`, {
+        const res = await authFetch(`${config.leaderboard.api}/game/start`, {
           method: 'POST',
           body: JSON.stringify({ game: currentGame, exerciseId: sql.id }),
         });
+        const data = await res.json();
+        if (typeof data?.elapsed === 'number') setOrigin(originFromElapsed(data.elapsed, Date.now()));
       } catch (err) {
         console.error('Could not start timer for exercise', err);
       }
@@ -289,7 +293,7 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
             <div className="df-editor">
               <div className="df-editor-head">
                 <span className="df-editor-dialect">{currentGame === 'Worldcup' ? 'SQL Server' : 'PostgreSQL'}</span>
-                <QuestionTimer />
+                <QuestionTimer origin={origin} />
                 <Button variant="primary" onClick={handleFetch} disabled={!sqlText.length} className="df-editor-submit">
                   Submit&nbsp;&nbsp;⌘↵
                 </Button>
