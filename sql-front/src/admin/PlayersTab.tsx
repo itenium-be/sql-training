@@ -60,13 +60,6 @@ export function PlayersTab({ overview, entities, now }: { overview: AdminOvervie
               <span className="adm-frac">{solved}/{total}</span>
             </div>
             <div className="adm-pbar"><i style={{ width: `${total ? (solved / total) * 100 : 0}%` }} /></div>
-            {!started
-              ? <div className="adm-sub" style={{ marginTop: 9 }}>no submission yet</div>
-              : stuck.length
-                ? stuck.map(r => <QuestionBox key={`${r.game}-${r.exerciseid}`} row={r} />)
-                : solved >= total
-                  ? <div className="adm-fin">🏁 finished all {total}</div>
-                  : <div className="adm-sub" style={{ marginTop: 9 }}>nothing open right now</div>}
             {solvedRow && (
               <div className="adm-qbox adm-qsolved" title="last solved">
                 <div className="adm-qhd">
@@ -76,6 +69,13 @@ export function PlayersTab({ overview, entities, now }: { overview: AdminOvervie
                 </div>
               </div>
             )}
+            {!started
+              ? <div className="adm-sub" style={{ marginTop: 9 }}>no submission yet</div>
+              : stuck.length
+                ? stuck.map(r => <QuestionBox key={`${r.game}-${r.exerciseid}`} row={r} />)
+                : solved >= total
+                  ? <div className="adm-fin">🏁 finished all {total}</div>
+                  : <div className="adm-sub" style={{ marginTop: 9 }}>nothing open right now</div>}
           </div>
         );
       })}
