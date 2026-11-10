@@ -100,6 +100,9 @@ for _ in $(seq 1 90); do
 done
 [ "$UP" = 1 ] || echo " not responding after 3 minutes, check: docker compose logs"
 
+# initdb scripts only run on an empty volume
+docker compose exec -T postgres psql -U admin -d world -v ON_ERROR_STOP=1 -q -f /docker-entrypoint-initdb.d/04-hardening.sql
+
 docker compose ps
 echo "API_KEY: $API_KEY"
 REMOTE
