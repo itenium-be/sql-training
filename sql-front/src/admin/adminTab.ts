@@ -1,4 +1,4 @@
-export const adminTabs = ['overview', 'players', 'exercises'] as const;
+const adminTabs = ['overview', 'players', 'exercises'] as const;
 export type AdminTab = typeof adminTabs[number];
 
 export function tabFromSearch(search: string): AdminTab {
