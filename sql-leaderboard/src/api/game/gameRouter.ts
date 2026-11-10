@@ -3,12 +3,17 @@ import { env } from "@/envConfig";
 import { type AuthRequest, mintToken, requirePlayer } from "../auth";
 import { executeQuery } from "../query";
 import { shouldRecordActivity } from "./activity";
+import { type GameMode, gameModes, parseGameMode } from "./gameMode";
 import type { ExerciseStart, ExerciseSubmit } from "./gameModel";
 import { calculatePoints } from "./scoring";
 
-const gameModes = ["init", "running", "end"] as const;
-type GameMode = (typeof gameModes)[number];
 let gameMode: GameMode = "init";
+
+export async function restoreGameMode() {
+  const result = await executeQuery("SELECT value FROM settings WHERE key='game_mode'");
+  gameMode = parseGameMode(result.rows[0]?.value);
+}
+
 // Sanity ceiling only; the avatar catalogue is defined in the frontend (avatars.ts).
 const MAX_AVATAR = 500;
 
@@ -373,6 +378,10 @@ const setMode: RequestHandler = async (req: Request, res: Response) => {
     return res.status(400).send({ message: `Invalid mode, expected one of: ${gameModes.join(", ")}` });
   }
 
+  await executeQuery(
+    "INSERT INTO settings (key, value) VALUES ('game_mode', $1) ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value",
+    [newMode],
+  );
   gameMode = newMode;
   console.log("Game mode", gameMode);
   return res.status(200).send({ mode: gameMode, message: `Going into ${gameMode} game mode!` });
