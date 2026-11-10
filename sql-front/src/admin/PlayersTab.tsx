@@ -63,7 +63,9 @@ export function PlayersTab({ overview, entities, now }: { overview: AdminOvervie
               ? <div className="adm-sub" style={{ marginTop: 9 }}>no submission yet</div>
               : stuck.length
                 ? stuck.map(r => <QuestionBox key={`${r.game}-${r.exerciseid}`} row={r} />)
-                : <div className="adm-fin">🏁 finished all {total}</div>}
+                : solved >= total
+                  ? <div className="adm-fin">🏁 finished all {total}</div>
+                  : <div className="adm-sub" style={{ marginTop: 9 }}>nothing open right now</div>}
           </div>
         );
       })}
