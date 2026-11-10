@@ -2,11 +2,18 @@ import { useEffect, useRef, useState } from "react";
 import { diagrams, toMermaid } from "./diagrams";
 
 const themeVariables = {
+  darkMode: true,
   fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+  background: '#1f170f',
+  mainBkg: '#241a11',
   primaryColor: '#241a11',
   primaryBorderColor: '#4a3820',
-  primaryTextColor: '#d6c49e',
+  nodeBorder: '#4a3820',
+  primaryTextColor: '#f0e2c2',
+  textColor: '#d6c49e',
+  titleColor: '#e9b44c',
   lineColor: '#c47a35',
+  tertiaryColor: '#16100a',
 };
 
 export function SchemaDiagram({ game }: { game: string }) {
