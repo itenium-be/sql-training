@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { ExerciseId, ExerciseModel, Score } from './exerciseModels'
 import { lastSolvedQuestion } from './lastSolved'
+import { normalizeScores } from './normalizeScores'
 
 type StoreState = {
   entities: ExerciseModel[];
@@ -79,16 +80,7 @@ const exercisesSlice = createSlice({
       state.userName = action.payload;
     },
     setScores: (state, action) => {
-      state.scores = action.payload;
-      state.scores = state.scores.map(score => ({
-        ...score,
-        exerciseid: +score.exerciseid,
-        solutionlength: +score.solutionlength,
-        elapsed: +score.elapsed,
-        cost: score.cost === null || score.cost === undefined ? null : +score.cost,
-        points: score.points === null || score.points === undefined ? null : +score.points,
-        attempts: +(score.attempts ?? 0),
-      }))
+      state.scores = normalizeScores(action.payload);
     }
   },
 })

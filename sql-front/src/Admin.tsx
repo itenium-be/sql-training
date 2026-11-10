@@ -4,6 +4,7 @@ import { adminFetch } from './adminApi';
 import { config } from './config';
 import { GameMode } from './game';
 import { ExerciseModel } from './exercises/exerciseModels';
+import { normalizeScores } from './exercises/normalizeScores';
 import { AdminOverview } from './admin/adminData';
 import { OverviewTab } from './admin/OverviewTab';
 import { PlayersTab } from './admin/PlayersTab';
@@ -29,7 +30,10 @@ export function Admin() {
   const [now, setNow] = useState(() => Date.now());
 
   const load = useCallback((key: string) => {
-    adminFetch(key, '/overview').then((data: AdminOverview) => { setOverview(data); setNow(Date.now()); }, () => {});
+    adminFetch(key, '/overview').then((data: AdminOverview) => {
+      setOverview({ ...data, progress: normalizeScores(data.progress) });
+      setNow(Date.now());
+    }, () => {});
     adminFetch(key, '/health').then(setHealth, () => {});
   }, []);
 
