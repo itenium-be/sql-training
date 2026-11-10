@@ -6,6 +6,8 @@
   padding: 14px 0 12px;
 }
 .adm-health { display: flex; gap: 14px; align-items: center; margin-left: auto; font-size: .8rem; }
+.adm-health-link { color: inherit; text-decoration: none; }
+.adm-health-link:hover { color: var(--df-gold); text-decoration: underline; }
 .adm-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; margin-right: 5px; }
 .adm-dot-up { background: var(--df-gold); }
 .adm-dot-down { background: var(--df-red); }

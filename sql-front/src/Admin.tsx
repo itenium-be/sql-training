@@ -17,7 +17,11 @@ const REFRESH_MS = 5000;
 const MESSAGE_MS = 5000;
 
 const modeLabels: Record<GameMode, string> = { init: 'Lobby', running: 'Running', end: 'Ended' };
-type Health = { db: boolean; backend: boolean };
+type Health = { db: boolean; backend: boolean; postgres: boolean; mssql: boolean };
+
+function Light({ up }: { up: boolean }) {
+  return <span className={`adm-dot ${up ? 'adm-dot-up' : 'adm-dot-down'}`} />;
+}
 
 export function Admin() {
   const [storedApiKey] = useState(() => localStorage.getItem(API_KEY_STORAGE) ?? '');
@@ -31,7 +35,7 @@ export function Admin() {
   };
   const [overview, setOverview] = useState<AdminOverview | null>(null);
   const [entities, setEntities] = useState<ExerciseModel[]>([]);
-  const [health, setHealth] = useState<Health>({ db: false, backend: false });
+  const [health, setHealth] = useState<Health>({ db: false, backend: false, postgres: false, mssql: false });
   const [now, setNow] = useState(() => Date.now());
 
   const load = useCallback((key: string) => {
@@ -135,8 +139,10 @@ export function Admin() {
           </ButtonGroup>
         )}
         <div className="adm-health">
-          <span><span className={`adm-dot ${health.backend ? 'adm-dot-up' : 'adm-dot-down'}`} />API</span>
-          <span><span className={`adm-dot ${health.db ? 'adm-dot-up' : 'adm-dot-down'}`} />DB</span>
+          <a href="/api/" target="_blank" rel="noreferrer" className="adm-health-link" title="Swagger"><Light up={health.backend} />API</a>
+          <span title="Leaderboard database"><Light up={health.db} />Game DB</span>
+          <span title="Exercise database (world)"><Light up={health.postgres} />PG</span>
+          <span title="Exercise database (sportdb)"><Light up={health.mssql} />MSSQL</span>
           <Button href="/beamer" target="_blank" rel="noreferrer" variant="outline-primary" size="sm">Open beamer ↗</Button>
           <Button variant="outline-secondary" size="sm" onClick={logout}>Logout</Button>
         </div>
