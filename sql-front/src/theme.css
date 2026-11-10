@@ -992,6 +992,15 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
 }
 .df-results-empty { color: var(--df-muted); margin: 0; padding: 28px 12px; text-align: center; }
 
+.df-diagram { overflow: auto; display: flex; justify-content: center; }
+.df-diagram svg { max-width: 100%; height: auto; }
+.df-diagram .node rect, .df-diagram .node path, .df-diagram .node polygon { fill: var(--df-surface) !important; stroke: var(--df-border) !important; }
+.df-diagram text { fill: var(--df-text) !important; }
+.df-diagram .relationshipLine { stroke: var(--df-copper) !important; }
+.df-diagram .edgeLabel rect, .df-diagram .relationshipLabelBox, .df-diagram .labelBkg { fill: var(--df-bg) !important; background: var(--df-bg) !important; }
+.df-diagram .edgeLabel text { fill: var(--df-muted) !important; }
+.df-diagram-empty { color: var(--df-muted); margin: 0; padding: 28px 12px; text-align: center; }
+
 .df-locked {
   display: flex;
   flex-direction: column;
