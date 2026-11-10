@@ -1,6 +1,7 @@
 import { OpenAPIRegistry, OpenApiGeneratorV3 } from "@asteasolutions/zod-to-openapi";
 import { companyRegistry } from "@/api/company/companyRouter";
 import { exRegistry } from "@/api/exercises/exRouter";
+import { gameRegistry } from "@/api/game/gameDocs";
 import { healthCheckRegistry } from "@/api/healthCheck/healthCheckRouter";
 import { teacherRegistry } from "@/api/teacher/teacherRouter";
 import { worldRegistry } from "@/api/world/worldRouter";
@@ -9,6 +10,7 @@ import { worldcupRegistry } from "@/api/worldcup/woldcupRouter";
 export function generateOpenAPIDocument() {
   const registry = new OpenAPIRegistry([
     healthCheckRegistry,
+    gameRegistry,
     worldRegistry,
     teacherRegistry,
     exRegistry,

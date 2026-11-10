@@ -26,4 +26,8 @@ describe("generateOpenAPIDocument", () => {
     );
     expect(missing).toEqual([]);
   });
+  test("documents the game API", () => {
+    expect(Object.keys(doc.paths ?? {})).toContain("/game/start");
+    expect(doc.paths?.["/game/start"]?.post?.security).toEqual([{ player: [] }]);
+  });
 });
