@@ -56,7 +56,7 @@ export function ExercisesTab({ overview, entities }: { overview: AdminOverview; 
         return (
           <div key={g.id} style={{ marginBottom: 20 }}>
             {games.length > 1 && <h3 style={{ fontSize: '1.05rem', marginBottom: 8 }}>{g.name}</h3>}
-            <div className="df-register" style={{ padding: '0 14px' }}>
+            <div className="df-register" style={{ padding: '0 14px', maxWidth: 'none' }}>
               <div className="adm-awrow adm-head">
                 <span>Exercise</span><span>Solved</span><span>⚡ Fastest</span>
                 <span className="adm-hidesm">&lt;/&gt; Shortest</span><span className="adm-hidesm">🍃 Leanest</span><span />
