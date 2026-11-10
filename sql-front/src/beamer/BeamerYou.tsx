@@ -19,7 +19,7 @@ export function BeamerYou({rows, you, players, scores}: {rows: PlayerRow[]; you:
     <div className="bm-body bm-you">
       <YourStanding rows={rows} you={you} players={players} />
       <h2 className="bm-you-head">Your Scores</h2>
-      <YourScores scores={mine} />
+      <YourScores scores={scores} you={you} />
     </div>
   );
 }

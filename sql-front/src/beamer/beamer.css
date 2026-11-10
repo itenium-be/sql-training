@@ -362,6 +362,17 @@
 .bm-you { gap: 24px; }
 .bm-you .bm-standing { margin-top: 0; }
 .bm-you-head { margin: 0; font-size: 24px; font-weight: 800; color: var(--df-cream); }
+.ys-table th { white-space: nowrap; }
+.ys-row { cursor: pointer; }
+.ys-id { white-space: nowrap; color: var(--df-muted); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: .85rem; }
+.ys-q { color: var(--df-cream); min-width: 260px; }
+.ys-num, .ys-val { font-family: 'JetBrains Mono', ui-monospace, monospace; white-space: nowrap; color: var(--df-cream); }
+.ys-gap, .ys-best { display: block; margin-top: 2px; font-size: .8rem; white-space: nowrap; }
+.ys-gap { color: var(--df-muted); }
+.ys-behind { color: var(--df-copper); font-family: 'JetBrains Mono', ui-monospace, monospace; }
+.ys-best { color: var(--df-gold); font-weight: 700; }
+td.ys-gap { display: table-cell; }
+.ys-modal-q { color: var(--df-cream); font-weight: 600; }
 
 .bm-sol-btn {
   justify-self: start;
