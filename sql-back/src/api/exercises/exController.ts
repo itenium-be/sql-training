@@ -26,22 +26,6 @@ type CheckResult = {
 };
 
 class ExController {
-  public post: RequestHandler = async (_req: Request, res: Response) => {
-    try {
-      const game = _req.body.game;
-      const rows = toObjects(await runQuery(game, _req.body.sql ?? ""));
-      const serviceResponse = ServiceResponse.success<any[]>(
-        `${game === "Worldcup" ? "SQL Server" : "Postgres SQL"} for ${game} executed`,
-        rows,
-      );
-      return handleServiceResponse(serviceResponse, res);
-    } catch (err: any) {
-      const status = err instanceof QueryError ? StatusCodes.BAD_REQUEST : StatusCodes.INTERNAL_SERVER_ERROR;
-      const errorResponse = ServiceResponse.failure(err.message, null, status);
-      return handleServiceResponse(errorResponse, res);
-    }
-  };
-
   public definitions: RequestHandler = async (_req: Request, res: Response) => {
     const publicExercises = exercises.map((game) => ({
       ...game,

@@ -19,35 +19,6 @@ export const exRouter: Router = express.Router();
 
 exRegistry.registerPath({
   method: "post",
-  path: "/exercises",
-  summary: "Run a query",
-  description:
-    "Executes `sql` against the game's database (SQL Server for Worldcup, Postgres otherwise) and returns the rows. Does not check or score anything; nothing in this repo calls it.",
-  tags: ["Exercises"],
-  requestBody: {
-    required: true,
-    content: {
-      "application/json": {
-        schema: {
-          type: "object",
-          properties: {
-            sql: {
-              type: "string",
-            },
-            game: {
-              type: "string",
-            },
-          },
-          required: ["sql", "game"],
-        },
-      },
-    },
-  },
-  responses: createApiResponse(z.any().array(), "Success"),
-});
-
-exRegistry.registerPath({
-  method: "post",
   path: "/exercises/validate",
   summary: "Syntax-check a query without running it",
   description:
@@ -94,7 +65,6 @@ exRegistry.registerPath({
   responses: createApiResponse(z.any().array(), "All exercises with their expected results"),
 });
 
-exRouter.post("/", exController.post);
 exRouter.post("/validate", exController.validate);
 exRouter.get("/schema", exController.schema);
 exRouter.post("/cost", requireInternal, exController.cost);
