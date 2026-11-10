@@ -82,6 +82,7 @@ if [ "$RESET" = 1 ]; then
 fi
 
 docker compose up -d --build --remove-orphans
+docker compose up -d --force-recreate --no-deps proxy
 docker image prune -f >/dev/null
 
 set -a; . ./.env; set +a
