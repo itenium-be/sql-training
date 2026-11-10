@@ -16,6 +16,7 @@ import { originFromElapsed } from "./questionElapsed";
 import { loadScores } from "../layout/fetchData";
 import { formatElapsed } from "./formatElapsed";
 import { formatScored } from "./formatScored";
+import { ActivityRow, findActivity } from "./myActivity";
 
 const emojis = ['🎉', '🥳', '🎊', '💯', '🌟', '🚀', '🦄', '🎈', '🎆', '🏆'];
 
@@ -137,6 +138,31 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
     startExercise();
   }, [sql, currentGame])
 
+  useEffect(() => {
+    const game = currentGame ?? '';
+    const restoreHelp = async () => {
+      try {
+        const res = await authFetch(`${config.leaderboard.api}/game/me`);
+        if (!res.ok) return;
+        const data: {activity: ActivityRow[]} = await res.json();
+        const activity = findActivity(data.activity, game, sql.id);
+        setAttempts(activity.attempts);
+        if (activity.hint) {
+          const help = await fetchHelp(game, sql.id, 'hint');
+          if (help.ok) setHint(help.data.hints);
+        }
+        if (activity.expected) {
+          const help = await fetchHelp(game, sql.id, 'expected');
+          if (help.ok) setExpected(help.data);
+        }
+      } catch (err) {
+        console.error('Could not restore used help', err);
+      }
+    }
+
+    restoreHelp();
+  }, [sql, currentGame])
+
   const reset = () => {
     setError('');
     setResult(null);
@@ -193,21 +219,17 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
     }
   };
 
-  const requestHelp = async (type: 'hint' | 'expected') => {
+  const requestHelp = async (type: HelpType) => {
     try {
-      const res = await authFetch(`${config.leaderboard.api}/game/hint`, {
-        method: 'POST',
-        body: JSON.stringify({ game: currentGame, exerciseId: sql.id, type }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.message ?? 'Could not fetch the hint');
+      const help = await fetchHelp(currentGame ?? '', sql.id, type);
+      if (!help.ok) {
+        setError(help.data.message ?? 'Could not fetch the hint');
         return;
       }
       if (type === 'hint') {
-        setHint(data.hints);
+        setHint(help.data.hints);
       } else {
-        setExpected(data);
+        setExpected(help.data);
         setResultTab('expected');
       }
     } catch (err) {
@@ -371,6 +393,17 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
       {!narrow && <aside className="df-ide-schema">{<SchemaPanel game={currentGame ?? ''} sqlText={sqlText} />}</aside>}
     </div>
   )
+}
+
+
+type HelpType = 'hint' | 'expected';
+
+async function fetchHelp(game: string, exerciseId: number, type: HelpType) {
+  const res = await authFetch(`${config.leaderboard.api}/game/hint`, {
+    method: 'POST',
+    body: JSON.stringify({ game, exerciseId, type }),
+  });
+  return { ok: res.ok, data: await res.json() };
 }
 
 
