@@ -50,7 +50,7 @@ function AwardRow({ award, overview }: { award: ExerciseAward; overview: AdminOv
 export function ExercisesTab({ overview, entities }: { overview: AdminOverview; entities: ExerciseModel[] }) {
   const games = entities.filter(g => g.exercises.length);
   return (
-    <>
+    <div className="adm-wide">
       {games.map(g => {
         const awards = exerciseAwards(entities, overview.progress, g.id);
         return (
@@ -66,6 +66,6 @@ export function ExercisesTab({ overview, entities }: { overview: AdminOverview; 
           </div>
         );
       })}
-    </>
+    </div>
   );
 }

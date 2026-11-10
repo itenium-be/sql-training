@@ -49,6 +49,7 @@
 .adm-recent { background: var(--df-copper); }
 .adm-idle { background: var(--df-muted); }
 
+.adm-wide { position: relative; left: 50%; transform: translateX(-50%); width: min(2400px, calc(100vw - 32px)); }
 .adm-awrow {
   display: grid; grid-template-columns: 2.1fr .7fr 1fr 1fr 1fr 28px; gap: 10px; align-items: center;
   padding: 11px 12px; border-bottom: 1px solid var(--df-border-soft); cursor: pointer;

@@ -108,7 +108,7 @@ export function Admin() {
   }
 
   return (
-    <Container fluid={tab === 'exercises'} style={{ paddingTop: 0, paddingBottom: 25, maxWidth: tab === 'exercises' ? 2400 : 1180 }}>
+    <Container style={{ paddingTop: 0, paddingBottom: 25, maxWidth: 1180 }}>
       <div className="adm-hdr">
         <div>
           <div className="df-eyebrow">SQL Training · Admin</div>
