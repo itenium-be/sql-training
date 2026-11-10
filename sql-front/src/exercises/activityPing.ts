@@ -19,7 +19,7 @@ export function pingActivity(game: ExerciseId, exerciseId: number): void {
   const now = Date.now();
   if (!shouldPing(lastPing.get(key) ?? null, now)) return;
   lastPing.set(key, now);
-  authFetch(`${config.leaderboard.api}/game/activity`, {
+  authFetch(`${config.api}/game/activity`, {
     method: 'POST',
     body: JSON.stringify({ game, exerciseId }),
   }).catch(() => {});

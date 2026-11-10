@@ -1,8 +1,9 @@
 import express, { type Request, type RequestHandler, type Response, type Router } from "express";
-import { env } from "@/envConfig";
-import { type AuthRequest, mintToken, requirePlayer } from "../auth";
-import { executeQuery } from "../query";
+import { checkSolution, exerciseHint, referenceSolutions } from "@/api/exercises/exerciseService";
+import { env } from "@/common/utils/envConfig";
 import { shouldRecordActivity } from "./activity";
+import { type AuthRequest, mintToken, requirePlayer } from "./auth";
+import { gameQuery } from "./gameDb";
 import { type GameMode, gameModes, parseGameMode } from "./gameMode";
 import type { ExerciseStart, ExerciseSubmit } from "./gameModel";
 import { calculatePoints } from "./scoring";
@@ -10,7 +11,7 @@ import { calculatePoints } from "./scoring";
 let gameMode: GameMode = "init";
 
 export async function restoreGameMode() {
-  const result = await executeQuery("SELECT value FROM settings WHERE key='game_mode'");
+  const result = await gameQuery("SELECT value FROM settings WHERE key='game_mode'");
   gameMode = parseGameMode(result.rows[0]?.value);
 }
 
@@ -29,7 +30,7 @@ const registerUser: RequestHandler = async (_req: Request, res: Response) => {
     return res.status(400).send({ message: "Name is too long (max 100 characters)" });
   }
 
-  const result = await executeQuery("INSERT INTO players (name) VALUES ($1) ON CONFLICT DO NOTHING", [name]);
+  const result = await gameQuery("INSERT INTO players (name) VALUES ($1) ON CONFLICT DO NOTHING", [name]);
   if (!result.rowCount) {
     return res.status(409).send({ message: `Name "${name}" is already taken, pick another one!` });
   }
@@ -45,7 +46,7 @@ const startExercise: RequestHandler = async (req: Request, res: Response) => {
     return res.status(400).send({ message: "game and exerciseId are required" });
   }
 
-  await executeQuery("INSERT INTO game_start (player, game, exerciseId) VALUES ($1, $2, $3)", [
+  await gameQuery("INSERT INTO game_start (player, game, exerciseId) VALUES ($1, $2, $3)", [
     player,
     data.game,
     data.exerciseId,
@@ -55,24 +56,15 @@ const startExercise: RequestHandler = async (req: Request, res: Response) => {
 };
 
 async function firstStartElapsed(player: string, game: string, exerciseId: number): Promise<number> {
-  const result = await executeQuery(
+  const result = await gameQuery(
     "SELECT EXTRACT(EPOCH FROM (NOW() - startTime)) AS seconds FROM game_start WHERE player=$1 AND game=$2 AND exerciseId=$3 ORDER BY startTime LIMIT 1",
     [player, game, exerciseId],
   );
   return parseInt(result.rows[0]?.seconds, 10) || 0;
 }
 
-async function callBackEnd(path: string, init?: RequestInit) {
-  const res = await fetch(`${env.BACK_END_URL}${path}`, {
-    ...init,
-    headers: { "Content-Type": "application/json", "x-internal-key": env.INTERNAL_API_KEY },
-    signal: AbortSignal.timeout(15000),
-  });
-  return res.json();
-}
-
 async function getActivity(player: string, game: string, exerciseId: number) {
-  const result = await executeQuery(
+  const result = await gameQuery(
     "SELECT attempts, hint, expected FROM exercise_activity WHERE player=$1 AND game=$2 AND exerciseId=$3",
     [player, game, exerciseId],
   );
@@ -85,7 +77,7 @@ async function getActivity(player: string, game: string, exerciseId: number) {
 }
 
 async function isSolved(player: string, game: string, exerciseId: number) {
-  const result = await executeQuery("SELECT 0 FROM game_progress WHERE player=$1 AND game=$2 AND exerciseId=$3", [
+  const result = await gameQuery("SELECT 0 FROM game_progress WHERE player=$1 AND game=$2 AND exerciseId=$3", [
     player,
     game,
     exerciseId,
@@ -100,29 +92,19 @@ const checkExercise: RequestHandler = async (req: Request, res: Response) => {
     return res.status(400).send({ message: "game, exerciseId and solution are required" });
   }
 
-  let body: any;
-  try {
-    body = await callBackEnd("/exercises/check", {
-      method: "POST",
-      body: JSON.stringify({ game: data.game, exerciseId: data.exerciseId, sql: data.solution }),
-    });
-  } catch (err) {
-    console.error("Could not check solution", err);
-    return res.status(503).send({ message: "Could not verify your solution, try again" });
-  }
-
-  const correct = body.success && body.responseObject.correct === true;
-  await executeQuery(
+  const body = await checkSolution(data.game, data.exerciseId, data.solution);
+  const correct = body.success && body.responseObject?.correct === true;
+  await gameQuery(
     "INSERT INTO submissions (player, game, exerciseId, solution, correct, message) VALUES ($1, $2, $3, $4, $5, $6)",
     [player, data.game, data.exerciseId, data.solution, correct, body.message ?? null],
   ).catch((err) => console.error("Could not log submission", err));
-  const rows = body.success ? body.responseObject.rows : null;
+  const rows = body.responseObject?.rows ?? null;
   const recording = gameMode === "running" && !(await isSolved(player, data.game, data.exerciseId));
 
   if (!correct) {
     let attempts = 0;
     if (recording) {
-      const result = await executeQuery(
+      const result = await gameQuery(
         `INSERT INTO exercise_activity (player, game, exerciseId, attempts) VALUES ($1, $2, $3, 1)
          ON CONFLICT (player, game, exerciseId) DO UPDATE SET attempts = exercise_activity.attempts + 1
          RETURNING attempts`,
@@ -133,7 +115,8 @@ const checkExercise: RequestHandler = async (req: Request, res: Response) => {
     return res.status(200).send({ correct: false, message: body.message, rows, attempts });
   }
 
-  const cost: number | null = body.responseObject.cost;
+  const result = body.responseObject!;
+  const cost = result.cost;
   if (!recording) {
     const message =
       gameMode === "running"
@@ -147,7 +130,7 @@ const checkExercise: RequestHandler = async (req: Request, res: Response) => {
   const elapsed = await firstStartElapsed(player, data.game, data.exerciseId);
 
   const { attempts, hint, expected } = await getActivity(player, data.game, data.exerciseId);
-  const { points: basePoints, hintCost, expectedCost } = body.responseObject;
+  const { points: basePoints, hintCost, expectedCost } = result;
   const points = calculatePoints(basePoints, { hint, hintCost, expected, expectedCost }, attempts);
   const solutionLength = data.solution.replace(/\s/g, "").length;
   const values = [
@@ -163,7 +146,7 @@ const checkExercise: RequestHandler = async (req: Request, res: Response) => {
     expected,
     attempts,
   ];
-  await executeQuery(
+  await gameQuery(
     "INSERT INTO game_progress (player, game, exerciseId, solution, solutionLength, elapsed, cost, points, hint, expected, attempts) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) ON CONFLICT DO NOTHING",
     values,
   );
@@ -181,19 +164,13 @@ const getHint: RequestHandler = async (req: Request, res: Response) => {
     return res.status(400).send({ message: "game, exerciseId and type (hint|expected) are required" });
   }
 
-  let body: any;
-  try {
-    body = await callBackEnd(`/exercises/hint?game=${encodeURIComponent(game)}&exerciseId=${exerciseId}&type=${type}`);
-  } catch (err) {
-    console.error("Could not fetch hint", err);
-    return res.status(503).send({ message: "Could not fetch the hint, try again" });
-  }
+  const body = await exerciseHint(game, exerciseId, type);
   if (!body.success) {
-    return res.status(404).send({ message: body.message });
+    return res.status(body.statusCode).send({ message: body.message });
   }
 
   if (gameMode === "running" && !(await isSolved(player, game, exerciseId))) {
-    await executeQuery(
+    await gameQuery(
       `INSERT INTO exercise_activity (player, game, exerciseId, ${type}) VALUES ($1, $2, $3, TRUE)
        ON CONFLICT (player, game, exerciseId) DO UPDATE SET ${type} = TRUE`,
       [player, game, exerciseId],
@@ -204,7 +181,7 @@ const getHint: RequestHandler = async (req: Request, res: Response) => {
 
 const getMyActivity: RequestHandler = async (req: Request, res: Response) => {
   const player = (req as AuthRequest).player;
-  const result = await executeQuery(
+  const result = await gameQuery(
     "SELECT game, exerciseId, attempts, hint, expected FROM exercise_activity WHERE player=$1",
     [player],
   );
@@ -220,7 +197,7 @@ const recordActivity: RequestHandler = async (req: Request, res: Response) => {
   }
 
   if (shouldRecordActivity(gameMode, await isSolved(player, game, exerciseId))) {
-    await executeQuery(
+    await gameQuery(
       `INSERT INTO exercise_activity (player, game, exerciseId, lastActiveAt) VALUES ($1, $2, $3, NOW())
        ON CONFLICT (player, game, exerciseId) DO UPDATE SET lastActiveAt = NOW()`,
       [player, game, exerciseId],
@@ -237,7 +214,7 @@ const getMySolution: RequestHandler = async (req: Request, res: Response) => {
     return res.status(400).send({ message: "game and exerciseId are required" });
   }
 
-  const result = await executeQuery(
+  const result = await gameQuery(
     "SELECT solution, elapsed FROM game_progress WHERE player=$1 AND game=$2 AND exerciseId=$3",
     [player, game, exerciseId],
   );
@@ -246,16 +223,7 @@ const getMySolution: RequestHandler = async (req: Request, res: Response) => {
     return res.status(404).send({ message: "Not solved yet" });
   }
 
-  let rows = null;
-  try {
-    const body = await callBackEnd("/exercises/check", {
-      method: "POST",
-      body: JSON.stringify({ game, exerciseId, sql: row.solution }),
-    });
-    rows = body.success ? body.responseObject.rows : null;
-  } catch (err) {
-    console.error("Could not run stored solution", err);
-  }
+  const rows = (await checkSolution(game, exerciseId, row.solution)).responseObject?.rows ?? null;
   return res.status(200).send({ solution: row.solution, elapsed: Number(row.elapsed), rows });
 };
 
@@ -265,13 +233,13 @@ const getProgress: RequestHandler = async (_req: Request, res: Response) => {
   }
 
   if (gameMode === "end") {
-    const data = await executeQuery(
+    const data = await gameQuery(
       "SELECT player, game, exerciseId, solution, solutionLength, elapsed, cost, points, hint, expected, attempts FROM game_progress",
     );
     return res.status(200).send(data.rows);
   }
 
-  const data = await executeQuery(
+  const data = await gameQuery(
     "SELECT player, game, exerciseId, solutionLength, elapsed, cost, points, hint, expected, attempts FROM game_progress",
   );
   return res.status(200).send(data.rows);
@@ -282,7 +250,7 @@ const getState: RequestHandler = async (_req: Request, res: Response) => {
 };
 
 const getPlayers: RequestHandler = async (_req: Request, res: Response) => {
-  const data = await executeQuery("SELECT id, name, avatar FROM players ORDER BY id");
+  const data = await gameQuery("SELECT id, name, avatar FROM players ORDER BY id");
   return res.status(200).send(data.rows);
 };
 
@@ -297,7 +265,7 @@ const setAvatar: RequestHandler = async (req: Request, res: Response) => {
     return res.status(400).send({ message: `Avatar must be between 1 and ${MAX_AVATAR}` });
   }
 
-  const result = await executeQuery("UPDATE players SET avatar=$2 WHERE LOWER(name)=LOWER($1)", [name, avatar]);
+  const result = await gameQuery("UPDATE players SET avatar=$2 WHERE LOWER(name)=LOWER($1)", [name, avatar]);
   if (!result.rowCount) {
     return res.status(404).send({ message: "Player not found" });
   }
@@ -316,24 +284,16 @@ const getAdmin: RequestHandler = async (_req: Request, res: Response) => {
 };
 
 const getOverview: RequestHandler = async (_req: Request, res: Response) => {
-  let solutions: any[] = [];
-  try {
-    const body = await callBackEnd("/exercises/solutions");
-    solutions = body.success ? body.responseObject : [];
-  } catch (err) {
-    console.error("Could not fetch reference solutions", err);
-  }
-
   const [players, progress, starts, activity, submissions] = await Promise.all([
-    executeQuery("SELECT id, name, avatar FROM players ORDER BY id"),
-    executeQuery(
+    gameQuery("SELECT id, name, avatar FROM players ORDER BY id"),
+    gameQuery(
       "SELECT player, game, exerciseId, solution, solutionLength, elapsed, cost, points, hint, expected, attempts FROM game_progress",
     ),
-    executeQuery(
+    gameQuery(
       "SELECT player, game, exerciseId, MIN(startTime) AS firstStart FROM game_start GROUP BY player, game, exerciseId",
     ),
-    executeQuery("SELECT player, game, exerciseId, attempts, lastActiveAt, hint, expected FROM exercise_activity"),
-    executeQuery(
+    gameQuery("SELECT player, game, exerciseId, attempts, lastActiveAt, hint, expected FROM exercise_activity"),
+    gameQuery(
       "SELECT id, player, game, exerciseId, solution, correct, message, submittedAt FROM submissions ORDER BY submittedAt",
     ),
   ]);
@@ -341,7 +301,7 @@ const getOverview: RequestHandler = async (_req: Request, res: Response) => {
   return res.status(200).send({
     mode: gameMode,
     modes: gameModes,
-    solutions,
+    solutions: referenceSolutions(),
     players: players.rows,
     progress: progress.rows,
     starts: starts.rows,
@@ -350,35 +310,13 @@ const getOverview: RequestHandler = async (_req: Request, res: Response) => {
   });
 };
 
-const getHealth: RequestHandler = async (_req: Request, res: Response) => {
-  let db = false;
-  let backend = false;
-  let postgres = false;
-  let mssql = false;
-  try {
-    await executeQuery("SELECT 1");
-    db = true;
-  } catch {
-    db = false;
-  }
-  try {
-    const health = await callBackEnd("/health-check");
-    backend = health.success === true;
-    postgres = health.responseObject?.postgres === true;
-    mssql = health.responseObject?.mssql === true;
-  } catch {
-    backend = false;
-  }
-  return res.status(200).send({ db, backend, postgres, mssql });
-};
-
 const setMode: RequestHandler = async (req: Request, res: Response) => {
   const newMode = req.body?.mode;
   if (!gameModes.includes(newMode)) {
     return res.status(400).send({ message: `Invalid mode, expected one of: ${gameModes.join(", ")}` });
   }
 
-  await executeQuery(
+  await gameQuery(
     "INSERT INTO settings (key, value) VALUES ('game_mode', $1) ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value",
     [newMode],
   );
@@ -401,4 +339,3 @@ gameRouter.post("/avatar", requirePlayer, setAvatar);
 gameRouter.get("/admin", requireAdmin, getAdmin);
 gameRouter.post("/admin/mode", requireAdmin, setMode);
 gameRouter.get("/admin/overview", requireAdmin, getOverview);
-gameRouter.get("/admin/health", requireAdmin, getHealth);

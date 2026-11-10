@@ -1,7 +1,7 @@
 import { randomBytes } from "node:crypto";
 import type { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { executeQuery } from "./query";
+import { gameQuery } from "./gameDb";
 
 let secret: string | null = null;
 
@@ -9,10 +9,10 @@ async function getSecret(): Promise<string> {
   if (secret) {
     return secret;
   }
-  await executeQuery("INSERT INTO settings (key, value) VALUES ('jwt_secret', $1) ON CONFLICT (key) DO NOTHING", [
+  await gameQuery("INSERT INTO settings (key, value) VALUES ('jwt_secret', $1) ON CONFLICT (key) DO NOTHING", [
     randomBytes(48).toString("hex"),
   ]);
-  const result = await executeQuery("SELECT value FROM settings WHERE key='jwt_secret'");
+  const result = await gameQuery("SELECT value FROM settings WHERE key='jwt_secret'");
   secret = result.rows[0].value as string;
   return secret;
 }

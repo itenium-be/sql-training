@@ -72,7 +72,7 @@ command -v docker >/dev/null || { echo "docker is not installed on the minipc" >
 
 if [ ! -f .env ]; then
   rand() { head -c 32 /dev/urandom | od -An -tx1 | tr -d ' \n'; }
-  printf 'API_KEY=%s\nINTERNAL_API_KEY=%s\nHTTP_PORT=80\n' "$(rand)" "$(rand)" > .env
+  printf 'API_KEY=%s\nHTTP_PORT=80\n' "$(rand)" > .env
   chmod 600 .env
   echo "Created .env with fresh secrets on the minipc"
 fi
@@ -110,5 +110,4 @@ REMOTE
 echo
 echo "Game:        http://$MINIPC_IP/"
 echo "API:         http://$MINIPC_IP/api/"
-echo "Leaderboard: http://$MINIPC_IP/leaderboard/"
 echo "Slides:      http://$MINIPC_IP/slides/"

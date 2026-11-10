@@ -1,5 +1,11 @@
+import { migrate } from "@/api/game/gameDb";
+import { restoreGameMode } from "@/api/game/gameRouter";
 import { env } from "@/common/utils/envConfig";
 import { app, logger } from "@/server";
+
+migrate()
+  .then(restoreGameMode)
+  .catch((err) => logger.error(err, "startup failed"));
 
 const server = app.listen(env.PORT, () => {
   const { NODE_ENV, HOST, PORT } = env;

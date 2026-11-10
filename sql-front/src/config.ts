@@ -1,8 +1,5 @@
 export const config = {
   api: '/api',
-  leaderboard: {
-    api: '/leaderboard'
-  }
 }
 
 export const TOKEN_STORAGE = 'token';

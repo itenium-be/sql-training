@@ -16,14 +16,13 @@ From your PC (ssh key access to the minipc, Docker on the minipc):
 
 `deploy.sh` copies the current checkout to `~/sql-training` on the minipc, rebuilds and starts everything there, waits until it responds and prints the URLs.
 Copy `.env.sample` to `.env`. The minipc IP is read from `MINIPC_IP` in `.env` (default `192.168.1.20`); if ssh fails it asks for a new IP and saves it.
-Optional: `MINIPC_USER` (default `wouter`), `MINIPC_DIR`. Secrets (`API_KEY`, `INTERNAL_API_KEY`) are generated in `.env` on the minipc on first deploy.
+Optional: `MINIPC_USER` (default `wouter`), `MINIPC_DIR`. The `API_KEY` secret is generated in `.env` on the minipc on first deploy.
 `./deploy.sh --reset` wipes all data first.
 
 Everything goes through the nginx reverse proxy on port 80 (`HTTP_PORT` to change it):
 
 - `/` the website
-- `/api/` back-end (Swagger UI)
-- `/leaderboard/` leaderboard
+- `/api/` back-end: exercises and game (Swagger UI)
 - `/slides/` slides (linked from the game header)
 
 The databases are not exposed outside of Docker.
@@ -74,21 +73,17 @@ docker compose -f compose.yaml -f compose.dev.yaml up -d postgres sqlserver lead
 
 Check all reference solutions against the databases: `cd sql-back && bun run verify-solutions` (optionally pass game ids, e.g. `Company`).
 
-Set `PG_HOST="localhost"`, `PG_PORT="5175"`, `SQL_SERVER_HOST="localhost"` and `SQL_SERVER_PORT="5174"` in `sql-back/.env`.
-Copy `sql-leaderboard/.env.template` to `sql-leaderboard/.env`.
+Set `PG_HOST="localhost"`, `PG_PORT="5175"`, `SQL_SERVER_HOST="localhost"`, `SQL_SERVER_PORT="5174"`, `GAME_PG_HOST="localhost"`, `GAME_PG_PORT="6000"`, `GAME_PG_USER="admin"`, `GAME_PG_PASSWORD="password"` and `API_KEY` in `sql-back/.env`.
 
 ```sh
 cd sql-back
-bun run dev
-
-cd ../sql-leaderboard
 bun run dev
 
 cd ../sql-front
 bun run dev
 ```
 
-The Vite dev server proxies `/api` and `/leaderboard` to the local back-ends.
+The Vite dev server proxies `/api` to the local back-end.
 
 ### Postgres
 
@@ -124,11 +119,11 @@ Game modes:
 - `running`: submissions are scored
 - `end`: submissions closed, all solutions visible
 
-The mode is kept in memory: a leaderboard restart resets it to `running`.
+The mode is stored in the game database and survives a restart.
 
 ```yaml
-GET: http://<host>/leaderboard/game/state
-POST: http://<host>/leaderboard/game/admin/mode
+GET: http://<host>/api/game/state
+POST: http://<host>/api/game/admin/mode
 x-api-key: secret
 {"mode": "running"}
 ```

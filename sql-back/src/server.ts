@@ -9,6 +9,7 @@ import requestLogger from "@/common/middleware/requestLogger";
 import { env } from "@/common/utils/envConfig";
 import { companyRouter } from "./api/company/companyRouter";
 import { exRouter } from "./api/exercises/exRouter";
+import { gameRouter } from "./api/game/gameRouter";
 import { teacherRouter } from "./api/teacher/teacherRouter";
 import { worldRouter } from "./api/world/worldRouter";
 import { worldcupRouter } from "./api/worldcup/woldcupRouter";
@@ -33,6 +34,7 @@ app.use(requestLogger);
 // Routes
 app.use("/health-check", healthCheckRouter);
 app.use("/exercises", exRouter);
+app.use("/game", gameRouter);
 app.use("/World", worldRouter);
 app.use("/Teachers", teacherRouter);
 app.use("/Worldcup", worldcupRouter);

@@ -47,17 +47,17 @@ function usePolling<T>(url: string, intervalMs: number): [T | null, () => Promis
 }
 
 export function useGameMode(): GameMode | null {
-  const [state] = usePolling<{mode: GameMode}>(`${config.leaderboard.api}/game/state`, 3000);
+  const [state] = usePolling<{mode: GameMode}>(`${config.api}/game/state`, 3000);
   return state?.mode ?? null;
 }
 
 export function usePlayers(): [Player[], () => Promise<void>] {
-  const [players, reload] = usePolling<Player[]>(`${config.leaderboard.api}/game/players`, 3000);
+  const [players, reload] = usePolling<Player[]>(`${config.api}/game/players`, 3000);
   return [players ?? [], reload];
 }
 
 export async function saveAvatar(avatar: number): Promise<string | null> {
-  const res = await authFetch(`${config.leaderboard.api}/game/avatar`, {
+  const res = await authFetch(`${config.api}/game/avatar`, {
     method: 'POST',
     body: JSON.stringify({ avatar }),
   });

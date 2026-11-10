@@ -43,7 +43,9 @@ export function Admin() {
       setOverview({ ...data, progress: normalizeScores(data.progress) });
       setNow(Date.now());
     }, () => {});
-    adminFetch(key, '/health').then(h => setHealth(healthFrom(h)), () => setHealth(healthDown));
+    fetch(`${config.api}/health-check`)
+      .then(res => res.json())
+      .then(body => setHealth(healthFrom(body.responseObject)), () => setHealth(healthDown));
   }, []);
 
   const onAuthorized = useCallback((key: string) => {
@@ -139,9 +141,8 @@ export function Admin() {
           </ButtonGroup>
         )}
         <div className="adm-health">
-          <span title="Leaderboard API"><Light up={health.leaderboard} />Leaderboard</span>
-          <a href="/api/" target="_blank" rel="noreferrer" className="adm-health-link" title="Back-end API (Swagger)"><Light up={health.backend} />Back-end</a>
-          <span title="Leaderboard database"><Light up={health.db} />Game DB</span>
+          <a href="/api/" target="_blank" rel="noreferrer" className="adm-health-link" title="Swagger"><Light up={health.api} />API</a>
+          <span title="Game database (players and scores)"><Light up={health.game} />Game DB</span>
           <span title="Exercise database (world)"><Light up={health.postgres} />PG</span>
           <span title="Exercise database (sportdb)"><Light up={health.mssql} />MSSQL</span>
           <Button href="/beamer" target="_blank" rel="noreferrer" variant="outline-primary" size="sm">Open beamer ↗</Button>

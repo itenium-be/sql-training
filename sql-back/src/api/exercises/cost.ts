@@ -12,7 +12,7 @@ const BUFFER_KEYS = [
   "Temp Written Blocks",
 ];
 
-export class CostError extends Error {}
+class CostError extends Error {}
 
 function singleStatement(query: string) {
   const trimmed = query.trim().replace(/;\s*$/, "");

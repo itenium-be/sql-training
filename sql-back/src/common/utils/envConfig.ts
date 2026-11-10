@@ -18,5 +18,10 @@ export const env = cleanEnv(process.env, {
   SQL_SERVER_USER: str({ testDefault: "player" }),
   SQL_SERVER_PASSWORD: str({ testDefault: "Player123!" }),
 
-  INTERNAL_API_KEY: str({ testDefault: "internal" }),
+  API_KEY: str({ testDefault: "secret" }),
+
+  GAME_PG_USER: str({ testDefault: "admin" }),
+  GAME_PG_PASSWORD: str({ testDefault: "password" }),
+  GAME_PG_HOST: host({ testDefault: "localhost" }),
+  GAME_PG_PORT: port({ testDefault: 6000 }),
 });

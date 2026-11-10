@@ -124,7 +124,7 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
   useEffect(() => {
     const startExercise = async () => {
       try {
-        const res = await authFetch(`${config.leaderboard.api}/game/start`, {
+        const res = await authFetch(`${config.api}/game/start`, {
           method: 'POST',
           body: JSON.stringify({ game: currentGame, exerciseId: sql.id }),
         });
@@ -142,7 +142,7 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
     const game = currentGame ?? '';
     const restoreHelp = async () => {
       try {
-        const res = await authFetch(`${config.leaderboard.api}/game/me`);
+        const res = await authFetch(`${config.api}/game/me`);
         if (!res.ok) return;
         const data: {activity: ActivityRow[]} = await res.json();
         const activity = findActivity(data.activity, game, sql.id);
@@ -186,7 +186,7 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
       setResult(null);
       setSuccess(false);
 
-      const res = await authFetch(`${config.leaderboard.api}/game/check`, {
+      const res = await authFetch(`${config.api}/game/check`, {
         method: 'POST',
         body: JSON.stringify({ game: currentGame, exerciseId: sql.id, solution: sqlText }),
       });
@@ -399,7 +399,7 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
 type HelpType = 'hint' | 'expected';
 
 async function fetchHelp(game: string, exerciseId: number, type: HelpType) {
-  const res = await authFetch(`${config.leaderboard.api}/game/hint`, {
+  const res = await authFetch(`${config.api}/game/hint`, {
     method: 'POST',
     body: JSON.stringify({ game, exerciseId, type }),
   });
@@ -472,7 +472,7 @@ function MySolution({game, exerciseId, points, maxPoints}: {game: string, exerci
   const [data, setData] = useState<MySolutionModel | null>(null);
 
   useEffect(() => {
-    authFetch(`${config.leaderboard.api}/game/solution?game=${encodeURIComponent(game)}&exerciseId=${exerciseId}`)
+    authFetch(`${config.api}/game/solution?game=${encodeURIComponent(game)}&exerciseId=${exerciseId}`)
       .then(res => res.ok ? res.json() : null)
       .then(setData)
       .catch(err => console.error('Could not fetch your solution', err));

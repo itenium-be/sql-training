@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        package: [sql-back, sql-leaderboard, sql-front, slides]
+        package: [sql-back, sql-front, slides]
     defaults:
       run:
         working-directory: ${{ matrix.package }}
@@ -97,7 +97,11 @@ jobs:
           SQL_SERVER_PORT: 5174
           SQL_SERVER_USER: player
           SQL_SERVER_PASSWORD: Player123!
-          INTERNAL_API_KEY: ci
+          API_KEY: ci
+          GAME_PG_HOST: localhost
+          GAME_PG_PORT: 6000
+          GAME_PG_USER: admin
+          GAME_PG_PASSWORD: password
         run: bun run verify-solutions
 
   trivy:

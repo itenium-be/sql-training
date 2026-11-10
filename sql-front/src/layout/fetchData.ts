@@ -4,7 +4,7 @@ import { ExerciseId } from '../exercises/exerciseModels';
 
 export const loadScores = () => async (dispatch: AppDispatch) => {
   try {
-    const res = await fetch(`${config.leaderboard.api}/game`, {
+    const res = await fetch(`${config.api}/game`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     });

@@ -55,16 +55,6 @@ services:
         - path: ./sql-back/package.json
           action: rebuild
 
-  leaderboard:
-    command: bun run dev
-    develop:
-      watch:
-        - path: ./sql-leaderboard/src
-          action: sync
-          target: /usr/src/app/src
-        - path: ./sql-leaderboard/package.json
-          action: rebuild
-
   # Slidev's dev server serves at the root and its --remote sync state breaks
   # under a --base prefix, so the deck runs on :3030 and the dev proxy redirects
   # /slides/ there (see nginx.dev.conf) rather than reverse-proxying it.

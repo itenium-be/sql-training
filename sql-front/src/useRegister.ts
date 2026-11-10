@@ -13,7 +13,7 @@ export function useRegister() {
       return;
     }
     try {
-      const res = await fetch(`${config.leaderboard.api}/game/register`, {
+      const res = await fetch(`${config.api}/game/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name }),
