@@ -18,6 +18,8 @@ teacherRegistry.register("TeacherSample", TeacherSampleSchema);
 teacherRegistry.registerPath({
   method: "get",
   path: "/Teachers/sampleData",
+  summary: "Sample rows of the Teachers database",
+  description: "Teachers joined with their department; shown in the Example Data tab.",
   tags: ["Teachers"],
   responses: createApiResponse(z.array(TeacherSampleSchema), "Success"),
 });
@@ -25,6 +27,8 @@ teacherRegistry.registerPath({
 teacherRegistry.registerPath({
   method: "get",
   path: "/Teachers",
+  summary: "All teachers",
+  description: "The `teachers` table.",
   tags: ["Teachers"],
   responses: createApiResponse(z.array(TeacherSchema), "Success"),
 });
@@ -32,6 +36,8 @@ teacherRegistry.registerPath({
 teacherRegistry.registerPath({
   method: "get",
   path: "/Teachers/Departments",
+  summary: "All departments",
+  description: "The `departments` table.",
   tags: ["Teachers"],
   responses: createApiResponse(z.array(DepartmentSchema), "Success"),
 });

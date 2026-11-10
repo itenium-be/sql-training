@@ -28,6 +28,8 @@ worldcupRegistry.register("Worldcup-Rounds", worldcupSchemas.RoundSchema);
 worldcupRegistry.registerPath({
   method: "get",
   path: "/Worldcup/sampleData",
+  summary: "Sample rows of the Worldcup database",
+  description: "SQL Server (sportdb); shown in the Example Data tab.",
   tags: ["Worldcup"],
   responses: createApiResponse(z.array(worldcupSchemas.WorldcupSampleSchema), "Success"),
 });

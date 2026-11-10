@@ -20,6 +20,9 @@ export const exRouter: Router = express.Router();
 exRegistry.registerPath({
   method: "post",
   path: "/exercises",
+  summary: "Run a query",
+  description:
+    "Executes `sql` against the game's database (SQL Server for Worldcup, Postgres otherwise) and returns the rows. Does not check or score anything; nothing in this repo calls it.",
   tags: ["Exercises"],
   requestBody: {
     required: true,
@@ -46,6 +49,9 @@ exRegistry.registerPath({
 exRegistry.registerPath({
   method: "post",
   path: "/exercises/validate",
+  summary: "Syntax-check a query without running it",
+  description:
+    "Postgres: EXPLAIN; SQL Server: sp_describe_first_result_set. Returns editor diagnostics (message plus position) for the squiggles while typing; an empty array means the query parses.",
   tags: ["Exercises"],
   requestBody: {
     required: true,
@@ -71,6 +77,8 @@ exRegistry.registerPath({
 exRegistry.registerPath({
   method: "get",
   path: "/exercises/schema",
+  summary: "Tables and columns of a game's database",
+  description: "Feeds the editor's autocomplete and the Schema tab.",
   tags: ["Exercises"],
   request: { query: z.object({ game: z.string() }) },
   responses: createApiResponse(z.record(z.string(), z.string().array()), "Tables with their columns"),
@@ -79,6 +87,9 @@ exRegistry.registerPath({
 exRegistry.registerPath({
   method: "get",
   path: "/exercises/definitions",
+  summary: "All games and their exercises",
+  description:
+    "Exercise text, points and penalties per game. Expected results, hints and reference solutions are stripped.",
   tags: ["Exercises"],
   responses: createApiResponse(z.any().array(), "All exercises with their expected results"),
 });

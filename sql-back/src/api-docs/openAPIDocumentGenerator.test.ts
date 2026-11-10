@@ -12,4 +12,12 @@ describe("generateOpenAPIDocument", () => {
       expect(paths).not.toContain(internal);
     }
   });
+  test("every endpoint has a summary", () => {
+    const missing = Object.entries(doc.paths ?? {}).flatMap(([path, ops]) =>
+      Object.entries(ops as Record<string, { summary?: string }>)
+        .filter(([, op]) => !op.summary)
+        .map(([method]) => `${method} ${path}`),
+    );
+    expect(missing).toEqual([]);
+  });
 });

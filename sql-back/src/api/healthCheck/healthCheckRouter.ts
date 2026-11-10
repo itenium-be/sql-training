@@ -15,6 +15,9 @@ export const healthCheckRouter: Router = express.Router();
 healthCheckRegistry.registerPath({
   method: "get",
   path: "/health-check",
+  summary: "Health of the back-end and its databases",
+  description:
+    "Always 200 while the API is up; `postgres` and `mssql` report whether each exercise database answers `SELECT 1`.",
   tags: ["Health Check"],
   responses: createApiResponse(z.object({ postgres: z.boolean(), mssql: z.boolean() }), "Success"),
 });

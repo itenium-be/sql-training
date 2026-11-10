@@ -40,6 +40,8 @@ companyRegistry.register("CompanySample", CompanySampleSchema);
 companyRegistry.registerPath({
   method: "get",
   path: "/Company/sampleData",
+  summary: "Sample rows of the Company database",
+  description: "Shown in the Example Data tab.",
   tags: ["Company"],
   responses: createApiResponse(z.array(CompanySampleSchema), "Success"),
 });

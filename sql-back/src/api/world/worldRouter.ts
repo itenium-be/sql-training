@@ -13,6 +13,8 @@ worldRegistry.register("World", WorldSchema);
 worldRegistry.registerPath({
   method: "get",
   path: "/World/sampleData",
+  summary: "Sample rows of the World database",
+  description: "Shown in the Example Data tab.",
   tags: ["World"],
   responses: createApiResponse(z.array(WorldSchema), "Success"),
 });
