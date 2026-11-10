@@ -14,6 +14,7 @@ import './admin/admin.css';
 
 const API_KEY_STORAGE = 'adminApiKey';
 const REFRESH_MS = 5000;
+const MESSAGE_MS = 5000;
 
 const modeLabels: Record<GameMode, string> = { init: 'Lobby', running: 'Running', end: 'Ended' };
 type Health = { db: boolean; backend: boolean };
@@ -88,6 +89,12 @@ export function Admin() {
   }, [storedApiKey]);
 
   useEffect(() => {
+    if (!authorized || !message) return;
+    const timer = setTimeout(() => setMessage(''), MESSAGE_MS);
+    return () => clearTimeout(timer);
+  }, [authorized, message]);
+
+  useEffect(() => {
     if (!authorized) return;
     const timer = setInterval(() => load(apiKey), REFRESH_MS);
     return () => clearInterval(timer);
@@ -135,6 +142,8 @@ export function Admin() {
         </div>
       </div>
 
+      {message && <Alert variant="info" className="mb-0 mt-2" onClose={() => setMessage('')} dismissible>{message}</Alert>}
+
       <nav className="adm-tabs">
         <button className={`adm-tab ${tab === 'overview' ? 'adm-on' : ''}`} onClick={() => setTab('overview')}>Overview</button>
         <button className={`adm-tab ${tab === 'players' ? 'adm-on' : ''}`} onClick={() => setTab('players')}>
@@ -147,7 +156,6 @@ export function Admin() {
       {overview && tab === 'players' && <PlayersTab overview={overview} entities={entities} now={now} />}
       {overview && tab === 'exercises' && <ExercisesTab overview={overview} entities={entities} />}
 
-      {message && <Alert variant="info" style={{ marginTop: 16 }}>{message}</Alert>}
     </Container>
   );
 }
