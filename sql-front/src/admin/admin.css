@@ -49,6 +49,8 @@
 
 .adm-qbox { background: var(--df-surface); border: 1px solid var(--df-border-soft); border-radius: 10px; padding: 8px 10px; margin-top: 8px; }
 .adm-qbox.adm-qwrong { border-color: rgba(239, 107, 91, .3); }
+.adm-qbox.adm-qsolved { border-color: rgba(123, 182, 97, .28); }
+.adm-qsolved-t { color: #7bb661; }
 .adm-qhd { display: flex; align-items: center; gap: 7px; }
 .adm-qlbl { color: var(--df-text); font-size: .82rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .adm-qt { margin-left: auto; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: .8rem; color: var(--df-cream); white-space: nowrap; }

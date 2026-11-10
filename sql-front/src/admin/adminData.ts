@@ -55,8 +55,23 @@ export type StuckRow = {
   expected: boolean;
 };
 
+export type SolvedRow = { game: string; exerciseid: number; desc: string; solvedSec: number };
+
 const key = (game: string, exerciseId: number) => `${game}-${exerciseId}`;
 const ageSec = (iso: string, nowMs: number) => Math.round((nowMs - Date.parse(iso)) / 1000);
+
+export function lastSolved(player: string, o: AdminOverview, nowMs: number): SolvedRow | null {
+  const corrects = o.submissions.filter(x => x.player === player && x.correct);
+  if (corrects.length === 0) return null;
+  const latest = corrects.reduce((a, b) => (Date.parse(b.submittedat) > Date.parse(a.submittedat) ? b : a));
+  const descOf = new Map(o.solutions.map(s => [key(s.game, s.exerciseId), s.desc]));
+  return {
+    game: latest.game,
+    exerciseid: latest.exerciseid,
+    desc: descOf.get(key(latest.game, latest.exerciseid)) ?? `#${latest.exerciseid}`,
+    solvedSec: ageSec(latest.submittedat, nowMs),
+  };
+}
 
 export function stuckRows(player: string, o: AdminOverview, nowMs: number): StuckRow[] {
   const solved = new Set(o.progress.filter(p => p.player === player).map(p => key(p.game, p.exerciseid)));

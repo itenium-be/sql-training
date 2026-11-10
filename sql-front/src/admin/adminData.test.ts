@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { activityLevel, humanDuration, stuckRows, type AdminOverview } from './adminData';
+import { activityLevel, humanDuration, lastSolved, stuckRows, type AdminOverview } from './adminData';
 
 describe('humanDuration', () => {
   test('seconds under a minute', () => {
@@ -127,5 +127,30 @@ describe('stuckRows', () => {
     expect(byEx[3].expected).toBe(true);
     expect(byEx[7].hint).toBe(false);
     expect(byEx[7].expected).toBe(false);
+  });
+});
+
+describe('lastSolved', () => {
+  test('returns the most recent correct submission with its age and label', () => {
+    const o = overview({
+      submissions: [
+        { id: 1, player: 'Sam', game: 'Worldcup', exerciseid: 3, correct: true, submittedat: ago(300), solution: 'x', message: null },
+        { id: 2, player: 'Sam', game: 'Worldcup', exerciseid: 7, correct: true, submittedat: ago(40), solution: 'y', message: null },
+        { id: 3, player: 'Sam', game: 'Worldcup', exerciseid: 7, correct: false, submittedat: ago(10), solution: 'z', message: 'no' },
+      ],
+    });
+    const s = lastSolved('Sam', o, NOW)!;
+    expect(s.exerciseid).toBe(7);
+    expect(s.desc).toBe('Top scorer');
+    expect(s.solvedSec).toBe(40);
+  });
+
+  test('null when the player has no correct submission', () => {
+    const o = overview({
+      submissions: [
+        { id: 1, player: 'Sam', game: 'Worldcup', exerciseid: 7, correct: false, submittedat: ago(40), solution: 'y', message: 'no' },
+      ],
+    });
+    expect(lastSolved('Sam', o, NOW)).toBeNull();
   });
 });

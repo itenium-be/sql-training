@@ -2,7 +2,7 @@ import { Avatar } from '../Avatar';
 import { avatarIndex } from '../game';
 import { ExerciseModel } from '../exercises/exerciseModels';
 import { rankPlayers } from '../leaderboard/leaderboardData';
-import { activityLevel, AdminOverview, humanDuration, IDLE_SEC, stuckRows, StuckRow } from './adminData';
+import { activityLevel, AdminOverview, humanDuration, IDLE_SEC, lastSolved, stuckRows, StuckRow } from './adminData';
 
 function TypedAgo({ seconds }: { seconds: number | null }) {
   const level = activityLevel(seconds);
@@ -37,14 +37,15 @@ export function PlayersTab({ overview, entities, now }: { overview: AdminOvervie
     const solved = row?.solved ?? 0;
     const points = row?.points ?? 0;
     const stuck = stuckRows(p.name, overview, now);
+    const solvedRow = lastSolved(p.name, overview, now);
     const started = stuck.length > 0 || solved > 0;
     const anyActive = stuck.some(r => r.lastActiveSec !== null && r.lastActiveSec < IDLE_SEC);
-    return { p, solved, points, stuck, started, anyActive };
+    return { p, solved, points, stuck, solvedRow, started, anyActive };
   }).sort((a, b) => b.stuck.length - a.stuck.length || b.points - a.points);
 
   return (
     <div className="adm-players">
-      {cards.map(({ p, solved, points, stuck, started, anyActive }) => {
+      {cards.map(({ p, solved, points, stuck, solvedRow, started, anyActive }) => {
         const sub = !started ? 'registered'
           : stuck.length ? `${points} pts · ${stuck.length} open`
           : `${points} pts`;
@@ -66,6 +67,15 @@ export function PlayersTab({ overview, entities, now }: { overview: AdminOvervie
                 : solved >= total
                   ? <div className="adm-fin">🏁 finished all {total}</div>
                   : <div className="adm-sub" style={{ marginTop: 9 }}>nothing open right now</div>}
+            {solvedRow && (
+              <div className="adm-qbox adm-qsolved" title="last solved">
+                <div className="adm-qhd">
+                  <span className="adm-exn">{solvedRow.game}#{solvedRow.exerciseid}</span>
+                  <span className="adm-qlbl">{solvedRow.desc}</span>
+                  <span className="adm-qt adm-qsolved-t">✓ {humanDuration(solvedRow.solvedSec)} ago</span>
+                </div>
+              </div>
+            )}
           </div>
         );
       })}
