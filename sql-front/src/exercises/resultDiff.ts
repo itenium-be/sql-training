@@ -202,7 +202,7 @@ export function diffResult(
     if (used[i]) return;
     rows.push({
       status: 'missing',
-      cells: columns.map((col, idx) => {
+      cells: columns.map((_, idx) => {
         const ei = expectedIndex[idx];
         return { value: ei === -1 ? undefined : exp[ei], status: 'match' };
       }),
