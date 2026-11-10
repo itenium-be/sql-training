@@ -10,6 +10,7 @@ import { OverviewTab } from './admin/OverviewTab';
 import { PlayersTab } from './admin/PlayersTab';
 import { ExercisesTab } from './admin/ExercisesTab';
 import { AdminTab, searchForTab, tabFromSearch } from './admin/adminTab';
+import { Health, healthDown, healthFrom } from './admin/health';
 import './admin/admin.css';
 
 const API_KEY_STORAGE = 'adminApiKey';
@@ -17,7 +18,6 @@ const REFRESH_MS = 5000;
 const MESSAGE_MS = 5000;
 
 const modeLabels: Record<GameMode, string> = { init: 'Lobby', running: 'Running', end: 'Ended' };
-type Health = { db: boolean; backend: boolean; postgres: boolean; mssql: boolean };
 
 function Light({ up }: { up: boolean }) {
   return <span className={`adm-dot ${up ? 'adm-dot-up' : 'adm-dot-down'}`} />;
@@ -35,7 +35,7 @@ export function Admin() {
   };
   const [overview, setOverview] = useState<AdminOverview | null>(null);
   const [entities, setEntities] = useState<ExerciseModel[]>([]);
-  const [health, setHealth] = useState<Health>({ db: false, backend: false, postgres: false, mssql: false });
+  const [health, setHealth] = useState<Health>(healthDown);
   const [now, setNow] = useState(() => Date.now());
 
   const load = useCallback((key: string) => {
@@ -43,7 +43,7 @@ export function Admin() {
       setOverview({ ...data, progress: normalizeScores(data.progress) });
       setNow(Date.now());
     }, () => {});
-    adminFetch(key, '/health').then(setHealth, () => {});
+    adminFetch(key, '/health').then(h => setHealth(healthFrom(h)), () => setHealth(healthDown));
   }, []);
 
   const onAuthorized = useCallback((key: string) => {
@@ -139,7 +139,8 @@ export function Admin() {
           </ButtonGroup>
         )}
         <div className="adm-health">
-          <a href="/api/" target="_blank" rel="noreferrer" className="adm-health-link" title="Swagger"><Light up={health.backend} />API</a>
+          <span title="Leaderboard API"><Light up={health.leaderboard} />Leaderboard</span>
+          <a href="/api/" target="_blank" rel="noreferrer" className="adm-health-link" title="Back-end API (Swagger)"><Light up={health.backend} />Back-end</a>
           <span title="Leaderboard database"><Light up={health.db} />Game DB</span>
           <span title="Exercise database (world)"><Light up={health.postgres} />PG</span>
           <span title="Exercise database (sportdb)"><Light up={health.mssql} />MSSQL</span>
