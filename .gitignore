@@ -6,3 +6,5 @@ __pycache__
 *.pyc
 .playwright-mcp/
 .claude/worktrees/
+design/midjourney-raw/
+design/meme/
