@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { config } from '../config';
 import { loadScores } from '../layout/fetchData';
-import { usePlayers } from '../game';
+import { usePlayers, useGameMode } from '../game';
 import { rankPlayers } from '../leaderboard/leaderboardData';
 import { BeamerHeader, BeamerView } from './BeamerHeader';
 import { BeamerPlayers } from './BeamerPlayers';
 import { BeamerExercises } from './BeamerExercises';
+import { BeamerYou } from './BeamerYou';
 import './beamer.css';
 
 const REFRESH_MS = 5000;
@@ -17,6 +18,7 @@ export function Beamer({projector = false}: {projector?: boolean}) {
   const entities = useAppSelector(state => state.exercises.entities);
   const storeName = useAppSelector(state => state.exercises.userName);
   const [players] = usePlayers();
+  const mode = useGameMode();
   const [view, setView] = useState<BeamerView>('players');
   const you = storeName || localStorage.getItem('userName') || '';
 
@@ -35,15 +37,17 @@ export function Beamer({projector = false}: {projector?: boolean}) {
 
   const frame = (
     <div className={projector ? 'bm-frame' : 'bm-frame bm-frame-inline'}>
-      <BeamerHeader view={view} onSwitch={setView} bare={!projector} />
+      <BeamerHeader view={view} onSwitch={setView} bare={!projector} showYou={!projector} />
       {scores.length === 0 ? (
         <div className="bm-body bm-body-empty">
           <div className="bm-title" style={{opacity: 0.7}}>Waiting for the first score…</div>
         </div>
       ) : view === 'players' ? (
-        <BeamerPlayers rows={overall} you={you} players={players} showStanding={!projector} />
+        <BeamerPlayers rows={overall} you={you} players={players} />
+      ) : view === 'exercises' ? (
+        <BeamerExercises entities={entities} scores={scores} you={you} ended={mode === 'end'} />
       ) : (
-        <BeamerExercises entities={entities} scores={scores} you={you} />
+        <BeamerYou rows={overall} you={you} players={players} scores={scores} />
       )}
     </div>
   );

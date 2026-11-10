@@ -1,30 +1,8 @@
-import { CSSProperties, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { PlayerRow } from '../leaderboard/leaderboardData';
 import { BoltIcon, CheckIcon, CodeIcon, LeafIcon } from '../layout/Icons';
-import { Player, avatarIndex } from '../game';
-import { avatarUrl } from '../avatars';
-
-function initial(name: string) {
-  return name.trim().charAt(0).toUpperCase() || '?';
-}
-
-type Ring = 'gold' | 'you' | 'border';
-
-const ringStyle: Record<Ring, CSSProperties> = {
-  gold: {borderColor: 'var(--df-gold)', boxShadow: '0 0 0 6px rgba(233,180,76,0.2), 0 0 60px rgba(233,180,76,0.25)'},
-  you: {borderColor: 'var(--df-gold)', boxShadow: '0 0 0 5px rgba(233,180,76,0.2)'},
-  border: {borderColor: 'var(--df-gold)'},
-};
-
-function BeamerAvatar({name, players, size, ring}: {name: string; players: Player[]; size: number; ring?: Ring}) {
-  const player = players.find(p => p.name.toLowerCase() === name.toLowerCase());
-  const style = {width: size, height: size, fontSize: Math.round(size * 0.4), ...(ring ? ringStyle[ring] : {})};
-  return (
-    <span className="bm-av" style={style}>
-      {player ? <img className="bm-av-photo" src={avatarUrl(avatarIndex(player))} alt={name} /> : initial(name)}
-    </span>
-  );
-}
+import { Player } from '../game';
+import { BeamerAvatar } from './BeamerAvatar';
 
 function Badges({row}: {row: PlayerRow}) {
   const badge = (value: number, icon: ReactNode) => (
@@ -71,11 +49,9 @@ function Metric({value}: {value: number}) {
   return <span className={value ? 'bm-m' : 'bm-m0'}>{value}</span>;
 }
 
-export function BeamerPlayers({rows, you, players, showStanding}: {rows: PlayerRow[]; you: string; players: Player[]; showStanding: boolean}) {
+export function BeamerPlayers({rows, you, players}: {rows: PlayerRow[]; you: string; players: Player[]}) {
   const [first, second, third] = rows;
   const board = rows.slice(3);
-  const youIndex = rows.findIndex(r => r.name === you);
-  const youRow = youIndex === -1 ? null : rows[youIndex];
 
   return (
     <div className="bm-body">
@@ -107,22 +83,6 @@ export function BeamerPlayers({rows, you, players, showStanding}: {rows: PlayerR
           </div>
         ))}
       </div>
-
-      {showStanding && youRow && (
-        <div className="bm-standing">
-          <BeamerAvatar name={youRow.name} players={players} size={80} ring="you" />
-          <div style={{flex: 'none'}}>
-            <div className="bm-standing-sub">Your standing</div>
-            <div className="bm-standing-rank">#{youIndex + 1} of {rows.length} · {youRow.total} pts</div>
-          </div>
-          <div className="bm-pills">
-            <span className="bm-pill bm-pill-correct"><b>{youRow.solved}</b> correct</span>
-            {youRow.fastest > 0 && <span className="bm-pill"><b>{youRow.fastest}</b> fastest</span>}
-            {youRow.shortest > 0 && <span className="bm-pill"><b>{youRow.shortest}</b> shortest</span>}
-            {youRow.leanest > 0 && <span className="bm-pill"><b>{youRow.leanest}</b> leanest</span>}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
