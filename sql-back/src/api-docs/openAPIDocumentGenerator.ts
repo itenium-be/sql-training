@@ -23,9 +23,10 @@ export function generateOpenAPIDocument() {
       version: "1.0.0",
       title: "Swagger API",
     },
+    servers: [{ url: "/api" }],
     externalDocs: {
       description: "View the raw OpenAPI Specification in JSON format",
-      url: "/swagger.json",
+      url: "/api/swagger.json",
     },
   });
 }
