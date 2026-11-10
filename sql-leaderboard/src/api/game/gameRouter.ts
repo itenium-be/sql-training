@@ -332,7 +332,7 @@ const getOverview: RequestHandler = async (_req: Request, res: Response) => {
     executeQuery(
       "SELECT player, game, exerciseId, MIN(startTime) AS firstStart FROM game_start GROUP BY player, game, exerciseId",
     ),
-    executeQuery("SELECT player, game, exerciseId, attempts, lastActiveAt FROM exercise_activity"),
+    executeQuery("SELECT player, game, exerciseId, attempts, lastActiveAt, hint, expected FROM exercise_activity"),
     executeQuery(
       "SELECT id, player, game, exerciseId, solution, correct, message, submittedAt FROM submissions ORDER BY submittedAt",
     ),

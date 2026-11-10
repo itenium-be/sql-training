@@ -64,11 +64,11 @@ INSERT INTO submissions (player, game, exerciseId, solution, correct, message, s
   ('Sam','World',5,'SELECT continent, name, area FROM world x WHERE area=(SELECT MAX(area) FROM world y WHERE y.continent=x.continent)', TRUE, NULL, NOW() - INTERVAL '50 seconds');
 
 -- Typing activity: the signal that separates "head down" from "gone quiet".
-INSERT INTO exercise_activity (player, game, exerciseId, attempts, hint, lastActiveAt) VALUES
-  ('Sam','World',7,3,FALSE, NOW() - INTERVAL '8 seconds'),
-  ('Sam','World',6,0,FALSE, NOW() - INTERVAL '95 seconds'),
-  ('Mila','World',7,0,FALSE, NOW() - INTERVAL '18 seconds'),
-  ('Tibo','World',6,5,FALSE, NOW() - INTERVAL '3 seconds'),
-  ('Tibo','World',5,0,FALSE, NOW() - INTERVAL '65 seconds'),
-  ('Lena','World',4,1,TRUE,  NOW() - INTERVAL '12 seconds'),
-  ('Jo','World',3,1,FALSE,   NOW() - INTERVAL '6 minutes');
+INSERT INTO exercise_activity (player, game, exerciseId, attempts, hint, expected, lastActiveAt) VALUES
+  ('Sam','World',7,3,FALSE,TRUE,  NOW() - INTERVAL '8 seconds'),
+  ('Sam','World',6,0,FALSE,FALSE, NOW() - INTERVAL '95 seconds'),
+  ('Mila','World',7,0,FALSE,FALSE, NOW() - INTERVAL '18 seconds'),
+  ('Tibo','World',6,5,TRUE, TRUE,  NOW() - INTERVAL '3 seconds'),
+  ('Tibo','World',5,0,FALSE,FALSE, NOW() - INTERVAL '65 seconds'),
+  ('Lena','World',4,1,TRUE, FALSE, NOW() - INTERVAL '12 seconds'),
+  ('Jo','World',3,1,FALSE,FALSE,   NOW() - INTERVAL '6 minutes');

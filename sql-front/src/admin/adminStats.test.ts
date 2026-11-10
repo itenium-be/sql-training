@@ -26,8 +26,8 @@ describe('overviewStats', () => {
     const o = { ...base,
       players: [{ id: 1, name: 'A', avatar: null }, { id: 2, name: 'B', avatar: null }, { id: 3, name: 'C', avatar: null }],
       activity: [
-        { player: 'A', game: 'W', exerciseid: 1, attempts: 1, lastactiveat: ago(10) },
-        { player: 'B', game: 'W', exerciseid: 1, attempts: 1, lastactiveat: ago(400) },
+        { player: 'A', game: 'W', exerciseid: 1, attempts: 1, lastactiveat: ago(10), hint: false, expected: false },
+        { player: 'B', game: 'W', exerciseid: 1, attempts: 1, lastactiveat: ago(400), hint: false, expected: false },
       ],
     };
     const s = overviewStats(o, NOW, 10);

@@ -4,7 +4,7 @@ import { Score } from '../exercises/exerciseModels';
 export type PlayerInfo = { id: number; name: string; avatar: number | null };
 type ReferenceSolution = { game: string; exerciseId: number; desc: string; points: number; solution: string };
 type ExerciseStartRow = { player: string; game: string; exerciseid: number; firststart: string };
-type ActivityRow = { player: string; game: string; exerciseid: number; attempts: number; lastactiveat: string | null };
+type ActivityRow = { player: string; game: string; exerciseid: number; attempts: number; lastactiveat: string | null; hint: boolean; expected: boolean };
 type AdminSubmission = {
   id: number; player: string; game: string; exerciseid: number;
   correct: boolean; submittedat: string; solution: string; message: string | null;
@@ -33,6 +33,16 @@ export function activityLevel(secondsAgo: number | null): ActivityState {
   return 'idle';
 }
 
+export function humanDuration(seconds: number | null): string {
+  if (seconds === null) return '—';
+  if (seconds < 60) return `${seconds}s`;
+  const m = Math.floor(seconds / 60);
+  if (m < 60) return `${m}m`;
+  const h = Math.floor(m / 60);
+  const rem = m % 60;
+  return rem ? `${h}h${rem}m` : `${h}h`;
+}
+
 export type StuckRow = {
   game: string;
   exerciseid: number;
@@ -41,6 +51,8 @@ export type StuckRow = {
   wrong: number;
   lastWrongSec: number | null;
   lastActiveSec: number | null;
+  hint: boolean;
+  expected: boolean;
 };
 
 const key = (game: string, exerciseId: number) => `${game}-${exerciseId}`;
@@ -70,6 +82,8 @@ export function stuckRows(player: string, o: AdminOverview, nowMs: number): Stuc
         wrong: wrongs.length,
         lastWrongSec: lastWrong,
         lastActiveSec: act?.lastactiveat ? ageSec(act.lastactiveat, nowMs) : null,
+        hint: act?.hint ?? false,
+        expected: act?.expected ?? false,
       };
     });
 }
