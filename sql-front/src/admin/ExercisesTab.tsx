@@ -5,6 +5,17 @@ import { exerciseAwards, ExerciseAward } from '../leaderboard/leaderboardData';
 import { AdminOverview } from './adminData';
 import { winningSolutions } from './adminStats';
 import { gameFromSearch, searchWith } from './adminTab';
+import { copyText } from './copyText';
+
+function CopyButton({ text }: { text: string | undefined }) {
+  const [copied, setCopied] = useState(false);
+  if (!text) return null;
+  const copy = () => copyText(text).then(() => {
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1200);
+  });
+  return <button type="button" className="adm-copy" onClick={copy}>{copied ? 'Copied ✓' : 'Copy'}</button>;
+}
 
 function Holder({ player, value }: { player: string | undefined; value: string }) {
   if (!player) return <span className="adm-dash">—</span>;
@@ -31,13 +42,13 @@ function AwardRow({ award, overview }: { award: ExerciseAward; overview: AdminOv
       {open && (
         <div className="adm-sols">
           <div className="adm-sol adm-ref">
-            <div className="adm-sol-head"><span className="adm-sol-tag" style={{ color: 'var(--df-cream)' }}>★ Reference solution</span>{ref && <span className="adm-sub">{ref.points} pts</span>}</div>
+            <div className="adm-sol-head"><span className="adm-sol-tag" style={{ color: 'var(--df-cream)' }}>★ Reference solution</span><span className="adm-sol-right">{ref && <span className="adm-sub">{ref.points} pts</span>}<CopyButton text={ref?.solution} /></span></div>
             <pre>{ref?.solution ?? '—'}</pre>
           </div>
           {wins.length
             ? <div className="adm-grid3">{wins.map(w => (
                 <div key={w.tag} className="adm-sol">
-                  <div className="adm-sol-head"><span className="adm-sol-tag">{w.tag}</span><span><b>{w.player}</b><span className="adm-sol-metric">{metric(w.tag)}</span></span></div>
+                  <div className="adm-sol-head"><span className="adm-sol-tag">{w.tag}</span><span className="adm-sol-right"><span><b>{w.player}</b><span className="adm-sol-metric">{metric(w.tag)}</span></span><CopyButton text={w.solution} /></span></div>
                   <pre>{w.solution || '—'}</pre>
                 </div>
               ))}</div>

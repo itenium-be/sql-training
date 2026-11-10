@@ -82,3 +82,10 @@
   font: 800 .78rem var(--df-font); letter-spacing: .08em; text-transform: uppercase; cursor: pointer;
 }
 .adm-game[aria-pressed="true"] { background: rgba(233, 180, 76, .18); color: var(--df-gold); }
+
+.adm-sol-right { display: inline-flex; align-items: center; gap: 10px; }
+.adm-copy {
+  padding: 2px 10px; border: 1px solid var(--df-border); border-radius: 999px; background: transparent;
+  color: var(--df-muted); font-size: .72rem; font-weight: 700; cursor: pointer;
+}
+.adm-copy:hover { color: var(--df-gold); border-color: var(--df-gold); }
