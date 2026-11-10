@@ -1,10 +1,13 @@
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import express, { type Request, type Response, type Router } from "express";
+import sql from "mssql";
 import { z } from "zod";
 
 import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import { ServiceResponse } from "@/common/models/serviceResponse";
 import { handleServiceResponse } from "@/common/utils/httpHandlers";
+import { executeQuery, sqlConfig } from "../query";
+import { isUp } from "./isUp";
 
 export const healthCheckRegistry = new OpenAPIRegistry();
 export const healthCheckRouter: Router = express.Router();
@@ -13,10 +16,14 @@ healthCheckRegistry.registerPath({
   method: "get",
   path: "/health-check",
   tags: ["Health Check"],
-  responses: createApiResponse(z.null(), "Success"),
+  responses: createApiResponse(z.object({ postgres: z.boolean(), mssql: z.boolean() }), "Success"),
 });
 
-healthCheckRouter.get("/", (_req: Request, res: Response) => {
-  const serviceResponse = ServiceResponse.success("Service is healthy", null);
+healthCheckRouter.get("/", async (_req: Request, res: Response) => {
+  const [postgres, mssql] = await Promise.all([
+    isUp(() => executeQuery("SELECT 1")),
+    isUp(async () => (await sql.connect(sqlConfig)).request().query("SELECT 1")),
+  ]);
+  const serviceResponse = ServiceResponse.success("Service is healthy", { postgres, mssql });
   return handleServiceResponse(serviceResponse, res);
 });
