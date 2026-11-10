@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Button from 'react-bootstrap/Button';
 import Badge from 'react-bootstrap/Badge';
-import { ATTEMPTS_PER_PENALTY, ExerciseModel, ExpectedModel, SqlExerciseModel } from "./exerciseModels";
+import { ATTEMPTS_PER_PENALTY, ExerciseDetails, ExerciseModel, ExpectedModel, SqlExerciseModel } from "./exerciseModels";
 import { livePoints } from "./livePoints";
 import { ExerciseSampleData, ExercisesData } from "./ExerciseSampleData";
 import { ResultDiffTable } from "./ResultDiffTable";
@@ -119,6 +119,8 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
   const solved = solvedIds.has(sql.id);
   const scoredPoints = points ?? myScores.find(score => score.exerciseid === sql.id)?.points ?? sql.points;
   const [origin, setOrigin] = useState(() => Date.now());
+  const [details, setDetails] = useState<ExerciseDetails | null>(null);
+  const [startError, setStartError] = useState('');
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -129,7 +131,12 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
           body: JSON.stringify({ game: currentGame, exerciseId: sql.id }),
         });
         const data = await res.json();
+        if (!res.ok) {
+          setStartError(data?.message ?? res.statusText);
+          return;
+        }
         if (typeof data?.elapsed === 'number') setOrigin(originFromElapsed(data.elapsed, Date.now()));
+        setDetails(data.exercise);
       } catch (err) {
         console.error('Could not start timer for exercise', err);
       }
@@ -260,14 +267,14 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
           <h2 className="df-excard-title">Exercise {sql.id}</h2>
           <PointsBadge sql={sql} hintUsed={hint !== null} expectedUsed={expected !== null} attempts={attempts} />
         </div>
-        <p className="df-excard-desc">{sql.desc}</p>
-        {sql.expectedColumns.length > 0 && (
+        <p className="df-excard-desc">{details?.desc ?? (startError || 'Loading…')}</p>
+        {details && details.expectedColumns.length > 0 && (
           <div className="df-excard-cols">
             <div className="df-eyebrow df-excard-colslabel">Expected columns</div>
             <div className="df-chips">
-              {sql.expectedColumns.map(col => <code key={col} className="df-chip">{col}</code>)}
+              {details.expectedColumns.map(col => <code key={col} className="df-chip">{col}</code>)}
             </div>
-            <div className="df-excard-order">{sql.expectedOrder ? 'Order matters' : 'Any order'}</div>
+            <div className="df-excard-order">{details.expectedOrder ? 'Order matters' : 'Any order'}</div>
           </div>
         )}
       </section>
@@ -369,7 +376,7 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
                   !result
                     ? <p className="df-results-empty">Run your query to see your result here.</p>
                     : expected
-                      ? <ResultDiffTable result={result} expected={expected} expectedOrder={sql.expectedOrder} />
+                      ? <ResultDiffTable result={result} expected={expected} expectedOrder={details?.expectedOrder ?? false} />
                       : <ExercisesData data={result} />
                 )}
                 {resultTab === 'expected' && (

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ExerciseModel } from '../exercises/exerciseModels';
 import { formatClock } from '../beamer/beamerData';
-import { exerciseAwards, ExerciseAward } from '../leaderboard/leaderboardData';
+import { awardLabel, exerciseAwards, ExerciseAward } from '../leaderboard/leaderboardData';
 import { AdminOverview } from './adminData';
 import { winningSolutions } from './adminStats';
 import { gameFromSearch, searchWith } from './adminTab';
@@ -34,7 +34,7 @@ function AwardRow({ award, overview }: { award: ExerciseAward; overview: AdminOv
   return (
     <>
       <div className="adm-awrow" onClick={() => setOpen(o => !o)}>
-        <div className="adm-awname">#{award.exerciseId} · {award.desc}</div>
+        <div className="adm-awname">{awardLabel(award)}</div>
         <span className="adm-sub">{award.solvedBy}<small>/{overview.players.length}</small></span>
         <Holder player={award.fastest?.player} value={award.fastest ? formatClock(award.fastest.time) : ''} />
         <span className="adm-hidesm"><Holder player={award.shortest?.player} value={award.shortest ? `${award.shortest.chars} ch` : ''} /></span>

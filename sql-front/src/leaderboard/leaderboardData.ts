@@ -17,7 +17,7 @@ export type PlayerRow = {
 export type ExerciseAward = {
   game: string;
   exerciseId: number;
-  desc: string;
+  desc?: string;
   solvedBy: number;
   fastest: { player: string; time: number } | null;
   shortest: { player: string; chars: number } | null;
@@ -84,4 +84,8 @@ export function exerciseAwards(exercises: ExerciseModel[], scores: Score[], game
       leanest: leanest?.player ? { player: leanest.player, reads: leanest.cost } : null,
     };
   });
+}
+
+export function awardLabel(award: Pick<ExerciseAward, 'exerciseId' | 'desc'>): string {
+  return award.desc ? `#${award.exerciseId} · ${award.desc}` : `#${award.exerciseId}`;
 }

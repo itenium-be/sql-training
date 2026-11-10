@@ -3,7 +3,7 @@ import { ExerciseModel, Score } from "../exercises/exerciseModels";
 type FastestExercise = {
   game: string;
   exerciseId: number;
-  exercise: string;
+  exercise?: string;
   points: number;
   player: string;
   solution?: string;
@@ -46,7 +46,7 @@ export function calculateFastest(exercises: ExerciseModel[], scores: Score[]) {
 type LeanestExercise = {
   game: string;
   exerciseId: number;
-  exercise: string;
+  exercise?: string;
   points: number;
   player: string;
   solution?: string;
@@ -92,7 +92,7 @@ export function calculateShortest(exercises: ExerciseModel[], scores: Score[]) {
 type EfficientExercise = {
   game: string;
   exerciseId: number;
-  exercise: string;
+  exercise?: string;
   points: number;
   player: string;
   solution?: string;

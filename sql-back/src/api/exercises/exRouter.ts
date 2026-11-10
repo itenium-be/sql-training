@@ -51,7 +51,7 @@ exRegistry.registerPath({
   path: "/exercises/definitions",
   summary: "All games and their exercises",
   description:
-    "Exercise text, points and penalties per game. Expected results, hints and reference solutions are stripped.",
+    "Points and penalties per exercise. The question (text, expected columns and order) only comes back from POST /game/start, which starts the timer, until the game has ended. Expected results, hints and reference solutions are never included.",
   tags: ["Exercises"],
   responses: createApiResponse(z.any().array(), "All exercises with their expected results"),
 });

@@ -83,11 +83,11 @@ export function Admin() {
   }, []);
 
   useEffect(() => {
-    fetch(`${config.api}/exercises/definitions`)
-      .then(res => res.json())
-      .then(data => setEntities(data.responseObject))
+    if (!authorized) return;
+    adminFetch(apiKey, '/definitions')
+      .then(setEntities)
       .catch(err => console.error('Could not fetch exercises', err));
-  }, []);
+  }, [authorized, apiKey]);
 
   useEffect(() => {
     if (storedApiKey) login(storedApiKey);

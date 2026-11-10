@@ -9,13 +9,17 @@ export type ExerciseModel = {
   exercises: SqlExerciseModel[];
 }
 
-export type SqlExerciseModel = {
-  id: number;
+/** Only sent by POST /game/start (which starts the timer), or by the definitions once the game has ended. */
+export type ExerciseDetails = {
   desc: string;
-  points: number;
   /** Require specific array order */
   expectedOrder: boolean;
   expectedColumns: string[];
+};
+
+export type SqlExerciseModel = Partial<ExerciseDetails> & {
+  id: number;
+  points: number;
   hasHint: boolean;
   /** Points deducted for showing the hint */
   hintCost: number;

@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import { ExerciseModel, Score } from '../exercises/exerciseModels';
-import { AWARD_BONUS, exerciseAwards, rankPlayers } from './leaderboardData';
+import { AWARD_BONUS, awardLabel, exerciseAwards, rankPlayers } from './leaderboardData';
 
 const exercises: ExerciseModel[] = [{
   id: 'World',
@@ -61,4 +61,11 @@ describe('exerciseAwards', () => {
     expect(awards[0].shortest?.player).toBe('bob');
     expect(awards[0].leanest?.player).toBe('alice');
   });
+});
+
+describe('awardLabel', () => {
+  test('shows the question when it is known', () =>
+    expect(awardLabel({ exerciseId: 3, desc: 'Big countries' })).toBe('#3 · Big countries'));
+  test('shows only the number while the question is hidden', () =>
+    expect(awardLabel({ exerciseId: 3 })).toBe('#3'));
 });

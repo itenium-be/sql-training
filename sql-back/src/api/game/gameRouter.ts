@@ -1,18 +1,18 @@
 import express, { type Request, type RequestHandler, type Response, type Router } from "express";
+import { exercises } from "@/api/exercises/definitions/exercises";
 import { checkSolution, exerciseHint, referenceSolutions } from "@/api/exercises/exerciseService";
+import { exerciseDetails, publicDefinitions } from "@/api/exercises/publicDefinitions";
 import { env } from "@/common/utils/envConfig";
 import { shouldRecordActivity } from "./activity";
 import { type AuthRequest, mintToken, requirePlayer } from "./auth";
 import { gameQuery } from "./gameDb";
-import { type GameMode, gameModes, parseGameMode } from "./gameMode";
+import { gameModes, getGameMode, parseGameMode, setGameMode, startRefusal } from "./gameMode";
 import type { ExerciseStart, ExerciseSubmit } from "./gameModel";
 import { calculatePoints } from "./scoring";
 
-let gameMode: GameMode = "init";
-
 export async function restoreGameMode() {
   const result = await gameQuery("SELECT value FROM settings WHERE key='game_mode'");
-  gameMode = parseGameMode(result.rows[0]?.value);
+  setGameMode(parseGameMode(result.rows[0]?.value));
 }
 
 // Sanity ceiling only; the avatar catalogue is defined in the frontend (avatars.ts).
@@ -46,13 +46,22 @@ const startExercise: RequestHandler = async (req: Request, res: Response) => {
     return res.status(400).send({ message: "game and exerciseId are required" });
   }
 
+  const refusal = startRefusal(getGameMode());
+  if (refusal) {
+    return res.status(409).send({ message: refusal });
+  }
+  const exercise = exerciseDetails(exercises, data.game, data.exerciseId);
+  if (!exercise) {
+    return res.status(404).send({ message: `Unknown exercise ${data.game}-${data.exerciseId}` });
+  }
+
   await gameQuery("INSERT INTO game_start (player, game, exerciseId) VALUES ($1, $2, $3)", [
     player,
     data.game,
     data.exerciseId,
   ]);
   const elapsed = await firstStartElapsed(player, data.game, data.exerciseId);
-  return res.status(200).send({ message: "Started!", elapsed });
+  return res.status(200).send({ message: "Started!", elapsed, exercise });
 };
 
 async function firstStartElapsed(player: string, game: string, exerciseId: number): Promise<number> {
@@ -62,6 +71,17 @@ async function firstStartElapsed(player: string, game: string, exerciseId: numbe
   );
   return parseInt(result.rows[0]?.seconds, 10) || 0;
 }
+
+async function hasStarted(player: string, game: string, exerciseId: number) {
+  const result = await gameQuery("SELECT 0 FROM game_start WHERE player=$1 AND game=$2 AND exerciseId=$3 LIMIT 1", [
+    player,
+    game,
+    exerciseId,
+  ]);
+  return result.rows.length > 0;
+}
+
+const NOT_STARTED = "Open the exercise first";
 
 async function getActivity(player: string, game: string, exerciseId: number) {
   const result = await gameQuery(
@@ -92,6 +112,10 @@ const checkExercise: RequestHandler = async (req: Request, res: Response) => {
     return res.status(400).send({ message: "game, exerciseId and solution are required" });
   }
 
+  if (!(await hasStarted(player, data.game, data.exerciseId))) {
+    return res.status(409).send({ message: NOT_STARTED });
+  }
+
   const body = await checkSolution(data.game, data.exerciseId, data.solution);
   const correct = body.success && body.responseObject?.correct === true;
   await gameQuery(
@@ -99,7 +123,7 @@ const checkExercise: RequestHandler = async (req: Request, res: Response) => {
     [player, data.game, data.exerciseId, data.solution, correct, body.message ?? null],
   ).catch((err) => console.error("Could not log submission", err));
   const rows = body.responseObject?.rows ?? null;
-  const recording = gameMode === "running" && !(await isSolved(player, data.game, data.exerciseId));
+  const recording = getGameMode() === "running" && !(await isSolved(player, data.game, data.exerciseId));
 
   if (!correct) {
     let attempts = 0;
@@ -119,9 +143,9 @@ const checkExercise: RequestHandler = async (req: Request, res: Response) => {
   const cost = result.cost;
   if (!recording) {
     const message =
-      gameMode === "running"
+      getGameMode() === "running"
         ? "Already solved!"
-        : gameMode === "init"
+        : getGameMode() === "init"
           ? "Game has not yet started!"
           : "Game has finished!";
     return res.status(200).send({ correct: true, recorded: false, message, rows, cost });
@@ -164,12 +188,16 @@ const getHint: RequestHandler = async (req: Request, res: Response) => {
     return res.status(400).send({ message: "game, exerciseId and type (hint|expected) are required" });
   }
 
+  if (!(await hasStarted(player, game, exerciseId))) {
+    return res.status(409).send({ message: NOT_STARTED });
+  }
+
   const body = await exerciseHint(game, exerciseId, type);
   if (!body.success) {
     return res.status(body.statusCode).send({ message: body.message });
   }
 
-  if (gameMode === "running" && !(await isSolved(player, game, exerciseId))) {
+  if (getGameMode() === "running" && !(await isSolved(player, game, exerciseId))) {
     await gameQuery(
       `INSERT INTO exercise_activity (player, game, exerciseId, ${type}) VALUES ($1, $2, $3, TRUE)
        ON CONFLICT (player, game, exerciseId) DO UPDATE SET ${type} = TRUE`,
@@ -196,7 +224,7 @@ const recordActivity: RequestHandler = async (req: Request, res: Response) => {
     return res.status(400).send({ message: "game and exerciseId are required" });
   }
 
-  if (shouldRecordActivity(gameMode, await isSolved(player, game, exerciseId))) {
+  if (shouldRecordActivity(getGameMode(), await isSolved(player, game, exerciseId))) {
     await gameQuery(
       `INSERT INTO exercise_activity (player, game, exerciseId, lastActiveAt) VALUES ($1, $2, $3, NOW())
        ON CONFLICT (player, game, exerciseId) DO UPDATE SET lastActiveAt = NOW()`,
@@ -228,11 +256,11 @@ const getMySolution: RequestHandler = async (req: Request, res: Response) => {
 };
 
 const getProgress: RequestHandler = async (_req: Request, res: Response) => {
-  if (gameMode === "init") {
+  if (getGameMode() === "init") {
     return res.status(200).send({ message: "Game has not yet started!" });
   }
 
-  if (gameMode === "end") {
+  if (getGameMode() === "end") {
     const data = await gameQuery(
       "SELECT player, game, exerciseId, solution, solutionLength, elapsed, cost, points, hint, expected, attempts FROM game_progress",
     );
@@ -246,7 +274,7 @@ const getProgress: RequestHandler = async (_req: Request, res: Response) => {
 };
 
 const getState: RequestHandler = async (_req: Request, res: Response) => {
-  return res.status(200).send({ mode: gameMode });
+  return res.status(200).send({ mode: getGameMode() });
 };
 
 const getPlayers: RequestHandler = async (_req: Request, res: Response) => {
@@ -255,7 +283,7 @@ const getPlayers: RequestHandler = async (_req: Request, res: Response) => {
 };
 
 const setAvatar: RequestHandler = async (req: Request, res: Response) => {
-  if (gameMode !== "init") {
+  if (getGameMode() !== "init") {
     return res.status(400).send({ message: "Avatars can only be changed before the game starts" });
   }
 
@@ -280,7 +308,11 @@ const requireAdmin: RequestHandler = (req: Request, res: Response, next) => {
 };
 
 const getAdmin: RequestHandler = async (_req: Request, res: Response) => {
-  return res.status(200).send({ mode: gameMode, modes: gameModes });
+  return res.status(200).send({ mode: getGameMode(), modes: gameModes });
+};
+
+const getAdminDefinitions: RequestHandler = async (_req: Request, res: Response) => {
+  return res.status(200).send(publicDefinitions(exercises, true));
 };
 
 const getOverview: RequestHandler = async (_req: Request, res: Response) => {
@@ -299,7 +331,7 @@ const getOverview: RequestHandler = async (_req: Request, res: Response) => {
   ]);
 
   return res.status(200).send({
-    mode: gameMode,
+    mode: getGameMode(),
     modes: gameModes,
     solutions: referenceSolutions(),
     players: players.rows,
@@ -320,9 +352,9 @@ const setMode: RequestHandler = async (req: Request, res: Response) => {
     "INSERT INTO settings (key, value) VALUES ('game_mode', $1) ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value",
     [newMode],
   );
-  gameMode = newMode;
-  console.log("Game mode", gameMode);
-  return res.status(200).send({ mode: gameMode, message: `Going into ${gameMode} game mode!` });
+  setGameMode(newMode);
+  console.log("Game mode", newMode);
+  return res.status(200).send({ mode: newMode, message: `Going into ${newMode} game mode!` });
 };
 
 gameRouter.post("/register", registerUser);
@@ -339,3 +371,4 @@ gameRouter.post("/avatar", requirePlayer, setAvatar);
 gameRouter.get("/admin", requireAdmin, getAdmin);
 gameRouter.post("/admin/mode", requireAdmin, setMode);
 gameRouter.get("/admin/overview", requireAdmin, getOverview);
+gameRouter.get("/admin/definitions", requireAdmin, getAdminDefinitions);

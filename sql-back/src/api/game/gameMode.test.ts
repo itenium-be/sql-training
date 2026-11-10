@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { parseGameMode } from "./gameMode";
+import { parseGameMode, startRefusal } from "./gameMode";
 
 describe("parseGameMode", () => {
   test("returns a stored valid mode", () => {
@@ -14,4 +14,10 @@ describe("parseGameMode", () => {
   test("falls back to init for an unknown value", () => {
     expect(parseGameMode("paused")).toBe("init");
   });
+});
+
+describe("startRefusal", () => {
+  test("refuses in the lobby", () => expect(startRefusal("init")).toBe("Game has not yet started!"));
+  test("allows while running", () => expect(startRefusal("running")).toBeNull());
+  test("allows after the end", () => expect(startRefusal("end")).toBeNull());
 });

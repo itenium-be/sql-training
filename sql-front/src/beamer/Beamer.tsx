@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
-import { config } from '../config';
-import { loadScores } from '../layout/fetchData';
+import { loadDefinitions, loadScores } from '../layout/fetchData';
 import { usePlayers, useGameMode } from '../game';
 import { rankPlayers } from '../leaderboard/leaderboardData';
 import { BeamerHeader, BeamerView } from './BeamerHeader';
@@ -23,11 +22,10 @@ export function Beamer({projector = false}: {projector?: boolean}) {
   const you = storeName || localStorage.getItem('userName') || '';
 
   useEffect(() => {
-    fetch(`${config.api}/exercises/definitions`)
-      .then(res => res.json())
-      .then(data => dispatch({type: 'exercises/setEntities', payload: data.responseObject}))
-      .catch(err => console.error('Could not fetch exercises', err));
+    if (mode) dispatch(loadDefinitions());
+  }, [dispatch, mode]);
 
+  useEffect(() => {
     dispatch(loadScores());
     const timer = setInterval(() => dispatch(loadScores()), REFRESH_MS);
     return () => clearInterval(timer);

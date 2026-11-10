@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ExerciseId, ExerciseModel, Score } from '../exercises/exerciseModels';
-import { ExerciseAward, exerciseAwards } from '../leaderboard/leaderboardData';
+import { awardLabel, ExerciseAward, exerciseAwards } from '../leaderboard/leaderboardData';
 import { BoltIcon, CodeIcon, LeafIcon } from '../layout/Icons';
 import { SolutionCard, SolutionTag, exerciseSolutions, formatClock, myExerciseResult } from './beamerData';
 
@@ -76,7 +76,7 @@ export function BeamerExercises({entities, scores, you, ended}: {entities: Exerc
           const cards = ended && isOpen ? exerciseSolutions(scores, you, award) : [];
           return (
             <div key={award.exerciseId} className={isOpen ? 'bm-awrow bm-awrow-open' : 'bm-awrow'}>
-              <div className="bm-aw"><span className="bm-awname">#{award.exerciseId} · {award.desc}</span></div>
+              <div className="bm-aw"><span className="bm-awname">{awardLabel(award)}</span></div>
               <span className="bm-solvedby">{award.solvedBy}<small>/{totalPlayers}</small></span>
               <Holder name={award.fastest?.player} value={award.fastest ? formatClock(award.fastest.time) : ''} you={you} />
               <Holder name={award.shortest?.player} value={award.shortest ? `${award.shortest.chars} ch` : ''} you={you} />

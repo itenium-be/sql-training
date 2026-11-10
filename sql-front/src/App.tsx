@@ -1,5 +1,5 @@
 import { TopNavigation } from './layout/TopNavigation'
-import { fetchData } from './layout/fetchData'
+import { fetchData, loadDefinitions } from './layout/fetchData'
 import { Container } from 'react-bootstrap'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Home } from './Home'
@@ -13,7 +13,7 @@ import { Admin } from './Admin'
 import { Beamer } from './beamer/Beamer'
 import { useGameMode } from './game'
 import { screenFor } from './flow'
-import { config, TOKEN_STORAGE } from './config'
+import { TOKEN_STORAGE } from './config'
 
 export function App() {
   if (window.location.pathname.startsWith('/admin')) {
@@ -40,13 +40,12 @@ function Game() {
       dispatch({type: 'exercises/register', payload: name});
     }
 
-    fetch(`${config.api}/exercises/definitions`)
-      .then(res => res.json())
-      .then(data => dispatch({type: 'exercises/setEntities', payload: data.responseObject}))
-      .catch(err => console.error('Could not fetch exercises', err));
-
     dispatch(fetchData('home'));
   }, [dispatch]);
+
+  useEffect(() => {
+    if (mode) dispatch(loadDefinitions());
+  }, [dispatch, mode]);
 
   const screen = screenFor(mode, !!registeredName, started);
   if (screen === 'intro') {

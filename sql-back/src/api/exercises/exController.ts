@@ -2,21 +2,15 @@ import type { Request, RequestHandler, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { ServiceResponse } from "@/common/models/serviceResponse";
 import { handleServiceResponse } from "@/common/utils/httpHandlers";
-import { penalties } from "./checker";
+import { getGameMode } from "../game/gameMode";
 import { exercises } from "./definitions/exercises";
+import { publicDefinitions } from "./publicDefinitions";
 import { checkSql, getSchema } from "./sqlCheck";
 
 class ExController {
   public definitions: RequestHandler = async (_req: Request, res: Response) => {
-    const publicExercises = exercises.map((game) => ({
-      ...game,
-      exercises: game.exercises.map(({ expected, hints, hintCost, expectedCost, solution, ...exercise }) => ({
-        ...exercise,
-        hasHint: !!hints,
-        ...penalties({ ...exercise, expected, hints, hintCost, expectedCost, solution }),
-      })),
-    }));
-    return handleServiceResponse(ServiceResponse.success("Exercises", publicExercises), res);
+    const definitions = publicDefinitions(exercises, getGameMode() === "end");
+    return handleServiceResponse(ServiceResponse.success("Exercises", definitions), res);
   };
 
   public validate: RequestHandler = async (_req: Request, res: Response) => {

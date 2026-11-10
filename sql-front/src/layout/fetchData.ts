@@ -17,6 +17,16 @@ export const loadScores = () => async (dispatch: AppDispatch) => {
   }
 };
 
+export const loadDefinitions = () => async (dispatch: AppDispatch) => {
+  try {
+    const res = await fetch(`${config.api}/exercises/definitions`);
+    const data = await res.json();
+    dispatch({type: 'exercises/setEntities', payload: data.responseObject});
+  } catch (error) {
+    console.error('Could not fetch exercises', error);
+  }
+};
+
 export const fetchData = (key: 'home' | ExerciseId) => async (dispatch: AppDispatch) => {
   await dispatch(loadScores());
 
