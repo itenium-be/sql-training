@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from "../store";
 import { Alert } from "react-bootstrap";
 import { SqlEditor } from "./SqlEditor";
 import { SchemaPanel } from "./SchemaPanel";
+import { SchemaDiagram } from "./SchemaDiagram";
 import { QuestionTimer } from "./QuestionTimer";
 import { originFromElapsed } from "./questionElapsed";
 import { loadScores } from "../layout/fetchData";
@@ -42,6 +43,8 @@ export function Exercise({exercise}: {exercise: ExerciseModel}) {
         <h2>Example Data</h2>
         <pre>{exercise.sampleQuery}</pre>
         <ExerciseSampleData />
+        <h2>Schema</h2>
+        <SchemaDiagram game={exercise.id} />
         <Button variant="success" onClick={() => dispatch({type: 'exercises/firstQuestion'})}>
           Let's Start
         </Button>
@@ -85,7 +88,7 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
   const [attempts, setAttempts] = useState(0);
   const [success, setSuccess] = useState(false);
   const [cost, setCost] = useState<number | null>(null);
-  const [resultTab, setResultTab] = useState<'result' | 'expected' | 'sample'>('result');
+  const [resultTab, setResultTab] = useState<'result' | 'expected' | 'sample' | 'diagram'>('result');
   const [leftTab, setLeftTab] = useState<'exercises' | 'schema'>('exercises');
   const narrow = useMediaQuery('(max-width: 1100px)');
   const currentGame = useAppSelector(state => state.exercises.selected);
@@ -313,6 +316,7 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
                   {expected ? 'Expected' : '🔒 Expected'}
                 </button>
                 <button type="button" role="tab" aria-selected={resultTab === 'sample'} onClick={() => setResultTab('sample')}>Sample data</button>
+                <button type="button" role="tab" aria-selected={resultTab === 'diagram'} onClick={() => setResultTab('diagram')}>Diagram</button>
               </div>
               <div className="df-results-body">
                 {resultTab === 'result' && (
@@ -329,6 +333,7 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
                     <ExerciseSampleData />
                   </>
                 )}
+                {resultTab === 'diagram' && <SchemaDiagram game={currentGame ?? ''} />}
               </div>
             </div>
           </>
