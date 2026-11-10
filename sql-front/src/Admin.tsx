@@ -9,13 +9,13 @@ import { AdminOverview } from './admin/adminData';
 import { OverviewTab } from './admin/OverviewTab';
 import { PlayersTab } from './admin/PlayersTab';
 import { ExercisesTab } from './admin/ExercisesTab';
+import { AdminTab, searchForTab, tabFromSearch } from './admin/adminTab';
 import './admin/admin.css';
 
 const API_KEY_STORAGE = 'adminApiKey';
 const REFRESH_MS = 5000;
 
 const modeLabels: Record<GameMode, string> = { init: 'Lobby', running: 'Running', end: 'Ended' };
-type Tab = 'overview' | 'players' | 'exercises';
 type Health = { db: boolean; backend: boolean };
 
 export function Admin() {
@@ -23,7 +23,11 @@ export function Admin() {
   const [apiKey, setApiKey] = useState(storedApiKey);
   const [authorized, setAuthorized] = useState(false);
   const [message, setMessage] = useState('');
-  const [tab, setTab] = useState<Tab>('overview');
+  const [tab, setTabState] = useState<AdminTab>(() => tabFromSearch(window.location.search));
+  const setTab = (t: AdminTab) => {
+    setTabState(t);
+    history.replaceState(null, '', searchForTab(t));
+  };
   const [overview, setOverview] = useState<AdminOverview | null>(null);
   const [entities, setEntities] = useState<ExerciseModel[]>([]);
   const [health, setHealth] = useState<Health>({ db: false, backend: false });
