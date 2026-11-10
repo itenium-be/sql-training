@@ -1002,6 +1002,7 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
 .df-diagram .edgeLabel rect, .df-diagram .relationshipLabelBox, .df-diagram .labelBkg { fill: var(--df-bg) !important; background: var(--df-bg) !important; }
 .df-diagram .edgeLabel text { fill: var(--df-muted) !important; }
 .df-diagram-empty { color: var(--df-muted); margin: 0; padding: 28px 12px; text-align: center; }
+.df-intro-diagram { max-height: 60vh; overflow: auto; margin-bottom: 16px; }
 
 .df-locked {
   display: flex;

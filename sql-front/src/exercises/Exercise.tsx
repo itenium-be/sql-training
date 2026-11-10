@@ -34,26 +34,42 @@ export function Exercise({exercise}: {exercise: ExerciseModel}) {
   const dispatch = useAppDispatch();
 
   if (currentExIndex === 0) {
-    return (
-      <>
-        <h1>
-          {exercise.name}
-          <ExercisePoints exercise={exercise} />
-        </h1>
-        <p>{exercise.desc}</p>
-        <h2>Example Data</h2>
-        <pre>{exercise.sampleQuery}</pre>
-        <ExerciseSampleData />
-        <h2>Schema</h2>
-        <SchemaDiagram game={exercise.id} />
-        <Button variant="success" onClick={() => dispatch({type: 'exercises/firstQuestion'})}>
-          Let's Start
-        </Button>
-      </>
-    )
+    return <ExerciseIntro exercise={exercise} onStart={() => dispatch({type: 'exercises/firstQuestion'})} />;
   }
 
   return <SqlExercises exercise={exercise} />
+}
+
+
+function ExerciseIntro({exercise, onStart}: {exercise: ExerciseModel, onStart: () => void}) {
+  const [tab, setTab] = useState<'sample' | 'diagram'>('sample');
+
+  return (
+    <>
+      <h1>
+        {exercise.name}
+        <ExercisePoints exercise={exercise} />
+      </h1>
+      <p>{exercise.desc}</p>
+      <div className="df-rtabs" role="tablist">
+        <button type="button" role="tab" aria-selected={tab === 'sample'} onClick={() => setTab('sample')}>Example Data</button>
+        <button type="button" role="tab" aria-selected={tab === 'diagram'} onClick={() => setTab('diagram')}>Diagram</button>
+      </div>
+      {tab === 'sample' ? (
+        <>
+          <pre>{exercise.sampleQuery}</pre>
+          <ExerciseSampleData />
+        </>
+      ) : (
+        <div className="df-intro-diagram">
+          <SchemaDiagram game={exercise.id} />
+        </div>
+      )}
+      <Button variant="success" onClick={onStart}>
+        Let's Start
+      </Button>
+    </>
+  );
 }
 
 
