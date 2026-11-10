@@ -209,11 +209,15 @@ const getHint: RequestHandler = async (req: Request, res: Response) => {
 
 const getMyActivity: RequestHandler = async (req: Request, res: Response) => {
   const player = (req as AuthRequest).player;
-  const result = await gameQuery(
-    "SELECT game, exerciseId, attempts, hint, expected FROM exercise_activity WHERE player=$1",
-    [player],
-  );
-  return res.status(200).send({ player, activity: result.rows });
+  const [activity, started] = await Promise.all([
+    gameQuery("SELECT game, exerciseId, attempts, hint, expected FROM exercise_activity WHERE player=$1", [player]),
+    gameQuery("SELECT DISTINCT game, exerciseId FROM game_start WHERE player=$1", [player]),
+  ]);
+  const opened = started.rows.map((row) => {
+    const exerciseId = Number(row.exerciseid);
+    return { game: row.game, exerciseId, ...exerciseDetails(exercises, row.game, exerciseId) };
+  });
+  return res.status(200).send({ player, activity: activity.rows, exercises: opened });
 };
 
 const recordActivity: RequestHandler = async (req: Request, res: Response) => {

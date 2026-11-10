@@ -60,7 +60,13 @@ const docs: Doc[] = [
     auth: "player",
     request: json(z.object({ ...exercise, type: z.enum(["hint", "expected"]) })),
   },
-  { method: "get", path: "/me", summary: "Your attempts and revealed help per exercise", auth: "player" },
+  {
+    method: "get",
+    path: "/me",
+    summary: "Your attempts, revealed help and opened exercises",
+    description: "`exercises` holds the question of every exercise you started.",
+    auth: "player",
+  },
   {
     method: "get",
     path: "/solution",
