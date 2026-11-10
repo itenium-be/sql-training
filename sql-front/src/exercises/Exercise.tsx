@@ -15,6 +15,7 @@ import { QuestionTimer } from "./QuestionTimer";
 import { originFromElapsed } from "./questionElapsed";
 import { loadScores } from "../layout/fetchData";
 import { formatElapsed } from "./formatElapsed";
+import { formatScored } from "./formatScored";
 
 const emojis = ['🎉', '🥳', '🎊', '💯', '🌟', '🚀', '🦄', '🎈', '🎆', '🏆'];
 
@@ -112,10 +113,10 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
   const currentGame = useAppSelector(state => state.exercises.selected);
   const registeredName = useAppSelector(state => state.exercises.userName);
   const scores = useAppSelector(state => state.exercises.scores);
-  const solvedIds = new Set(scores
-    .filter(score => score.player === registeredName && score.game === currentGame)
-    .map(score => score.exerciseid));
+  const myScores = scores.filter(score => score.player === registeredName && score.game === currentGame);
+  const solvedIds = new Set(myScores.map(score => score.exerciseid));
   const solved = solvedIds.has(sql.id);
+  const scoredPoints = points ?? myScores.find(score => score.exerciseid === sql.id)?.points ?? sql.points;
   const [origin, setOrigin] = useState(() => Date.now());
   const dispatch = useAppDispatch();
 
@@ -279,8 +280,8 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
       <div className="df-ide">
         <aside className="df-ide-left">{exercisesPanel}</aside>
         <section className="df-ide-main">
-          <ExerciseSolved sql={sql} reset={reset} text="Greato success, you've already solved this one!" />
-          <MySolution game={currentGame ?? ''} exerciseId={sql.id} />
+          <ExerciseSolved reset={reset} text="Greato success, you've already solved this one!" />
+          <MySolution game={currentGame ?? ''} exerciseId={sql.id} points={scoredPoints} maxPoints={sql.points} />
         </section>
         {!narrow && <aside className="df-ide-schema">{<SchemaPanel game={currentGame ?? ''} sqlText={sqlText} />}</aside>}
       </div>
@@ -309,7 +310,10 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
         )}
 
         {success ? (
-          <ExerciseSolved sql={sql} reset={reset} cost={cost} points={points} />
+          <>
+            <ExerciseSolved reset={reset} cost={cost} />
+            <MySolution game={currentGame ?? ''} exerciseId={sql.id} points={scoredPoints} maxPoints={sql.points} />
+          </>
         ) : (
           <>
             <div className="df-editor">
@@ -408,8 +412,7 @@ function expectedRows(expected: ExpectedModel): Record<string, unknown>[] {
 }
 
 
-function ExerciseSolved({sql, reset, text, cost, points}: {sql: SqlExerciseModel, reset: () => void, text?: string, cost?: number | null, points?: number | null}) {
-  const scored = points ?? sql.points;
+function ExerciseSolved({reset, text, cost}: {reset: () => void, text?: string, cost?: number | null}) {
   const [emoji] = useState(() => emojis[Math.floor(Math.random() * emojis.length)]);
   const dispatch = useAppDispatch();
 
@@ -423,8 +426,7 @@ function ExerciseSolved({sql, reset, text, cost, points}: {sql: SqlExerciseModel
         Next Question
       </Button>
       <div className="float-none" style={{marginBottom: 8}}>
-        <b>You scored {scored} point{scored === 1 ? '' : 's'}!</b>
-        {typeof cost === 'number' && <> Your query read {cost} page{cost === 1 ? '' : 's'}.</>}
+        {typeof cost === 'number' && <>Your query read {cost} page{cost === 1 ? '' : 's'}.</>}
       </div>
     </Alert>
   )
@@ -433,7 +435,7 @@ function ExerciseSolved({sql, reset, text, cost, points}: {sql: SqlExerciseModel
 
 type MySolutionModel = { solution: string; elapsed: number; rows: Record<string, unknown>[] | null };
 
-function MySolution({game, exerciseId}: {game: string, exerciseId: number}) {
+function MySolution({game, exerciseId, points, maxPoints}: {game: string, exerciseId: number, points: number, maxPoints: number}) {
   const [data, setData] = useState<MySolutionModel | null>(null);
 
   useEffect(() => {
@@ -447,7 +449,7 @@ function MySolution({game, exerciseId}: {game: string, exerciseId: number}) {
 
   return (
     <>
-      <div className="df-eyebrow">Your query · <span className="df-timer"><span className="df-timer-bolt">⚡</span> {formatElapsed(data.elapsed)}</span></div>
+      <div className="df-eyebrow">Your query · <span className="df-timer"><span className="df-timer-bolt">⚡</span> {formatElapsed(data.elapsed)}</span> <span className="df-timer">{formatScored(points, maxPoints)}</span></div>
       <pre className="df-sample-query">{data.solution}</pre>
       {data.rows && <ExercisesData data={data.rows} />}
     </>
