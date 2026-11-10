@@ -4,6 +4,7 @@ import { formatClock } from '../beamer/beamerData';
 import { exerciseAwards, ExerciseAward } from '../leaderboard/leaderboardData';
 import { AdminOverview } from './adminData';
 import { winningSolutions } from './adminStats';
+import { gameFromSearch, searchWith } from './adminTab';
 
 function Holder({ player, value }: { player: string | undefined; value: string }) {
   if (!player) return <span className="adm-dash">—</span>;
@@ -48,14 +49,26 @@ function AwardRow({ award, overview }: { award: ExerciseAward; overview: AdminOv
 }
 
 export function ExercisesTab({ overview, entities }: { overview: AdminOverview; entities: ExerciseModel[] }) {
+  const [game, setGameState] = useState(() => gameFromSearch(window.location.search));
+  const setGame = (id: string) => {
+    setGameState(id);
+    history.replaceState(null, '', searchWith(window.location.search, 'game', id) || window.location.pathname);
+  };
   const games = entities.filter(g => g.exercises.length);
+  const shown = games.filter(g => game === 'all' || g.id === game);
+  const visible = shown.length ? shown : games;
   return (
     <div className="adm-wide">
-      {games.map(g => {
+      <div className="adm-games" role="group" aria-label="Game">
+        {['all', ...games.map(g => g.id)].map(id => (
+          <button key={id} type="button" className="adm-game" aria-pressed={id === game || (id === 'all' && !shown.length)} onClick={() => setGame(id)}>{id}</button>
+        ))}
+      </div>
+      {visible.map(g => {
         const awards = exerciseAwards(entities, overview.progress, g.id);
         return (
           <div key={g.id} style={{ marginBottom: 20 }}>
-            {games.length > 1 && <h3 style={{ fontSize: '1.05rem', marginBottom: 8 }}>{g.name}</h3>}
+            {visible.length > 1 && <h3 style={{ fontSize: '1.05rem', marginBottom: 8 }}>{g.name}</h3>}
             <div className="df-register" style={{ padding: '0 14px', maxWidth: 'none' }}>
               <div className="adm-awrow adm-head">
                 <span>Exercise</span><span>Solved</span><span>⚡ Fastest</span>

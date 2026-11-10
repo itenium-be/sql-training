@@ -75,3 +75,10 @@
   .adm-awrow { grid-template-columns: 1.4fr .6fr 1fr 28px; }
   .adm-awrow .adm-hidesm { display: none; }
 }
+
+.adm-games { display: inline-flex; gap: 4px; padding: 4px; margin-bottom: 16px; border: 1px solid var(--df-border); border-radius: 999px; }
+.adm-game {
+  padding: 6px 16px; border: 0; border-radius: 999px; background: transparent; color: var(--df-cream);
+  font: 800 .78rem var(--df-font); letter-spacing: .08em; text-transform: uppercase; cursor: pointer;
+}
+.adm-game[aria-pressed="true"] { background: rgba(233, 180, 76, .18); color: var(--df-gold); }
