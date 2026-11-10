@@ -14,6 +14,7 @@ import { SchemaDiagram } from "./SchemaDiagram";
 import { QuestionTimer } from "./QuestionTimer";
 import { originFromElapsed } from "./questionElapsed";
 import { loadScores } from "../layout/fetchData";
+import { formatElapsed } from "./formatElapsed";
 
 const emojis = ['🎉', '🥳', '🎊', '💯', '🌟', '🚀', '🦄', '🎈', '🎆', '🏆'];
 
@@ -279,6 +280,7 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
         <aside className="df-ide-left">{exercisesPanel}</aside>
         <section className="df-ide-main">
           <ExerciseSolved sql={sql} reset={reset} text="Greato success, you've already solved this one!" />
+          <MySolution game={currentGame ?? ''} exerciseId={sql.id} />
         </section>
         {!narrow && <aside className="df-ide-schema">{<SchemaPanel game={currentGame ?? ''} sqlText={sqlText} />}</aside>}
       </div>
@@ -426,6 +428,30 @@ function ExerciseSolved({sql, reset, text, cost, points}: {sql: SqlExerciseModel
       </div>
     </Alert>
   )
+}
+
+
+type MySolutionModel = { solution: string; elapsed: number; rows: Record<string, unknown>[] | null };
+
+function MySolution({game, exerciseId}: {game: string, exerciseId: number}) {
+  const [data, setData] = useState<MySolutionModel | null>(null);
+
+  useEffect(() => {
+    authFetch(`${config.leaderboard.api}/game/solution?game=${encodeURIComponent(game)}&exerciseId=${exerciseId}`)
+      .then(res => res.ok ? res.json() : null)
+      .then(setData)
+      .catch(err => console.error('Could not fetch your solution', err));
+  }, [game, exerciseId]);
+
+  if (!data) return null;
+
+  return (
+    <>
+      <div className="df-eyebrow">Your query · <span className="df-timer"><span className="df-timer-bolt">⚡</span> {formatElapsed(data.elapsed)}</span></div>
+      <pre className="df-sample-query">{data.solution}</pre>
+      {data.rows && <ExercisesData data={data.rows} />}
+    </>
+  );
 }
 
 

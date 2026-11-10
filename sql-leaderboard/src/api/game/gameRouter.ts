@@ -224,6 +224,36 @@ const recordActivity: RequestHandler = async (req: Request, res: Response) => {
   return res.status(200).send({ ok: true });
 };
 
+const getMySolution: RequestHandler = async (req: Request, res: Response) => {
+  const player = (req as AuthRequest).player;
+  const game = req.query.game;
+  const exerciseId = Number(req.query.exerciseId);
+  if (typeof game !== "string" || !Number.isInteger(exerciseId)) {
+    return res.status(400).send({ message: "game and exerciseId are required" });
+  }
+
+  const result = await executeQuery(
+    "SELECT solution, elapsed FROM game_progress WHERE player=$1 AND game=$2 AND exerciseId=$3",
+    [player, game, exerciseId],
+  );
+  const row = result.rows[0];
+  if (!row) {
+    return res.status(404).send({ message: "Not solved yet" });
+  }
+
+  let rows = null;
+  try {
+    const body = await callBackEnd("/exercises/check", {
+      method: "POST",
+      body: JSON.stringify({ game, exerciseId, sql: row.solution }),
+    });
+    rows = body.success ? body.responseObject.rows : null;
+  } catch (err) {
+    console.error("Could not run stored solution", err);
+  }
+  return res.status(200).send({ solution: row.solution, elapsed: Number(row.elapsed), rows });
+};
+
 const getProgress: RequestHandler = async (_req: Request, res: Response) => {
   if (gameMode === "init") {
     return res.status(200).send({ message: "Game has not yet started!" });
@@ -353,6 +383,7 @@ gameRouter.post("/start", requirePlayer, startExercise);
 gameRouter.post("/check", requirePlayer, checkExercise);
 gameRouter.post("/hint", requirePlayer, getHint);
 gameRouter.get("/me", requirePlayer, getMyActivity);
+gameRouter.get("/solution", requirePlayer, getMySolution);
 gameRouter.post("/activity", requirePlayer, recordActivity);
 gameRouter.get("/", getProgress);
 gameRouter.get("/state", getState);
