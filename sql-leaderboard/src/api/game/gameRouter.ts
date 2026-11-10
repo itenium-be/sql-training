@@ -318,6 +318,8 @@ const getOverview: RequestHandler = async (_req: Request, res: Response) => {
 const getHealth: RequestHandler = async (_req: Request, res: Response) => {
   let db = false;
   let backend = false;
+  let postgres = false;
+  let mssql = false;
   try {
     await executeQuery("SELECT 1");
     db = true;
@@ -325,11 +327,14 @@ const getHealth: RequestHandler = async (_req: Request, res: Response) => {
     db = false;
   }
   try {
-    backend = (await callBackEnd("/health-check")).success === true;
+    const health = await callBackEnd("/health-check");
+    backend = health.success === true;
+    postgres = health.responseObject?.postgres === true;
+    mssql = health.responseObject?.mssql === true;
   } catch {
     backend = false;
   }
-  return res.status(200).send({ db, backend });
+  return res.status(200).send({ db, backend, postgres, mssql });
 };
 
 const setMode: RequestHandler = async (req: Request, res: Response) => {
