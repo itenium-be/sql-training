@@ -14,6 +14,8 @@
   --df-orange-2: #b2472a;
   --df-white: #fbf8f2;
   --df-ink: #1b1a2e;
+  --df-red: #ef6b5b;
+  --df-red-rgb: 239, 107, 91;
   --df-font: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
@@ -1063,4 +1065,80 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
 @media (max-width: 820px) {
   .df-ide { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* ── Result diff (wrong answer vs revealed expected) ───────────── */
+.df-diff { display: flex; flex-direction: column; gap: 14px; }
+
+.df-diff-badges { display: flex; flex-wrap: wrap; gap: 8px; }
+.df-diff-badge {
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+.df-db-wrong, .df-db-extra { border-color: rgba(var(--df-red-rgb), 0.6); color: var(--df-red); }
+.df-db-missing { border: 1px dashed var(--df-gold); color: var(--df-gold); }
+.df-db-note { border-color: var(--df-border); color: var(--df-muted); }
+
+.df-diff-note {
+  align-self: flex-start;
+  padding: 7px 12px;
+  border: 1px solid var(--df-gold);
+  border-radius: 10px;
+  color: var(--df-gold);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.df-diff-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.9rem; }
+.df-diff-table th {
+  text-align: left;
+  padding: 8px 12px;
+  color: var(--df-gold);
+  border-bottom: 1px solid var(--df-border-soft);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.df-diff-table td { padding: 8px 12px; border-bottom: 1px solid var(--df-border-soft); vertical-align: top; }
+
+.df-diff-gutter { width: 1%; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.df-diff-rownum { color: var(--df-muted); }
+.df-diff-belongs { display: block; color: var(--df-red); font-size: 0.72rem; font-weight: 700; }
+.df-diff-rowtag { font-size: 0.66rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; }
+.df-rt-extra { color: var(--df-red); }
+.df-rt-missing { color: var(--df-gold); }
+
+.df-diff-tag { display: block; font-size: 0.64rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; }
+
+.df-dc-extra { color: var(--df-red); background: rgba(var(--df-red-rgb), 0.18); }
+.df-dc-missing { color: var(--df-gold); border-bottom: 2px dashed var(--df-gold); }
+
+.df-dr-extra td { background: rgba(var(--df-red-rgb), 0.12); color: #ffb4b4; }
+.df-dr-missing td { color: var(--df-gold); font-style: italic; border-top: 1px dashed var(--df-gold); border-bottom-color: transparent; }
+
+.df-dcell-extra { background: rgba(var(--df-red-rgb), 0.1); }
+.df-dcell-missing { color: var(--df-gold); font-style: italic; border-left: 1px dashed var(--df-gold); border-right: 1px dashed var(--df-gold); }
+.df-dcell-wrong { background: rgba(var(--df-red-rgb), 0.26); }
+.df-dcell-wrong .df-diff-expected { color: var(--df-muted); }
+.df-diff-expected { display: block; color: var(--df-muted); font-size: 0.75rem; font-weight: 600; }
+.df-diff-dash { color: var(--df-muted); }
+
+.df-diff-more {
+  align-self: flex-start;
+  background: transparent;
+  border: 1px solid var(--df-border);
+  border-radius: 999px;
+  color: var(--df-gold);
+  font-weight: 700;
+  padding: 6px 16px;
+  cursor: pointer;
+}
+.df-diff-more:hover { border-color: var(--df-gold); }
+
+.df-diff-legend { display: flex; flex-wrap: wrap; gap: 16px; color: var(--df-muted); font-size: 0.8rem; }
+.df-leg { display: inline-block; width: 22px; height: 13px; border-radius: 4px; vertical-align: middle; margin-right: 6px; }
+.df-leg-wrong { background: rgba(var(--df-red-rgb), 0.3); }
+.df-leg-extra { background: rgba(var(--df-red-rgb), 0.18); }
+.df-leg-missing { border: 1px dashed var(--df-gold); }
 

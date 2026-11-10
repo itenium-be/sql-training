@@ -1,5 +1,6 @@
 import { Table } from "react-bootstrap";
 import { useAppSelector } from "../store";
+import { formatValue } from "./formatValue";
 
 export function ExerciseSampleData() {
   const data = useAppSelector(state => {
@@ -56,27 +57,6 @@ function TableBody({data}: {data: Record<string, unknown>[]}) {
 }
 
 function Cell({value}: {value: unknown}) {
-  if (typeof value === 'boolean')
-    return <td>{value.toString()}</td>
-
-  if (value === null)
-    return <td><i>NULL</i></td>
-
-  if (typeof value === 'object')
-    return <td>{JSON.stringify(value)}</td>
-
-  const text = String(value);
-
-  if (typeof value === 'string' && (text.includes(' ') || text[0] === '+'))
-    return <td>{text}</td>
-
-  if (typeof value === 'string' && text.indexOf('-') !== -1 && text.indexOf('-') !== text.lastIndexOf('-'))
-    return <td>{text}</td>
-
-  if (!isNaN(parseInt(text)) && text[text.length - 1] !== '%') {
-    const belgianFormattedValue = (+text).toLocaleString("nl-BE")
-    return <td style={{textAlign: 'right'}}>{belgianFormattedValue}</td>
-  }
-
-  return <td>{text}</td>
+  const { node, alignRight } = formatValue(value);
+  return <td style={alignRight ? {textAlign: 'right'} : undefined}>{node}</td>;
 }

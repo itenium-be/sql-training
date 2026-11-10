@@ -4,6 +4,7 @@ import Badge from 'react-bootstrap/Badge';
 import { ATTEMPTS_PER_PENALTY, ExerciseModel, ExpectedModel, SqlExerciseModel } from "./exerciseModels";
 import { livePoints } from "./livePoints";
 import { ExerciseSampleData, ExercisesData } from "./ExerciseSampleData";
+import { ResultDiffTable } from "./ResultDiffTable";
 import { authFetch, config } from "../config";
 import { useAppDispatch, useAppSelector } from "../store";
 import { Alert } from "react-bootstrap";
@@ -320,7 +321,11 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
               </div>
               <div className="df-results-body">
                 {resultTab === 'result' && (
-                  result ? <ExercisesData data={result} /> : <p className="df-results-empty">Run your query to see your result here.</p>
+                  !result
+                    ? <p className="df-results-empty">Run your query to see your result here.</p>
+                    : expected
+                      ? <ResultDiffTable result={result} expected={expected} expectedOrder={sql.expectedOrder} />
+                      : <ExercisesData data={result} />
                 )}
                 {resultTab === 'expected' && (
                   expected
