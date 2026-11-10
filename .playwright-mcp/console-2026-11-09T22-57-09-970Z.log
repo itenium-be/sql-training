@@ -1,3 +1,0 @@
-[     124ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost/node_modules/.vite/deps/react-dom_client.js?v=e1e8dc30:15802
-[   25363ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost/src/exercises/Exercise.tsx?t=1794265055294:1
-[   25373ms] [ERROR] [vite] Failed to reload /src/exercises/Exercise.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost/@vite/client:1011

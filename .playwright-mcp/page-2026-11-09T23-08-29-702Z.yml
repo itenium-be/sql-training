@@ -1,7 +1,0 @@
-- generic [ref=e3]:
-  - heading "Admin" [level=1] [ref=e4]
-  - generic [ref=e5]:
-    - generic [ref=e6]:
-      - generic [ref=e7]: "API key:"
-      - textbox "API key:" [active] [ref=e8]
-    - button "Login" [disabled]

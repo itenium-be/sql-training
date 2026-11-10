@@ -1,4 +1,0 @@
-[     224ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost/node_modules/.vite/deps/react-dom_client.js?v=e1e8dc30:15802
-[     381ms] [VERBOSE] [DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o @ http://localhost/admin:1
-[  140038ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost/src/leaderboard/Scoreboard.tsx?t=1794265849409:1
-[  140039ms] [ERROR] [vite] Failed to reload /src/leaderboard/Scoreboard.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost/@vite/client:1011
