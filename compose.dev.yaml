@@ -18,6 +18,11 @@ services:
   leaderboard-db:
     ports:
       - 6000:5432
+    # Dev seed so /admin has players, stuck lists, awards and solutions to look
+    # at. initdb runs it once on an empty volume, so recreate to reseed:
+    #   docker compose down -v && docker compose -f compose.yaml -f compose.dev.yaml watch
+    volumes:
+      - ./sql-data/game-dev-seed.sql:/docker-entrypoint-initdb.d/zz-dev-seed.sql
 
   front-end:
     command: bun run dev
