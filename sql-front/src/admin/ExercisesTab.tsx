@@ -5,17 +5,7 @@ import { awardLabel, exerciseAwards, ExerciseAward } from '../leaderboard/leader
 import { AdminOverview } from './adminData';
 import { winningSolutions } from './adminStats';
 import { gameFromSearch, searchWith } from './adminTab';
-import { copyText } from './copyText';
-
-function CopyButton({ text }: { text: string | undefined }) {
-  const [copied, setCopied] = useState(false);
-  if (!text) return null;
-  const copy = () => copyText(text).then(() => {
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1200);
-  });
-  return <button type="button" className="adm-copy" onClick={copy}>{copied ? 'Copied ✓' : 'Copy'}</button>;
-}
+import { CopyButton } from '../layout/CopyButton';
 
 const tagIcons: Record<string, string> = { Fastest: '⚡', Shortest: '</>', Leanest: '🍃' };
 

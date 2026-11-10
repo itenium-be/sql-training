@@ -14,6 +14,7 @@ import { SchemaDiagram } from "./SchemaDiagram";
 import { QuestionTimer } from "./QuestionTimer";
 import { originFromElapsed } from "./questionElapsed";
 import { loadScores } from "../layout/fetchData";
+import { CopyButton } from "../layout/CopyButton";
 import { formatElapsed } from "./formatElapsed";
 import { formatScored } from "./formatScored";
 import { ActivityRow, findActivity } from "./myActivity";
@@ -475,7 +476,7 @@ function ExerciseSolved({reset, text, cost}: {reset: () => void, text?: string, 
 
 type MySolutionModel = { solution: string; elapsed: number; rows: Record<string, unknown>[] | null };
 
-function MySolution({game, exerciseId, points, maxPoints}: {game: string, exerciseId: number, points: number, maxPoints: number}) {
+export function MySolution({game, exerciseId, points, maxPoints}: {game: string, exerciseId: number, points: number, maxPoints: number}) {
   const [data, setData] = useState<MySolutionModel | null>(null);
 
   useEffect(() => {
@@ -489,7 +490,7 @@ function MySolution({game, exerciseId, points, maxPoints}: {game: string, exerci
 
   return (
     <>
-      <div className="df-eyebrow">Your query · <span className="df-timer"><span className="df-timer-bolt">⚡</span> {formatElapsed(data.elapsed)}</span> <span className="df-timer">{formatScored(points, maxPoints)}</span></div>
+      <div className="df-eyebrow">Your query · <span className="df-timer"><span className="df-timer-bolt">⚡</span> {formatElapsed(data.elapsed)}</span> <span className="df-timer">{formatScored(points, maxPoints)}</span> <CopyButton text={data.solution} /></div>
       <pre className="df-sample-query">{data.solution}</pre>
       {data.rows && <ExercisesData data={data.rows} />}
     </>

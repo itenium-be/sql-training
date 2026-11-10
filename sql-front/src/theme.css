@@ -1143,3 +1143,9 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
 .df-leg-extra { background: rgba(var(--df-red-rgb), 0.18); }
 .df-leg-missing { border: 1px dashed var(--df-gold); }
 
+
+.df-copy {
+  padding: 2px 10px; border: 1px solid var(--df-border); border-radius: 999px; background: transparent;
+  color: var(--df-muted); font-size: .72rem; font-weight: 700; cursor: pointer;
+}
+.df-copy:hover { color: var(--df-gold); border-color: var(--df-gold); }
