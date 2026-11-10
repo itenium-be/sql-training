@@ -320,6 +320,7 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
               </div>
               <SqlEditor
                 game={currentGame ?? ''}
+                exerciseId={sql.id}
                 value={sqlText}
                 onChange={setSqlText}
                 onSubmit={() => { if (sqlText.trim().length && !success) handleFetch(); }}

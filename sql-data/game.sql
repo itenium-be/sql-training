@@ -24,6 +24,7 @@ CREATE TABLE exercise_activity (
   attempts NUMERIC(15,0) NOT NULL DEFAULT 0,
   hint BOOLEAN NOT NULL DEFAULT FALSE,
   expected BOOLEAN NOT NULL DEFAULT FALSE,
+  lastActiveAt TIMESTAMP,
   PRIMARY KEY (player, game, exerciseId)
 );
 

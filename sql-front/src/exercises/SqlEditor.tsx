@@ -10,6 +10,8 @@ import { completeFromList } from "@codemirror/autocomplete";
 import { config } from "../config";
 import { SqlSchema } from "./schema";
 import { loadSchema } from "./loadSchema";
+import { ExerciseId } from "./exerciseModels";
+import { pingActivity } from "./activityPing";
 
 const SUBMIT_EVENT = 'sql-editor-submit';
 
@@ -100,13 +102,14 @@ async function validate(game: string, text: string): Promise<SqlProblem[]> {
 
 type SqlEditorProps = {
   game: string;
+  exerciseId?: number;
   value: string;
   onChange: (value: string) => void;
   onSubmit: () => void;
   height?: string;
 };
 
-export function SqlEditor({ game, value, onChange, onSubmit, height = '275px' }: SqlEditorProps) {
+export function SqlEditor({ game, exerciseId, value, onChange, onSubmit, height = '275px' }: SqlEditorProps) {
   const [schema, setSchema] = useState<SqlSchema>({});
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -141,6 +144,9 @@ export function SqlEditor({ game, value, onChange, onSubmit, height = '275px' }:
     lintGutter(),
     linter(async view => {
       const text = view.state.doc.toString();
+      if (exerciseId != null && game) {
+        pingActivity(game as ExerciseId, exerciseId);
+      }
       try {
         const problems = await validate(game, text);
         if (view.state.doc.toString() !== text) {
@@ -157,7 +163,7 @@ export function SqlEditor({ game, value, onChange, onSubmit, height = '275px' }:
     }, { delay: 600 }),
     submitKeymap,
   ];
-  }, [game, schema]);
+  }, [game, exerciseId, schema]);
 
   return (
     <div ref={wrapperRef}>

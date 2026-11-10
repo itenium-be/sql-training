@@ -31,6 +31,7 @@ export async function migrate() {
   )`);
   await executeQuery("ALTER TABLE game_progress ADD COLUMN IF NOT EXISTS expected BOOLEAN NOT NULL DEFAULT FALSE");
   await executeQuery("ALTER TABLE exercise_activity ADD COLUMN IF NOT EXISTS expected BOOLEAN NOT NULL DEFAULT FALSE");
+  await executeQuery("ALTER TABLE exercise_activity ADD COLUMN IF NOT EXISTS lastActiveAt TIMESTAMP");
   await executeQuery(
     "CREATE UNIQUE INDEX IF NOT EXISTS game_progress_unique ON game_progress (player, game, exerciseId)",
   );

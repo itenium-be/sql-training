@@ -2,6 +2,7 @@ import express, { type Request, type RequestHandler, type Response, type Router 
 import { env } from "@/envConfig";
 import { type AuthRequest, mintToken, requirePlayer } from "../auth";
 import { executeQuery } from "../query";
+import { shouldRecordActivity } from "./activity";
 import type { ExerciseStart, ExerciseSubmit } from "./gameModel";
 import { calculatePoints } from "./scoring";
 
@@ -205,6 +206,24 @@ const getMyActivity: RequestHandler = async (req: Request, res: Response) => {
   return res.status(200).send({ player, activity: result.rows });
 };
 
+const recordActivity: RequestHandler = async (req: Request, res: Response) => {
+  const player = (req as AuthRequest).player;
+  const game = req.body?.game;
+  const exerciseId = req.body?.exerciseId;
+  if (typeof game !== "string" || !Number.isInteger(exerciseId)) {
+    return res.status(400).send({ message: "game and exerciseId are required" });
+  }
+
+  if (shouldRecordActivity(gameMode, await isSolved(player, game, exerciseId))) {
+    await executeQuery(
+      `INSERT INTO exercise_activity (player, game, exerciseId, lastActiveAt) VALUES ($1, $2, $3, NOW())
+       ON CONFLICT (player, game, exerciseId) DO UPDATE SET lastActiveAt = NOW()`,
+      [player, game, exerciseId],
+    );
+  }
+  return res.status(200).send({ ok: true });
+};
+
 const getProgress: RequestHandler = async (_req: Request, res: Response) => {
   if (gameMode === "init") {
     return res.status(200).send({ message: "Game has not yet started!" });
@@ -261,7 +280,7 @@ const getAdmin: RequestHandler = async (_req: Request, res: Response) => {
   return res.status(200).send({ mode: gameMode, modes: gameModes });
 };
 
-const getSubmissions: RequestHandler = async (_req: Request, res: Response) => {
+const getOverview: RequestHandler = async (_req: Request, res: Response) => {
   let solutions: any[] = [];
   try {
     const body = await callBackEnd("/exercises/solutions");
@@ -269,10 +288,48 @@ const getSubmissions: RequestHandler = async (_req: Request, res: Response) => {
   } catch (err) {
     console.error("Could not fetch reference solutions", err);
   }
-  const result = await executeQuery(
-    "SELECT id, player, game, exerciseId, solution, correct, message, submittedAt FROM submissions ORDER BY submittedAt",
-  );
-  return res.status(200).send({ solutions, submissions: result.rows });
+
+  const [players, progress, starts, activity, submissions] = await Promise.all([
+    executeQuery("SELECT id, name, avatar FROM players ORDER BY id"),
+    executeQuery(
+      "SELECT player, game, exerciseId, solution, solutionLength, elapsed, cost, points, hint, expected, attempts FROM game_progress",
+    ),
+    executeQuery(
+      "SELECT player, game, exerciseId, MIN(startTime) AS firstStart FROM game_start GROUP BY player, game, exerciseId",
+    ),
+    executeQuery("SELECT player, game, exerciseId, attempts, lastActiveAt FROM exercise_activity"),
+    executeQuery(
+      "SELECT id, player, game, exerciseId, solution, correct, message, submittedAt FROM submissions ORDER BY submittedAt",
+    ),
+  ]);
+
+  return res.status(200).send({
+    mode: gameMode,
+    modes: gameModes,
+    solutions,
+    players: players.rows,
+    progress: progress.rows,
+    starts: starts.rows,
+    activity: activity.rows,
+    submissions: submissions.rows,
+  });
+};
+
+const getHealth: RequestHandler = async (_req: Request, res: Response) => {
+  let db = false;
+  let backend = false;
+  try {
+    await executeQuery("SELECT 1");
+    db = true;
+  } catch {
+    db = false;
+  }
+  try {
+    backend = (await callBackEnd("/health-check")).success === true;
+  } catch {
+    backend = false;
+  }
+  return res.status(200).send({ db, backend });
 };
 
 const setMode: RequestHandler = async (req: Request, res: Response) => {
@@ -291,10 +348,12 @@ gameRouter.post("/start", requirePlayer, startExercise);
 gameRouter.post("/check", requirePlayer, checkExercise);
 gameRouter.post("/hint", requirePlayer, getHint);
 gameRouter.get("/me", requirePlayer, getMyActivity);
+gameRouter.post("/activity", requirePlayer, recordActivity);
 gameRouter.get("/", getProgress);
 gameRouter.get("/state", getState);
 gameRouter.get("/players", getPlayers);
 gameRouter.post("/avatar", requirePlayer, setAvatar);
 gameRouter.get("/admin", requireAdmin, getAdmin);
 gameRouter.post("/admin/mode", requireAdmin, setMode);
-gameRouter.get("/admin/submissions", requireAdmin, getSubmissions);
+gameRouter.get("/admin/overview", requireAdmin, getOverview);
+gameRouter.get("/admin/health", requireAdmin, getHealth);
