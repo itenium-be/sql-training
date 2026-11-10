@@ -68,7 +68,7 @@
 .adm-sol-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
 .adm-sol-tag { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 800; color: var(--df-gold); }
 .adm-sol-metric { color: var(--df-muted); margin-left: 8px; font-family: 'JetBrains Mono', ui-monospace, monospace; }
-.adm-sol pre { margin: 0; white-space: pre-wrap; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: .82rem; color: var(--df-cream); }
+.adm-sol pre { margin: 0; font-variant-ligatures: none; white-space: pre-wrap; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: .82rem; color: var(--df-cream); }
 
 @media (max-width: 820px) {
   .adm-grid3, .adm-grid2, .adm-players { grid-template-columns: 1fr; }
