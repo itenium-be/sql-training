@@ -17,6 +17,8 @@ function CopyButton({ text }: { text: string | undefined }) {
   return <button type="button" className="adm-copy" onClick={copy}>{copied ? 'Copied ✓' : 'Copy'}</button>;
 }
 
+const tagIcons: Record<string, string> = { Fastest: '⚡', Shortest: '</>', Leanest: '🍃' };
+
 function Holder({ player, value }: { player: string | undefined; value: string }) {
   if (!player) return <span className="adm-dash">—</span>;
   return <div><div className="adm-awname" style={{ fontWeight: 600 }}>{player}</div><div className="adm-awval">{value}</div></div>;
@@ -48,7 +50,7 @@ function AwardRow({ award, overview }: { award: ExerciseAward; overview: AdminOv
           {wins.length
             ? <div className="adm-grid3">{wins.map(w => (
                 <div key={w.tag} className="adm-sol">
-                  <div className="adm-sol-head"><span className="adm-sol-tag">{w.tag}</span><span className="adm-sol-right"><span><b>{w.player}</b><span className="adm-sol-metric">{metric(w.tag)}</span></span><CopyButton text={w.solution} /></span></div>
+                  <div className="adm-sol-head"><span className="adm-sol-tag">{tagIcons[w.tag]} {w.tag}</span><span className="adm-sol-right"><span><b>{w.player}</b><span className="adm-sol-metric">{metric(w.tag)}</span></span><CopyButton text={w.solution} /></span></div>
                   <pre>{w.solution || '—'}</pre>
                 </div>
               ))}</div>
