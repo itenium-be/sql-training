@@ -6,6 +6,7 @@ info: |
 gameUrl: http://sql.lan
 wifiNetwork: IteniumWorkshop
 wifiPassword: ConnectToWorkshop
+gameIp: 10.42.42.42
 favicon: /favicon.png
 colorSchema: dark
 aspectRatio: 16/9
@@ -26,6 +27,7 @@ class: cover
   <img src="/img/itenium-logo.png" class="h-10 mb-8" alt="itenium" />
   <div class="pill eyebrow !text-xs mb-6">27 November 2026 · La Fabrique de la Connaissance</div>
   <h1 class="!text-7xl !mb-6 !leading-none">SQL Showdown<br><span class="gradient-gold">DevFest Paris</span> <span class="gradient-copper">edition.</span></h1>
+  <JoinCards />
 </div>
 
 ---
@@ -102,20 +104,9 @@ layout: center
 layout: default
 ---
 
-<div class="grid grid-cols-[1fr_auto] gap-10 items-center h-full">
-<div>
-  <h1 class="!mb-2">Let’s get this <span class="gradient-copper">party</span> started!</h1>
+<h1 class="!mb-2">Let’s get this <span class="gradient-copper">party</span> started!</h1>
 
-  <ol class="steps">
-    <li><span>Join the WiFi <strong>{{ $slidev.configs.wifiNetwork }}</strong><br><span class="text-base opacity-75">password <strong>{{ $slidev.configs.wifiPassword }}</strong></span></span></li>
-    <li>Browse to the game</li>
-    <li>Pick a name and an avatar</li>
-    <li>Wait for the start signal</li>
-  </ol>
-  <div class="mt-6"><span class="cta">{{ $slidev.configs.gameUrl }}</span></div>
-</div>
-<img src="/img/party-rocket.png" class="photo-round w-64 h-64" alt="Database rocket launching amid confetti" />
-</div>
+<JoinCards steps />
 
 <img src="/img/itenium-logo.png" class="brand" alt="itenium" />
 

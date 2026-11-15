@@ -152,9 +152,6 @@
 
 .menu li { font-size: 2rem; line-height: 1.6; font-weight: 700; color: var(--df-cream); }
 
-.steps { counter-reset: step; list-style: none; padding: 0; margin: 1rem 0 0; display: grid; gap: .6rem; }
-.steps li { counter-increment: step; display: flex; align-items: center; gap: .9rem; font-size: 1.3rem; color: var(--df-cream); }
-.steps li::before { content: counter(step); flex: none; width: 2rem; height: 2rem; border-radius: 50%; border: 1px solid var(--df-gold); color: var(--df-gold); font-weight: 800; display: inline-flex; align-items: center; justify-content: center; font-size: 1rem; }
 .slidev-layout kbd { font-family: 'JetBrains Mono', monospace; font-size: .85em; padding: .05em .4em; border: 1px solid var(--df-border); border-bottom-width: 2px; border-radius: 6px; color: var(--df-cream); background: var(--df-surface); }
 
 /* Competition: award cards + penalty strip */
@@ -186,3 +183,17 @@
 .db { display: inline-flex; align-items: center; gap: .35rem; font-family: 'JetBrains Mono', monospace; font-size: .68rem; font-weight: 700; letter-spacing: .04em; padding: .2rem .55rem; border-radius: 999px; border: 1px solid currentColor; text-transform: uppercase; }
 .db-pg { color: var(--df-gold); }
 .db-ms { color: var(--df-copper); }
+
+/* Join cards: WiFi + URL (cover and join slide) */
+.join-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; margin-top: 1.4rem; }
+.join-card { border: 1px solid var(--df-border); border-radius: 20px; background: var(--df-bg-raised); padding: 1.2rem 1.5rem; }
+.join-head { display: flex; align-items: center; gap: .75rem; margin-bottom: .6rem; font-size: 1.4rem; font-weight: 700; color: var(--df-cream); }
+.join-num { flex: none; width: 2rem; height: 2rem; border-radius: 50%; border: 1px solid var(--df-gold); color: var(--df-gold); font-weight: 800; display: inline-flex; align-items: center; justify-content: center; font-size: 1rem; }
+.join-cap { margin-top: .6rem; font-family: 'JetBrains Mono', monospace; font-size: .75rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--df-muted); }
+.join-val { font-family: 'JetBrains Mono', monospace; font-size: 2.1rem; font-weight: 800; line-height: 1.2; color: var(--df-gold); }
+.join-url { margin-top: .4rem; font-family: 'JetBrains Mono', monospace; font-size: 2.1rem; }
+.join-small { display: flex; align-items: center; gap: .75rem; padding: .8rem 1.5rem; font-size: 1.25rem; color: var(--df-text); }
+.join-compact .join-card { padding: .9rem 1.3rem; }
+.join-compact .join-head { font-size: 1rem; margin-bottom: .2rem; }
+.join-compact .join-cap { margin-top: .35rem; }
+.join-compact .join-val, .join-compact .join-url { font-size: 1.35rem; }

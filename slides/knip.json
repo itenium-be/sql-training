@@ -1,5 +1,8 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": [
+    "components/*.vue"
+  ],
   "ignoreDependencies": [
     "@fontsource/.*",
     "@slidev/theme-default",
