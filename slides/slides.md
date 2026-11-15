@@ -3,9 +3,9 @@ theme: default
 title: SQL Showdown · DevFest Paris
 info: |
   SQL Showdown by itenium, DevFest Paris 2026.
-gameUrl: http://TODO-HOST
-wifiNetwork: TODO-NETWORK
-wifiPassword: TODO-PASSWORD
+gameUrl: http://sql.lan
+wifiNetwork: IteniumWorkshop
+wifiPassword: ConnectToWorkshop
 favicon: /favicon.png
 colorSchema: dark
 aspectRatio: 16/9
@@ -107,7 +107,7 @@ layout: default
   <h1 class="!mb-2">Let’s get this <span class="gradient-copper">party</span> started!</h1>
 
   <ol class="steps">
-    <li>Join the WiFi <strong>{{ $slidev.configs.wifiNetwork }}</strong></li>
+    <li>Join the WiFi <strong>{{ $slidev.configs.wifiNetwork }}</strong> · password <strong>{{ $slidev.configs.wifiPassword }}</strong></li>
     <li>Browse to the game</li>
     <li>Pick a name and an avatar</li>
     <li>Wait for the start signal</li>
