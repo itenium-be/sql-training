@@ -32,14 +32,14 @@ Players query with a read-only `player` user and every query is killed after 5 s
 
 Venue LAN cable → router **WAN** port, minipc → router **LAN** port. Never connect the venue/home LAN to a router LAN port: that bridges both networks and their DHCP servers.
 
-| What          | Value                                              |
-|---------------|----------------------------------------------------|
-| Router        | GL.iNet GL-MT6000, `10.42.42.1` (admin UI + ssh)   |
-| WiFi          | `IteniumWorkshop` / `IteniumWorkshop-5G`           |
-| WiFi password | `ConnectToWorkshop`                                |
-| Minipc        | `fear`, `10.42.42.42` (DHCP reservation by MAC)    |
-| Game URL      | `http://sql.lan/` (dnsmasq on the router)          |
-| Players       | DHCP `10.42.42.100–249`                            |
+| What          | Value                                                              |
+|---------------|--------------------------------------------------------------------|
+| Router        | GL.iNet GL-MT6000, `10.42.42.1` (admin UI + ssh)                   |
+| WiFi          | `IteniumWorkshop` / `IteniumWorkshop-5G`                           |
+| WiFi password | `ConnectToWorkshop`                                                |
+| Minipc        | `fear`, `10.42.42.42` on either LAN port (DHCP reservation by MAC) |
+| Game URL      | `http://sql.lan/` (dnsmasq on the router)                          |
+| Players       | DHCP `10.42.42.100–249`                                            |
 
 Players on a VPN or with forced DNS can't resolve `sql.lan`: give them `http://10.42.42.42/`.
 
