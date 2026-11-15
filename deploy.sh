@@ -105,11 +105,12 @@ done
 docker compose exec -T postgres psql -U admin -d world -v ON_ERROR_STOP=1 -q -f /docker-entrypoint-initdb.d/04-hardening.sql
 
 docker compose ps
-echo "API_KEY: $API_KEY"
 REMOTE
+
+API_KEY="$(ssh "$(target)" "grep -E '^API_KEY=' '$MINIPC_DIR/.env' | cut -d= -f2-")"
 
 echo
 echo "Game:        http://$MINIPC_IP/"
-echo "Admin:       http://$MINIPC_IP/admin  (log in with API_KEY above)"
+echo "Admin:       http://$MINIPC_IP/admin  (API_KEY: $API_KEY)"
 echo "API:         http://$MINIPC_IP/api/"
 echo "Slides:      http://$MINIPC_IP/slides/"
