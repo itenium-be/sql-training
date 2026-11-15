@@ -110,5 +110,6 @@ REMOTE
 
 echo
 echo "Game:        http://$MINIPC_IP/"
+echo "Admin:       http://$MINIPC_IP/admin  (log in with API_KEY above)"
 echo "API:         http://$MINIPC_IP/api/"
 echo "Slides:      http://$MINIPC_IP/slides/"
