@@ -31,7 +31,7 @@ set_env() {
 }
 
 MINIPC_IP="$(get_env MINIPC_IP)"
-MINIPC_IP="${MINIPC_IP:-192.168.1.20}"
+MINIPC_IP="${MINIPC_IP:-10.42.42.42}"
 MINIPC_USER="$(get_env MINIPC_USER)"
 MINIPC_USER="${MINIPC_USER:-wouter}"
 MINIPC_DIR="$(get_env MINIPC_DIR)"

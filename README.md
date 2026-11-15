@@ -5,17 +5,17 @@ Bun: v1.4
 
 ## Host the game
 
-One machine (e.g. a minipc on a dedicated router) runs everything; players only need a browser.
+One machine (a minipc on a dedicated router) runs everything; players only need a browser.
 
 From your PC (ssh key access to the minipc, Docker on the minipc):
 
 ```sh
 ./deploy.sh
-# Players browse to http://<minipc-ip>/
+# Players browse to http://sql.lan/
 ```
 
 `deploy.sh` copies the current checkout to `~/sql-training` on the minipc, rebuilds and starts everything there, waits until it responds and prints the URLs.
-Copy `.env.sample` to `.env`. The minipc IP is read from `MINIPC_IP` in `.env` (default `192.168.1.20`); if ssh fails it asks for a new IP and saves it.
+Copy `.env.sample` to `.env`. The minipc IP is read from `MINIPC_IP` in `.env` (default `10.42.42.42`); if ssh fails it asks for a new IP and saves it.
 Optional: `MINIPC_USER` (default `wouter`), `MINIPC_DIR`. The `API_KEY` secret is generated in `.env` on the minipc on first deploy.
 `./deploy.sh --reset` wipes all data first.
 
@@ -27,6 +27,21 @@ Everything goes through the nginx reverse proxy on port 80 (`HTTP_PORT` to chang
 
 The databases are not exposed outside of Docker.
 Players query with a read-only `player` user and every query is killed after 5 seconds.
+
+### Workshop network
+
+Venue LAN cable → router **WAN** port, minipc → router **LAN** port. Never connect the venue/home LAN to a router LAN port: that bridges both networks and their DHCP servers.
+
+| What          | Value                                              |
+|---------------|----------------------------------------------------|
+| Router        | GL.iNet GL-MT6000, `10.42.42.1` (admin UI + ssh)   |
+| WiFi          | `IteniumWorkshop` / `IteniumWorkshop-5G`           |
+| WiFi password | `ConnectToWorkshop`                                |
+| Minipc        | `fear`, `10.42.42.42` (DHCP reservation by MAC)    |
+| Game URL      | `http://sql.lan/` (dnsmasq on the router)          |
+| Players       | DHCP `10.42.42.100–249`                            |
+
+Players on a VPN or with forced DNS can't resolve `sql.lan`: give them `http://10.42.42.42/`.
 
 ### Reset
 
