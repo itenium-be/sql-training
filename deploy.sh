@@ -109,8 +109,23 @@ REMOTE
 
 API_KEY="$(ssh "$(target)" "grep -E '^API_KEY=' '$MINIPC_DIR/.env' | cut -d= -f2-")"
 
-echo
-echo "Game:        http://$MINIPC_IP/"
-echo "Admin:       http://$MINIPC_IP/admin  (API_KEY: $API_KEY)"
-echo "API:         http://$MINIPC_IP/api/"
-echo "Slides:      http://$MINIPC_IP/slides/"
+B=$'\e[1m' G=$'\e[1;33m' D=$'\e[2m' X=$'\e[0m'
+[ -t 1 ] || B= G= D= X=
+URL="http://$MINIPC_IP"
+
+cat <<SUMMARY
+
+${G}  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${X}
+${G}    SQL Showdown${X}  ${D}on $(target)${X}
+${G}  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${X}
+
+    ${B}Game${X}           $URL/   ${D}players: http://sql.lan/${X}
+    ${B}Admin${X}          $URL/admin
+    ${B}API key${X}        $API_KEY
+    ${B}Slides${X}         $URL/slides/
+    ${B}API${X}            $URL/api/
+
+    ${B}Start over${X}     ./deploy.sh --reset        ${D}wipes players and scores${X}
+    ${B}Reopen lobby${X}   admin page → mode "init"   ${D}keeps players and scores${X}
+
+SUMMARY
