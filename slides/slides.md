@@ -107,7 +107,7 @@ layout: default
   <h1 class="!mb-2">Let’s get this <span class="gradient-copper">party</span> started!</h1>
 
   <ol class="steps">
-    <li>Join the WiFi <strong>{{ $slidev.configs.wifiNetwork }}</strong> · password <strong>{{ $slidev.configs.wifiPassword }}</strong></li>
+    <li><span>Join the WiFi <strong>{{ $slidev.configs.wifiNetwork }}</strong><br><span class="text-base opacity-75">password <strong>{{ $slidev.configs.wifiPassword }}</strong></span></span></li>
     <li>Browse to the game</li>
     <li>Pick a name and an avatar</li>
     <li>Wait for the start signal</li>
