@@ -145,3 +145,15 @@ layout: center
 </div>
 
 <img src="/img/itenium-logo.png" class="brand" alt="itenium" />
+
+---
+layout: center
+---
+
+<div class="text-center">
+  <h1>Feedback</h1>
+  <img src="/img/qr-feedback.svg" class="w-72 h-72 mx-auto mt-4 rounded-xl" alt="QR code to session feedback on openfeedback.io" />
+  <p class="mt-6 text-xl"><a href="https://openfeedback.io/sBSRvQdfgZv87UJ1Zr8p/2026-11-27/df26-027" target="_blank">openfeedback.io</a></p>
+</div>
+
+<img src="/img/itenium-logo.png" class="brand" alt="itenium" />
