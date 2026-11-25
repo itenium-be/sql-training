@@ -4,7 +4,8 @@ import { useAppDispatch, useAppSelector } from '../store';
 import { fetchData } from './fetchData';
 import { useEffect } from 'react';
 import { ExerciseId } from '../exercises/exerciseModels';
-import { DatabaseIcon } from './Icons';
+import Dropdown from 'react-bootstrap/Dropdown';
+import { DatabaseIcon, MenuIcon } from './Icons';
 import { avatarIndex, usePlayers } from '../game';
 import { Avatar } from '../Avatar';
 
@@ -41,6 +42,26 @@ export function TopNavigation() {
             <span className="df-player-name">{registeredName}</span>
           </span>
         )}
+        <Dropdown align="end" className="df-menu">
+          <Dropdown.Toggle className="df-menu-toggle" aria-label="Menu">
+            <MenuIcon />
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            {registeredName && (
+              <>
+                <Dropdown.Header>Datasets</Dropdown.Header>
+                {exercises.map(ex => (
+                  <Dropdown.Item key={ex.id} as={Link} to={ex.id} active={selected === ex.id} onClick={() => dispatch(fetchData(ex.id))}>
+                    {ex.id}
+                  </Dropdown.Item>
+                ))}
+                <Dropdown.Divider />
+              </>
+            )}
+            <Dropdown.Item as={Link} to="/" active={!selected} onClick={() => dispatch(fetchData('home'))}>Leaderboard</Dropdown.Item>
+            <Dropdown.Item href="/slides/" target="_blank" rel="noreferrer">Slides</Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
       </div>
     </header>
     <div className="df-tabs">
