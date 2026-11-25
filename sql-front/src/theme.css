@@ -49,6 +49,16 @@ body {
   min-height: 100vh;
 }
 
+.df-app {
+  max-width: 90%;
+  padding-top: 15px;
+  padding-bottom: 25px;
+}
+
+@media (max-width: 820px) {
+  .df-app { max-width: none; padding-left: 10px; padding-right: 10px; }
+}
+
 h1, h2, h3, h4 {
   font-weight: 800;
   letter-spacing: -0.02em;

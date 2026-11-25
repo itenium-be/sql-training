@@ -60,7 +60,7 @@ function Game() {
 
   return (
     <BrowserRouter>
-      <Container style={{paddingTop: 15, paddingBottom: 25, maxWidth: '90%'}}>
+      <Container className="df-app">
         <TopNavigation />
         <Routes>
           <Route path="/" element={ <Home /> } />
