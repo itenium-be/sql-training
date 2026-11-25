@@ -76,12 +76,13 @@ export function YourScores({scores, you}: {scores: Score[]; you: string}) {
             const k = key(score.game, score.exerciseid);
             const award = awards.get(k);
             const max = maxPoints.get(k);
+            const help = helpLabel(score);
             return (
               <tr key={k} className="ys-row" onClick={() => setOpen(score)}>
                 <td className="ys-id">{k}</td>
                 <td className="ys-q">{questions[k] ?? ''}</td>
                 <td className="ys-num">{score.points ?? max} / {max}</td>
-                <td className="ys-gap ys-help" data-label="Help">{helpLabel(score)}</td>
+                <td className={help === '—' ? 'ys-gap ys-help ys-help-none' : 'ys-gap ys-help'} data-label="Help">{help}</td>
                 <td className="ys-metric" data-label="⚡ Time"><Metric value={score.elapsed} format={formatClock} you={you} award="fastest"
                   holder={award?.fastest ? { player: award.fastest.player, value: award.fastest.time } : null} /></td>
                 <td className="ys-metric" data-label="</> Chars"><Metric value={score.solutionlength} format={n => `${n} ch`} formatGap={String} you={you} award="shortest"

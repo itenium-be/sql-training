@@ -559,6 +559,7 @@ td.ys-gap { display: table-cell; }
   .ys-table .ys-help { grid-column: 1 / -1; margin: 0; }
   .ys-table .ys-help::before { content: attr(data-label) ': '; color: var(--df-gold); font-weight: 700; }
   .ys-table .ys-q:empty { display: none; }
+  .ys-table .ys-help-none { display: none; }
   .ys-table .ys-metric { min-width: 0; }
   .ys-table .ys-metric::before {
     content: attr(data-label);
