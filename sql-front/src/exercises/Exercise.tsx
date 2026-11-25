@@ -5,6 +5,7 @@ import { ATTEMPTS_PER_PENALTY, ExerciseDetails, ExerciseModel, ExpectedModel, Sq
 import { livePoints } from "./livePoints";
 import { ExerciseSampleData, ExercisesData } from "./ExerciseSampleData";
 import { ResultDiffTable } from "./ResultDiffTable";
+import { SampleQuery } from "./SampleQuery";
 import { authFetch, config } from "../config";
 import { useAppDispatch, useAppSelector } from "../store";
 import { Alert } from "react-bootstrap";
@@ -62,7 +63,7 @@ function ExerciseIntro({exercise, onStart}: {exercise: ExerciseModel, onStart: (
       </div>
       {tab === 'sample' ? (
         <>
-          <pre>{exercise.sampleQuery}</pre>
+          <SampleQuery query={exercise.sampleQuery} />
           <Button variant="success" className="df-mobile-only" onClick={onStart}>
             Let's Start
           </Button>
@@ -393,7 +394,7 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
                 )}
                 {resultTab === 'sample' && (
                   <>
-                    <pre className="df-sample-query">{exercise.sampleQuery}</pre>
+                    <SampleQuery query={exercise.sampleQuery} className="df-sample-query" />
                     <ExerciseSampleData />
                   </>
                 )}

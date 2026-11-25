@@ -1208,9 +1208,29 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
 .df-copy:hover { color: var(--df-gold); border-color: var(--df-gold); }
 
 .df-mobile-only { display: none; }
+.df-query-wrap { position: relative; }
+.df-query-expand { display: none; }
+.df-query-full { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font-size: .9rem; color: var(--df-cream); }
 
 @media (max-width: 820px) {
   .df-mobile-only { display: inline-block; margin-bottom: 12px; }
+  .df-query-wrap pre { padding-right: 44px; }
+  .df-query-expand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--df-border);
+    border-radius: 8px;
+    background: var(--df-surface);
+    color: var(--df-gold);
+    font-size: 18px;
+    line-height: 1;
+  }
 
   .df-sample-table, .df-sample-table tbody { display: block; border: 0; counter-reset: sample-row; }
   .df-sample-table thead { display: none; }
