@@ -310,6 +310,7 @@
   background: rgba(233, 180, 76, 0.18);
   color: var(--df-gold);
 }
+.bm-games-select { display: none; }
 
 .bm-awards {
   flex: 1;
@@ -481,8 +482,20 @@ td.ys-gap { display: table-cell; }
   /* Exercises: exercise + solved-by on one line, the three awards below */
   .bm-subhead { gap: 10px; }
   .bm-subhead h2 { font-size: 20px; }
-  .bm-games { margin-left: 0; padding: 3px; }
-  .bm-game { padding: 6px 12px; font-size: 12px; letter-spacing: 0.04em; }
+  .bm-games { display: none; }
+  .bm-games-select {
+    display: block;
+    margin-left: auto;
+    padding: 6px 30px 6px 14px;
+    border: 1px solid var(--df-border);
+    border-radius: 999px;
+    background: var(--df-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23e9b44c' stroke-width='3'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center;
+    color: var(--df-gold);
+    font: 800 13px var(--df-font);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    appearance: none;
+  }
   .bm-awards { border-radius: 14px; }
   .bm-awrow, .bm-awards-ended .bm-awrow {
     grid-template-columns: repeat(3, minmax(0, 1fr));

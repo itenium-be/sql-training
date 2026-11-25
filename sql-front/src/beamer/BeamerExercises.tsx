@@ -61,6 +61,9 @@ export function BeamerExercises({entities, scores, you, ended}: {entities: Exerc
             <button key={g.id} type="button" className="bm-game" aria-pressed={g.id === game} onClick={() => switchGame(g.id)}>{g.id}</button>
           ))}
         </div>
+        <select className="bm-games-select" aria-label="Game" value={game} onChange={e => switchGame(e.target.value as ExerciseId)}>
+          {entities.map(g => <option key={g.id} value={g.id}>{g.id}</option>)}
+        </select>
       </div>
 
       <div className={ended ? 'bm-awards bm-awards-ended' : 'bm-awards'}>
