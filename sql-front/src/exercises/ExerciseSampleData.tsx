@@ -14,16 +14,16 @@ export function ExerciseSampleData() {
     return <p><b>No data!</b></p>
   }
 
-  return <ExercisesData data={data} />
+  return <ExercisesData data={data} className="df-sample-table" />
 }
 
-export function ExercisesData({data}: {data: Record<string, unknown>[]}) {
+export function ExercisesData({data, className}: {data: Record<string, unknown>[]; className?: string}) {
   if (!data.length) {
     return <b>No resulting data!</b>
   }
 
   return (
-    <Table striped bordered size="sm">
+    <Table striped bordered size="sm" className={className}>
       <TableHeader obj={data[0]} />
       <TableBody data={data} />
     </Table>
@@ -49,14 +49,14 @@ function TableBody({data}: {data: Record<string, unknown>[]}) {
     <tbody>
       {data.map((record, index) => (
         <tr key={index}>
-          {cols.map(col => <Cell key={col} value={record[col]} />)}
+          {cols.map(col => <Cell key={col} col={col} value={record[col]} />)}
         </tr>
       ))}
     </tbody>
   )
 }
 
-function Cell({value}: {value: unknown}) {
+function Cell({col, value}: {col: string; value: unknown}) {
   const { node, alignRight } = formatValue(value);
-  return <td style={alignRight ? {textAlign: 'right'} : undefined}>{node}</td>;
+  return <td data-label={col} style={alignRight ? {textAlign: 'right'} : undefined}>{node}</td>;
 }
