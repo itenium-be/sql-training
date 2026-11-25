@@ -62,10 +62,10 @@ function ExerciseIntro({exercise, onStart}: {exercise: ExerciseModel, onStart: (
       </div>
       {tab === 'sample' ? (
         <>
+          <pre>{exercise.sampleQuery}</pre>
           <Button variant="success" className="df-mobile-only" onClick={onStart}>
             Let's Start
           </Button>
-          <pre>{exercise.sampleQuery}</pre>
           <ExerciseSampleData />
         </>
       ) : (
