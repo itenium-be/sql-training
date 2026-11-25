@@ -501,6 +501,7 @@ td.ys-gap { display: table-cell; }
   .bm-awrow, .bm-awards-ended .bm-awrow {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
+    align-items: start;
     padding: 12px 14px;
     font-size: 15px;
     background: rgba(31, 23, 15, 0.8);
@@ -521,6 +522,7 @@ td.ys-gap { display: table-cell; }
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--df-gold);
+    white-space: nowrap;
   }
   .bm-awval { font-size: 13px; }
   .bm-solvedby small { font-size: 12px; }
