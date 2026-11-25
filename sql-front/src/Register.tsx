@@ -38,6 +38,7 @@ export function Register() {
               <input
                 className="df-sql-input"
                 value={name}
+                maxLength={20}
                 size={Math.max(trimmed.length || 9, 9)}
                 placeholder="your name"
                 onChange={e => setName(e.target.value)}

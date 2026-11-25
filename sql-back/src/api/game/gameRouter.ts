@@ -8,6 +8,7 @@ import { type AuthRequest, mintToken, requirePlayer } from "./auth";
 import { gameQuery } from "./gameDb";
 import { gameModes, getGameMode, parseGameMode, setGameMode, startRefusal } from "./gameMode";
 import type { ExerciseStart, ExerciseSubmit } from "./gameModel";
+import { validateName } from "./playerName";
 import { calculatePoints } from "./scoring";
 
 export async function restoreGameMode() {
@@ -22,13 +23,11 @@ export const gameRouter: Router = express.Router();
 
 const registerUser: RequestHandler = async (_req: Request, res: Response) => {
   console.log("register user", _req.body.name);
-  const name = typeof _req.body.name === "string" ? _req.body.name.trim() : "";
-  if (!name) {
-    return res.status(400).send({ message: "Name is required" });
+  const validated = validateName(_req.body.name);
+  if ("error" in validated) {
+    return res.status(400).send({ message: validated.error });
   }
-  if (name.length > 100) {
-    return res.status(400).send({ message: "Name is too long (max 100 characters)" });
-  }
+  const { name } = validated;
 
   const result = await gameQuery("INSERT INTO players (name) VALUES ($1) ON CONFLICT DO NOTHING", [name]);
   if (!result.rowCount) {
