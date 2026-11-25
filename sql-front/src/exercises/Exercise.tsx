@@ -371,11 +371,11 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
 
             <div className="df-results">
               <div className="df-rtabs" role="tablist">
-                <button type="button" role="tab" aria-selected={resultTab === 'result'} onClick={() => setResultTab('result')}>Your result</button>
+                <button type="button" role="tab" aria-selected={resultTab === 'result'} onClick={() => setResultTab('result')}><span className="df-label-long">Your result</span><span className="df-label-short">Result</span></button>
                 <button type="button" role="tab" aria-selected={resultTab === 'expected'} onClick={() => setResultTab('expected')}>
                   {expected ? 'Expected' : '🔒 Expected'}
                 </button>
-                <button type="button" role="tab" aria-selected={resultTab === 'sample'} onClick={() => setResultTab('sample')}>Sample data</button>
+                <button type="button" role="tab" aria-selected={resultTab === 'sample'} onClick={() => setResultTab('sample')}><span className="df-label-long">Sample data</span><span className="df-label-short">Sample</span></button>
                 <button type="button" role="tab" aria-selected={resultTab === 'diagram'} onClick={() => setResultTab('diagram')}>Diagram</button>
               </div>
               <div className="df-results-body">

@@ -1029,6 +1029,15 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
 
 .df-rtabs button[aria-selected="true"] { background: rgba(233, 180, 76, 0.16); color: var(--df-gold); }
 
+.df-label-short { display: none; }
+
+@media (max-width: 820px) {
+  .df-rtabs { overflow-x: auto; padding: 6px; gap: 2px; }
+  .df-rtabs button { flex: none; white-space: nowrap; padding: 0 10px; }
+  .df-label-long { display: none; }
+  .df-label-short { display: inline; }
+}
+
 .df-results-body { padding: 14px; overflow-x: auto; }
 .df-sample-query {
   margin: 0 0 12px;
