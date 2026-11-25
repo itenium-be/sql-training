@@ -1188,8 +1188,11 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
 }
 .df-copy:hover { color: var(--df-gold); border-color: var(--df-gold); }
 
+.df-mobile-only { display: none; }
 
 @media (max-width: 820px) {
+  .df-mobile-only { display: inline-block; margin-bottom: 12px; }
+
   .df-sample-table, .df-sample-table tbody { display: block; border: 0; counter-reset: sample-row; }
   .df-sample-table thead { display: none; }
   .df-sample-table tbody { display: flex; flex-direction: column; gap: 8px; }
