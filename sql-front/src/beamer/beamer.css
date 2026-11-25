@@ -552,8 +552,8 @@ td.ys-gap { display: table-cell; }
     border-radius: 14px;
   }
   .ys-table tr.ys-row > td { padding: 0; border: 0; box-shadow: none; background: none; }
-  .ys-table .ys-id { grid-column: span 2; align-self: center; }
-  .ys-table .ys-num { grid-row: 1; grid-column: 3; padding-right: 6px !important; text-align: right; color: var(--df-cream); font-weight: 700; }
+  .ys-table .ys-id { grid-row: 1; grid-column: 1 / -1; align-self: center; }
+  .ys-table .ys-num { grid-row: 1; grid-column: 1 / -1; justify-self: end; text-align: right; color: var(--df-cream); font-weight: 700; }
   .ys-table .ys-num::before { content: 'Score '; color: var(--df-gold); }
   .ys-table .ys-q { grid-column: 1 / -1; min-width: 0; }
   .ys-table .ys-help { grid-column: 1 / -1; margin: 0; }
