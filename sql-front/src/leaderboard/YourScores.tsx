@@ -81,12 +81,12 @@ export function YourScores({scores, you}: {scores: Score[]; you: string}) {
                 <td className="ys-id">{k}</td>
                 <td className="ys-q">{questions[k] ?? ''}</td>
                 <td className="ys-num">{score.points ?? max} / {max}</td>
-                <td className="ys-gap">{helpLabel(score)}</td>
-                <td><Metric value={score.elapsed} format={formatClock} you={you} award="fastest"
+                <td className="ys-gap ys-help" data-label="Help">{helpLabel(score)}</td>
+                <td className="ys-metric" data-label="⚡ Time"><Metric value={score.elapsed} format={formatClock} you={you} award="fastest"
                   holder={award?.fastest ? { player: award.fastest.player, value: award.fastest.time } : null} /></td>
-                <td><Metric value={score.solutionlength} format={n => `${n} ch`} formatGap={String} you={you} award="shortest"
+                <td className="ys-metric" data-label="</> Chars"><Metric value={score.solutionlength} format={n => `${n} ch`} formatGap={String} you={you} award="shortest"
                   holder={award?.shortest ? { player: award.shortest.player, value: award.shortest.chars } : null} /></td>
-                <td><Metric value={score.cost} format={String} you={you} award="leanest"
+                <td className="ys-metric" data-label="🍃 Reads"><Metric value={score.cost} format={String} you={you} award="leanest"
                   holder={award?.leanest ? { player: award.leanest.player, value: award.leanest.reads } : null} /></td>
               </tr>
             );

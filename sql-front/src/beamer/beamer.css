@@ -539,5 +539,36 @@ td.ys-gap { display: table-cell; }
   .bm-standing-rank { font-size: 22px; }
   .bm-pills { margin-left: 0; width: 100%; justify-content: flex-start; gap: 6px; }
   .bm-pill { padding: 4px 10px; font-size: 14px; gap: 5px; }
-  .ys-q { min-width: 180px; }
+  .ys-table, .ys-table tbody { display: block; border: 0; }
+  .ys-table thead { display: none; }
+  .ys-table tbody { display: flex; flex-direction: column; gap: 10px; }
+  .ys-table tr.ys-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px 10px;
+    padding: 12px 14px;
+    background: rgba(31, 23, 15, 0.8);
+    border: 1px solid var(--df-border-soft);
+    border-radius: 14px;
+  }
+  .ys-table tr.ys-row > td { padding: 0; border: 0; box-shadow: none; background: none; }
+  .ys-table .ys-id { grid-column: span 2; align-self: center; }
+  .ys-table .ys-num { text-align: right; color: var(--df-gold); font-weight: 700; }
+  .ys-table .ys-q { grid-column: 1 / -1; min-width: 0; }
+  .ys-table .ys-help { grid-column: 1 / -1; margin: 0; }
+  .ys-table .ys-help::before { content: attr(data-label) ': '; color: var(--df-gold); font-weight: 700; }
+  .ys-table .ys-q:empty { display: none; }
+  .ys-table .ys-metric { min-width: 0; }
+  .ys-table .ys-metric::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 2px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--df-gold);
+    white-space: nowrap;
+  }
+  .ys-table .ys-gap { white-space: normal; }
 }
