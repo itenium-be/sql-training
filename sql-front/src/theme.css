@@ -288,12 +288,6 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
   font-weight: 700;
 }
 
-@media (max-width: 820px) {
-  .df-menu { display: block; }
-  .df-slides-link, .df-tabs, .df-player:has(.df-avatar) .df-player-name { display: none; }
-  .df-header-right .df-player:has(.df-avatar) { padding: 4px; }
-}
-
 .df-tabs {
   display: flex;
   align-items: center;
@@ -313,6 +307,12 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
 .df-tab:hover { color: var(--df-cream); border-color: var(--df-gold-deep); text-decoration: none; }
 .df-tab-active { border-color: var(--df-gold); background: rgba(233, 180, 76, 0.18); color: var(--df-gold); }
 .df-tab-active:hover { color: var(--df-gold); border-color: var(--df-gold); }
+
+@media (max-width: 820px) {
+  .df-menu { display: block; }
+  .df-slides-link, .df-tabs, .df-player:has(.df-avatar) .df-player-name { display: none; }
+  .df-header-right .df-player:has(.df-avatar) { padding: 4px; }
+}
 
 .nav-tabs {
   --bs-nav-tabs-border-width: 0;
