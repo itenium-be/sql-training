@@ -353,6 +353,7 @@
   text-overflow: ellipsis;
 }
 .bm-awval { font-family: 'JetBrains Mono', ui-monospace, monospace; color: var(--df-muted); font-size: 17px; }
+.bm-aw-label { display: none; }
 .bm-mine .bm-awname { color: var(--df-gold); }
 .bm-mine .bm-awval { color: var(--df-gold); }
 .bm-solvedby { font-family: 'JetBrains Mono', ui-monospace, monospace; color: var(--df-muted); }
@@ -496,19 +497,34 @@ td.ys-gap { display: table-cell; }
     text-transform: uppercase;
     appearance: none;
   }
-  .bm-awards { border-radius: 14px; }
+  .bm-awards { background: none; border: 0; gap: 10px; }
   .bm-awrow, .bm-awards-ended .bm-awrow {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 6px 10px;
-    padding: 10px 12px;
+    gap: 10px;
+    padding: 12px 14px;
     font-size: 15px;
+    background: rgba(31, 23, 15, 0.8);
+    border: 1px solid var(--df-border-soft);
+    border-radius: 14px;
   }
+  .bm-awrow:last-child { border-bottom: 1px solid var(--df-border-soft); }
   .bm-awrow > :first-child { grid-column: span 2; }
+  .bm-awrow > :first-child .bm-awname { font-weight: 700; }
   .bm-awrow > :nth-child(2) { text-align: right; }
-  .bm-awrow-head { font-size: 11px; padding-top: 10px; padding-bottom: 10px; }
-  .bm-awrow-head > :nth-child(6) { display: none; }
+  .bm-awrow-head { display: none; }
+  .bm-aw-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--df-gold);
+  }
   .bm-awval { font-size: 13px; }
   .bm-solvedby small { font-size: 12px; }
+  .bm-solvedby small::after { content: ' solved'; }
   .bm-sol-btn { grid-column: 1 / -1; justify-self: stretch; justify-content: center; padding: 6px 12px; font-size: 12px; }
   .bm-sol-panel { grid-template-columns: minmax(0, 1fr); }
   .bm-sol-card pre { font-size: 12px; overflow-x: auto; }

@@ -1,15 +1,17 @@
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { ExerciseId, ExerciseModel, Score } from '../exercises/exerciseModels';
 import { awardLabel, ExerciseAward, exerciseAwards } from '../leaderboard/leaderboardData';
 import { BoltIcon, CodeIcon, LeafIcon } from '../layout/Icons';
 import { SolutionCard, SolutionTag, exerciseSolutions, formatClock, myExerciseResult } from './beamerData';
 
-function Holder({name, value, you}: {name: string | undefined; value: string; you: string}) {
+function Holder({name, value, you, label}: {name: string | undefined; value: string; you: string; label: ReactNode}) {
+  const caption = <span className="bm-aw-label">{label}</span>;
   if (!name) {
-    return <div className="bm-aw"><span className="bm-dash">—</span></div>;
+    return <div className="bm-aw">{caption}<span className="bm-dash">—</span></div>;
   }
   return (
     <div className={name === you ? 'bm-aw bm-mine' : 'bm-aw'}>
+      {caption}
       <span className="bm-awname">{name}</span>
       <span className="bm-awval">{value}</span>
     </div>
@@ -81,9 +83,9 @@ export function BeamerExercises({entities, scores, you, ended}: {entities: Exerc
             <div key={award.exerciseId} className={isOpen ? 'bm-awrow bm-awrow-open' : 'bm-awrow'}>
               <div className="bm-aw"><span className="bm-awname">{awardLabel(award)}</span></div>
               <span className="bm-solvedby">{award.solvedBy}<small>/{totalPlayers}</small></span>
-              <Holder name={award.fastest?.player} value={award.fastest ? formatClock(award.fastest.time) : ''} you={you} />
-              <Holder name={award.shortest?.player} value={award.shortest ? `${award.shortest.chars} ch` : ''} you={you} />
-              <Holder name={award.leanest?.player} value={award.leanest ? `${award.leanest.reads} reads` : ''} you={you} />
+              <Holder name={award.fastest?.player} value={award.fastest ? formatClock(award.fastest.time) : ''} you={you} label={<><BoltIcon size={12} />Fastest</>} />
+              <Holder name={award.shortest?.player} value={award.shortest ? `${award.shortest.chars} ch` : ''} you={you} label={<><CodeIcon size={12} />Shortest</>} />
+              <Holder name={award.leanest?.player} value={award.leanest ? `${award.leanest.reads} reads` : ''} you={you} label={<><LeafIcon size={12} />Leanest</>} />
               {ended && (
                 <button type="button" className="bm-sol-btn" aria-expanded={isOpen} onClick={() => setOpen(isOpen ? null : award.exerciseId)}>
                   <span className="bm-sol-chev">▸</span> Solutions
