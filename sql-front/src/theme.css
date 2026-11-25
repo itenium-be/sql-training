@@ -963,12 +963,16 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
 }
 
 .df-editor-dialect {
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 3px 10px;
+  display: inline-flex;
+  padding: 4px;
   border-radius: 999px;
   border: 1px solid var(--df-border);
-  color: var(--df-muted);
+}
+.df-dialect-pg { color: #4169e1; }
+.df-dialect-mssql { color: #cc2927; }
+
+@media (pointer: coarse) {
+  .df-shortcut { display: none; }
 }
 
 .df-timer {

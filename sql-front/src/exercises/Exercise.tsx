@@ -18,6 +18,7 @@ import { CopyButton } from "../layout/CopyButton";
 import { formatElapsed } from "./formatElapsed";
 import { formatScored } from "./formatScored";
 import { ActivityRow, findActivity } from "./myActivity";
+import { PostgresIcon, SqlServerIcon } from "../layout/Icons";
 
 const emojis = ['🎉', '🥳', '🎊', '💯', '🌟', '🚀', '🦄', '🎈', '🎆', '🏆'];
 
@@ -348,10 +349,12 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
           <>
             <div className="df-editor">
               <div className="df-editor-head">
-                <span className="df-editor-dialect">{currentGame === 'Worldcup' ? 'SQL Server' : 'PostgreSQL'}</span>
+                {currentGame === 'Worldcup'
+                  ? <span className="df-editor-dialect df-dialect-mssql" title="SQL Server" aria-label="SQL Server"><SqlServerIcon /></span>
+                  : <span className="df-editor-dialect df-dialect-pg" title="PostgreSQL" aria-label="PostgreSQL"><PostgresIcon /></span>}
                 <QuestionTimer origin={origin} />
                 <Button variant="primary" onClick={handleFetch} disabled={!sqlText.length} className="df-editor-submit">
-                  Submit&nbsp;&nbsp;⌘↵
+                  Submit<span className="df-shortcut">&nbsp;&nbsp;⌘↵</span>
                 </Button>
               </div>
               <SqlEditor

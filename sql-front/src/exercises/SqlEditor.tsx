@@ -140,7 +140,7 @@ export function SqlEditor({ game, exerciseId, value, onChange, onSubmit, height 
     syntaxHighlighting(devfestHighlight),
     devfestTheme,
     EditorView.lineWrapping,
-    placeholder('Enter your SQL… (Ctrl+Enter to submit)'),
+    placeholder(window.matchMedia('(pointer: coarse)').matches ? 'Enter your SQL…' : 'Enter your SQL… (Ctrl+Enter to submit)'),
     lintGutter(),
     linter(async view => {
       const text = view.state.doc.toString();
