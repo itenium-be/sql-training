@@ -429,3 +429,84 @@ td.ys-gap { display: table-cell; }
   color: var(--df-text);
   white-space: pre-wrap;
 }
+
+@media (max-width: 820px) {
+  .bm-frame-inline { gap: 14px; }
+  .bm-title { font-size: 26px; }
+  .bm-body { gap: 16px; }
+
+  .bm-toggle { margin-left: 0; width: 100%; padding: 3px; box-sizing: border-box; }
+  .bm-toggle button { flex: 1; padding: 7px 4px; font-size: 13px; letter-spacing: 0.04em; }
+
+  /* Players: compact podium */
+  .bm-podium { gap: 8px; }
+  .bm-pod { gap: 6px; min-width: 0; }
+  .bm-pod-crown svg { width: 26px; height: 26px; }
+  .bm-pod .bm-av { width: 52px !important; height: 52px !important; font-size: 21px !important; }
+  .bm-pod-1 .bm-av { width: 64px !important; height: 64px !important; font-size: 26px !important; }
+  .bm-pod-name, .bm-pod-1 .bm-pod-name {
+    font-size: 15px;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .bm-plinth { padding: 8px 4px; gap: 4px; border-radius: 12px 12px 0 0; }
+  .bm-pod-1 .bm-plinth { height: 150px; padding: 8px 4px; gap: 6px; }
+  .bm-pod-2 .bm-plinth { height: 120px; }
+  .bm-pod-3 .bm-plinth { height: 105px; }
+  .bm-plinth-rank, .bm-pod-2 .bm-plinth-rank { font-size: 30px; }
+  .bm-pod-1 .bm-plinth-rank { font-size: 38px; }
+  .bm-pod-3 .bm-plinth-rank { font-size: 26px; }
+  .bm-plinth-pts, .bm-pod-1 .bm-plinth-pts { font-size: 14px; }
+  .bm-podbadges { gap: 3px; }
+  .bm-ib { padding: 2px 6px; gap: 3px; font-size: 12px; }
+  .bm-ib svg { width: 11px; height: 11px; }
+
+  /* Players: board keeps rank, avatar, name, solved ratio, total */
+  .bm-board { border-radius: 14px; }
+  .bm-row {
+    grid-template-columns: 24px 32px minmax(0, 1fr) auto 44px;
+    gap: 8px;
+    padding: 8px 12px;
+    font-size: 15px;
+  }
+  .bm-row > :nth-child(5), .bm-row > :nth-child(6), .bm-row > :nth-child(7), .bm-bar { display: none; }
+  .bm-row .bm-av { width: 32px !important; height: 32px !important; font-size: 13px !important; }
+  .bm-row-head { font-size: 11px; padding-top: 10px; padding-bottom: 10px; }
+  .bm-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bm-name .bm-you { font-size: 12px; }
+  .bm-ratio { font-size: 14px; }
+
+  /* Exercises: exercise + solved-by on one line, the three awards below */
+  .bm-subhead { gap: 10px; }
+  .bm-subhead h2 { font-size: 20px; }
+  .bm-games { margin-left: 0; padding: 3px; }
+  .bm-game { padding: 6px 12px; font-size: 12px; letter-spacing: 0.04em; }
+  .bm-awards { border-radius: 14px; }
+  .bm-awrow, .bm-awards-ended .bm-awrow {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px 10px;
+    padding: 10px 12px;
+    font-size: 15px;
+  }
+  .bm-awrow > :first-child { grid-column: span 2; }
+  .bm-awrow > :nth-child(2) { text-align: right; }
+  .bm-awrow-head { font-size: 11px; padding-top: 10px; padding-bottom: 10px; }
+  .bm-awrow-head > :nth-child(6) { display: none; }
+  .bm-awval { font-size: 13px; }
+  .bm-solvedby small { font-size: 12px; }
+  .bm-sol-btn { grid-column: 1 / -1; justify-self: stretch; justify-content: center; padding: 6px 12px; font-size: 12px; }
+  .bm-sol-panel { grid-template-columns: minmax(0, 1fr); }
+  .bm-sol-card pre { font-size: 12px; overflow-x: auto; }
+
+  /* You */
+  .bm-you-head { font-size: 18px; }
+  .bm-standing { flex-wrap: wrap; gap: 12px 16px; padding: 14px 16px; border-radius: 14px; }
+  .bm-standing .bm-av { width: 52px !important; height: 52px !important; font-size: 21px !important; }
+  .bm-standing-sub { font-size: 12px; }
+  .bm-standing-rank { font-size: 22px; }
+  .bm-pills { margin-left: 0; width: 100%; justify-content: flex-start; gap: 6px; }
+  .bm-pill { padding: 4px 10px; font-size: 14px; gap: 5px; }
+  .ys-q { min-width: 180px; }
+}

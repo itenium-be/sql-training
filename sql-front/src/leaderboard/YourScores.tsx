@@ -59,7 +59,7 @@ export function YourScores({scores, you}: {scores: Score[]; you: string}) {
 
   return (
     <>
-      <Table bordered striped hover className="ys-table">
+      <Table bordered striped hover responsive className="ys-table">
         <thead>
           <tr>
             <th>#</th>
