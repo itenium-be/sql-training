@@ -2,7 +2,11 @@
 
 ## Abstract
 
-Most SQL workshops bore you with SELECT * FROM tutorial. This one has a leaderboard. Bring your laptop, spin up a Docker container, and join a live competition where every query you write earns points — for being correct, for being short, and for being fast. Two engines (PostgreSQL and SQL Server), three real datasets (a World atlas, a school administration, and the FIFA World Cup), and a room full of developers racing each other to the top of the board. Whether you're a junior who has only ever written `WHERE id = ?` or a senior who dreams in window functions, you will write SQL you didn't know you could write — and you'll see how everyone else solved the same problem when the endgame reveals all submissions.
+Most SQL workshops bore you with SELECT * FROM tutorial. This one has a leaderboard. Bring your laptop and join a live competition where every query you write earns points for being correct but also for the leanest, shortest and fastest solutions.
+
+Four datasets (including one with all FIFA World Cups), two databases (PostgreSQL and SQL Server), and a room full of developers racing each other to the top of the board.
+
+Whether you're a junior who has only ever written `WHERE id = ?` or a senior who dreams in window functions, you will write SQL you didn't know you could write — and you'll see how everyone else solved the same problem when the endgame reveals all submissions.
 
 ## Target Audience
 
