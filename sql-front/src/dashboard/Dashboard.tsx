@@ -1,14 +1,12 @@
 import { Link } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../store';
-import { fetchData } from '../layout/fetchData';
+import { useAppSelector } from '../store';
 import { useLiveScores } from '../layout/useLiveScores';
 import { SlidesIcon, TrophyIcon } from '../layout/Icons';
 import { dashboardSummary } from './dashboardSummary';
-import { datasets } from './datasets';
+import { GamePoster } from './GamePoster';
 import './dashboard.css';
 
 export function Dashboard() {
-  const dispatch = useAppDispatch();
   const exercises = useAppSelector(state => state.exercises.entities);
   const scores = useAppSelector(state => state.exercises.scores);
   const you = useAppSelector(state => state.exercises.userName);
@@ -26,26 +24,7 @@ export function Dashboard() {
 
 
       <div className="db-posters">
-        {summary.games.map(game => {
-          const ds = datasets[game.id];
-          return (
-            <Link key={game.id} to={`/${game.id}`} className="db-card db-poster" onClick={() => dispatch(fetchData(game.id))}>
-              <div className="db-art">
-                <img src={ds.image} alt="" />
-                <span className={`db-level db-level-${ds.level}`}>{ds.level}</span>
-              </div>
-              <div className="db-pbody">
-                <h3>{ds.title}</h3>
-                <p>{ds.blurb}</p>
-                <div className="db-bar"><b style={{width: `${game.total ? game.solved / game.total * 100 : 0}%`}} /></div>
-                <div className="db-row">
-                  <span className="db-num">{game.solved}/{game.total}</span>
-                  <span className="db-db">{ds.db}</span>
-                </div>
-              </div>
-            </Link>
-          );
-        })}
+        {summary.games.map(game => <GamePoster key={game.id} game={game} />)}
       </div>
 
       <div className="db-links">
