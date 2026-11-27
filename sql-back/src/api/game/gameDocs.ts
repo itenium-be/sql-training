@@ -86,7 +86,8 @@ const docs: Doc[] = [
     method: "get",
     path: "/solutions",
     summary: "Reference solution with its length and reads, and every accepted solution",
-    description: "Only once you solved or gave up on the exercise, or after the game has ended.",
+    description:
+      "Only once you solved or gave up on the exercise, or after the game has ended (then also without a token).",
     auth: "player",
     request: { query: z.object({ game: z.string(), exerciseId: z.coerce.number().int() }) },
   },

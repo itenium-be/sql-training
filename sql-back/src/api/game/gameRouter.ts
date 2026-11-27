@@ -4,7 +4,7 @@ import { checkSolution, exerciseHint, referenceSolution, referenceSolutions } fr
 import { exerciseDetails, publicDefinitions } from "@/api/exercises/publicDefinitions";
 import { env } from "@/common/utils/envConfig";
 import { canSeeSolutions, shouldRecordActivity } from "./activity";
-import { type AuthRequest, mintToken, requirePlayer } from "./auth";
+import { type AuthRequest, mintToken, optionalPlayer, requirePlayer } from "./auth";
 import { parseDisqualify } from "./disqualify";
 import { gameQuery } from "./gameDb";
 import { gameModes, getGameMode, parseGameMode, setGameMode, startRefusal } from "./gameMode";
@@ -297,7 +297,7 @@ const giveUp: RequestHandler = async (req: Request, res: Response) => {
 };
 
 const getSolutions: RequestHandler = async (req: Request, res: Response) => {
-  const player = (req as AuthRequest).player;
+  const player: string | undefined = (req as AuthRequest).player;
   const game = req.query.game;
   const exerciseId = Number(req.query.exerciseId);
   if (typeof game !== "string" || !Number.isInteger(exerciseId)) {
@@ -308,8 +308,8 @@ const getSolutions: RequestHandler = async (req: Request, res: Response) => {
   if (reference === undefined) {
     return res.status(404).send({ message: `Unknown exercise ${game}-${exerciseId}` });
   }
-  const solved = await isSolved(player, game, exerciseId);
-  const { gaveUp } = await getActivity(player, game, exerciseId);
+  const solved = player !== undefined && (await isSolved(player, game, exerciseId));
+  const gaveUp = player !== undefined && (await getActivity(player, game, exerciseId)).gaveUp;
   if (!canSeeSolutions(getGameMode(), { solved, gaveUp })) {
     return res.status(403).send({ message: "Solve the exercise or give up first" });
   }
@@ -448,7 +448,7 @@ gameRouter.post("/hint", requirePlayer, getHint);
 gameRouter.get("/me", requirePlayer, getMyActivity);
 gameRouter.get("/solution", requirePlayer, getMySolution);
 gameRouter.post("/giveup", requirePlayer, giveUp);
-gameRouter.get("/solutions", requirePlayer, getSolutions);
+gameRouter.get("/solutions", optionalPlayer, getSolutions);
 gameRouter.post("/activity", requirePlayer, recordActivity);
 gameRouter.get("/", getProgress);
 gameRouter.get("/state", getState);

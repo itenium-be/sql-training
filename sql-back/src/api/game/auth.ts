@@ -23,9 +23,13 @@ export async function mintToken(player: string): Promise<string> {
 
 export type AuthRequest = Request & { player: string };
 
-export async function requirePlayer(req: Request, res: Response, next: NextFunction) {
+function bearerToken(req: Request): string {
   const header = req.header("authorization") ?? "";
-  const token = header.startsWith("Bearer ") ? header.slice(7) : "";
+  return header.startsWith("Bearer ") ? header.slice(7) : "";
+}
+
+export async function requirePlayer(req: Request, res: Response, next: NextFunction) {
+  const token = bearerToken(req);
   if (!token) {
     res.status(401).send({ message: "Not registered" });
     return;
@@ -40,4 +44,13 @@ export async function requirePlayer(req: Request, res: Response, next: NextFunct
   } catch {
     res.status(401).send({ message: "Invalid token, please register again" });
   }
+}
+
+/** Lets anonymous viewers through, such as the beamer once the game has ended. */
+export async function optionalPlayer(req: Request, res: Response, next: NextFunction) {
+  if (!bearerToken(req)) {
+    next();
+    return;
+  }
+  await requirePlayer(req, res, next);
 }
