@@ -2,7 +2,7 @@ import { ReactNode, useState } from 'react';
 import { ExerciseId, ExerciseModel, Score } from '../exercises/exerciseModels';
 import { awardLabel, ExerciseAward, exerciseAwards } from '../leaderboard/leaderboardData';
 import { BoltIcon, CodeIcon, LeafIcon } from '../layout/Icons';
-import { SolutionCard, TAG_LABEL, exerciseSolutions, formatClock, myExerciseResult, tagMetric } from './beamerData';
+import { SolutionCard, TAG_LABEL, exerciseSolutions, formatClock, myExerciseResult, referenceSolution, tagMetric } from './beamerData';
 
 function Holder({name, value, you, label}: {name: string | undefined; value: string; you: string; label: ReactNode}) {
   const caption = <span className="bm-aw-label">{label}</span>;
@@ -70,6 +70,7 @@ export function BeamerExercises({entities, scores, you, ended}: {entities: Exerc
         {awards.map(award => {
           const isOpen = open === award.exerciseId;
           const cards = ended && isOpen ? exerciseSolutions(scores, you, award) : [];
+          const reference = ended && isOpen ? referenceSolution(entities, game, award.exerciseId) : undefined;
           return (
             <div key={award.exerciseId} className={isOpen ? 'bm-awrow bm-awrow-open' : 'bm-awrow'}>
               <div className="bm-aw"><span className="bm-awname">{awardLabel(award)}</span></div>
@@ -84,6 +85,12 @@ export function BeamerExercises({entities, scores, you, ended}: {entities: Exerc
               )}
               {ended && isOpen && (
                 <div className="bm-sol-panel">
+                  {reference && (
+                    <div className="bm-sol-card">
+                      <div className="bm-sol-head"><span className="bm-sol-tag">Reference</span></div>
+                      <pre>{reference}</pre>
+                    </div>
+                  )}
                   {cards.length
                     ? cards.map(card => <SolutionCardView key={card.player} card={card} award={award} scores={scores} you={you} />)
                     : <span className="bm-you-none">No solutions yet</span>}

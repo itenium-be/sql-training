@@ -1,4 +1,4 @@
-import { Score } from '../exercises/exerciseModels';
+import { ExerciseModel, Score } from '../exercises/exerciseModels';
 import { ExerciseAward } from '../leaderboard/leaderboardData';
 
 export type MyResult = { elapsed: number; chars: number };
@@ -60,4 +60,8 @@ export function formatClock(seconds: number): string {
 export function myExerciseResult(scores: Score[], player: string, game: string, exerciseId: number): MyResult | null {
   const mine = scores.find(s => s.player === player && s.game === game && s.exerciseid === exerciseId);
   return mine ? { elapsed: mine.elapsed, chars: mine.solutionlength } : null;
+}
+
+export function referenceSolution(entities: ExerciseModel[], game: string, exerciseId: number): string | undefined {
+  return entities.find(g => g.id === game)?.exercises.find(e => e.id === exerciseId)?.solution;
 }

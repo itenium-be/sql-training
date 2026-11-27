@@ -17,7 +17,10 @@ export type ExerciseDetails = {
   expectedColumns: string[];
 };
 
-export type SqlExerciseModel = Partial<ExerciseDetails> & {
+/** Only sent by the definitions once the game has ended. */
+type Reveal = { solution: string };
+
+export type SqlExerciseModel = Partial<ExerciseDetails & Reveal> & {
   id: number;
   points: number;
   hasHint: boolean;

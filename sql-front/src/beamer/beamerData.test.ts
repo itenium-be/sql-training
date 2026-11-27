@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
-import { Score } from '../exercises/exerciseModels';
+import { ExerciseModel, Score } from '../exercises/exerciseModels';
 import { ExerciseAward } from '../leaderboard/leaderboardData';
-import { exerciseSolutions, formatClock, myExerciseResult } from './beamerData';
+import { exerciseSolutions, formatClock, myExerciseResult, referenceSolution } from './beamerData';
 
 const score = (o: Partial<Score>): Score => ({
   player: 'alice', game: 'World', exerciseid: 1, solution: 'select 1', solutionlength: 84,
@@ -99,4 +99,13 @@ describe('exerciseSolutions', () => {
       { player: 'nosql', isYou: false, tags: ['fastest'], solution: '' },
     ]);
   });
+});
+
+describe('referenceSolution', () => {
+  const entities = [{ id: 'World', exercises: [{ id: 1, solution: 'SELECT name FROM countries' }, { id: 2 }] }] as ExerciseModel[];
+
+  test('the solution once the definitions carry it', () =>
+    expect(referenceSolution(entities, 'World', 1)).toBe('SELECT name FROM countries'));
+
+  test('undefined before the game has ended', () => expect(referenceSolution(entities, 'World', 2)).toBeUndefined());
 });
