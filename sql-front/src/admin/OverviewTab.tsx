@@ -66,7 +66,7 @@ export function OverviewTab({ overview, entities, now }: { overview: AdminOvervi
   }
 
   if (overview.mode === 'end') {
-    const ranked = rankPlayers(entities, overview.progress);
+    const ranked = rankPlayers(entities, overview.progress).filter(r => !r.disqualified);
     const rates = exerciseSolveRates(overview, entities).filter(r => r.attempted).sort((a, b) => a.rate - b.rate);
     const hardest = rates[0];
     const correct = overview.submissions.filter(s => s.correct).length;

@@ -60,3 +60,22 @@ describe('calculateEfficient', () => {
     expect(first).toMatchObject({player: 'alice', cost: 5});
   });
 });
+
+describe('disqualified players', () => {
+  const dq = (player: string) => scores.map(s => s.player === player ? {...s, disqualified: true} : s);
+
+  test('the next-best player takes fastest', () => {
+    const [first] = calculateFastest(exercises, dq('bob'));
+    expect(first).toMatchObject({player: 'carol', time: 90});
+  });
+
+  test('the next-best player takes shortest, averaged without them', () => {
+    const [first] = calculateShortest(exercises, dq('bob'));
+    expect(first).toMatchObject({player: 'alice', solutionLength: 30, avgLength: 35});
+  });
+
+  test('the next-best player takes leanest', () => {
+    const [first] = calculateEfficient(exercises, dq('alice'));
+    expect(first).toMatchObject({player: 'bob', cost: 50});
+  });
+});

@@ -217,6 +217,16 @@
 .bm-m { text-align: center; font-variant-numeric: tabular-nums; color: var(--df-text); }
 .bm-m0 { text-align: center; font-variant-numeric: tabular-nums; color: #6f5c3c; }
 .bm-solved { display: flex; align-items: center; gap: 12px; }
+.bm-dq-sep {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 24px 8px;
+  font-size: 15px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--df-red);
+}
+.bm-dq-sep::after { content: ""; flex: 1; border-top: 1px dashed rgba(var(--df-red-rgb), 0.45); }
+.bm-row-dq { opacity: 0.55; }
+.bm-row-dq img { filter: grayscale(1); }
+.bm-row-dq .bm-rank { color: var(--df-red); }
 .bm-bar {
   height: 10px;
   border-radius: 999px;

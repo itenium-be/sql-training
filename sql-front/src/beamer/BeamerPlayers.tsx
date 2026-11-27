@@ -50,8 +50,10 @@ function Metric({value}: {value: number}) {
 }
 
 export function BeamerPlayers({rows, you, players}: {rows: PlayerRow[]; you: string; players: Player[]}) {
-  const [first, second, third] = rows;
-  const board = rows.slice(3);
+  const ranked = rows.filter(row => !row.disqualified);
+  const disqualified = rows.filter(row => row.disqualified);
+  const [first, second, third] = ranked;
+  const board = ranked.slice(3);
 
   return (
     <div className="bm-body">
@@ -82,6 +84,22 @@ export function BeamerPlayers({rows, you, players}: {rows: PlayerRow[]; you: str
             <Metric value={row.fastest} />
             <Metric value={row.shortest} />
             <Metric value={row.leanest} />
+            <span className="bm-total">{row.total}</span>
+          </div>
+        ))}
+        {disqualified.length > 0 && <div className="bm-dq-sep">Disqualified</div>}
+        {disqualified.map(row => (
+          <div key={row.name} className={row.name === you ? 'bm-row bm-row-dq bm-row-me' : 'bm-row bm-row-dq'}>
+            <span className="bm-rank">✗</span>
+            <BeamerAvatar name={row.name} players={players} size={44} />
+            <span className="bm-name">{row.name}{row.name === you && <span className="bm-you"> you</span>}</span>
+            <span className="bm-solved">
+              <span className="bm-bar"><span style={{width: `${row.totalExercises ? Math.round(row.solved / row.totalExercises * 100) : 0}%`}} /></span>
+              <span className="bm-ratio">{row.solved}/{row.totalExercises}</span>
+            </span>
+            <span className="bm-m0">–</span>
+            <span className="bm-m0">–</span>
+            <span className="bm-m0">–</span>
             <span className="bm-total">{row.total}</span>
           </div>
         ))}

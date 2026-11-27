@@ -10,7 +10,10 @@ type FastestExercise = {
   time: number;
 }
 
-export function calculateFastest(exercises: ExerciseModel[], scores: Score[]) {
+const eligible = (scores: Score[]) => scores.filter(score => !score.disqualified);
+
+export function calculateFastest(exercises: ExerciseModel[], allScores: Score[]) {
+  const scores = eligible(allScores);
   const fastestTable = exercises.reduce((cur, game) => {
     const gameExs = game.exercises.map(ex => {
       return {
@@ -54,7 +57,8 @@ type LeanestExercise = {
   avgLength: number;
 }
 
-export function calculateShortest(exercises: ExerciseModel[], scores: Score[]) {
+export function calculateShortest(exercises: ExerciseModel[], allScores: Score[]) {
+  const scores = eligible(allScores);
   const leanestTable = exercises.reduce((cur, game) => {
     const gameExs = game.exercises.map(ex => {
       return {
@@ -100,7 +104,8 @@ type EfficientExercise = {
   avgCost: number;
 }
 
-export function calculateEfficient(exercises: ExerciseModel[], scores: Score[]) {
+export function calculateEfficient(exercises: ExerciseModel[], allScores: Score[]) {
+  const scores = eligible(allScores);
   const efficientTable = exercises.reduce((cur, game) => {
     const gameExs = game.exercises.map(ex => ({
       game: game.id,

@@ -42,6 +42,12 @@ describe('dashboardSummary', () => {
     expect(carol.games.map(g => g.solved)).toEqual([0, 0]);
   });
 
+  test('a disqualified player is unranked and does not count above others', () => {
+    const dq = scores.map(s => s.player === 'alice' ? { ...s, disqualified: true } : s);
+    expect(dashboardSummary(exercises, dq, 'alice').rank).toBeNull();
+    expect(dashboardSummary(exercises, dq, 'bob')).toMatchObject({ rank: 1, gapToNext: null });
+  });
+
   test('gap to next is the total difference with the player just above', () => {
     const rows = rankPlayers(exercises, scores);
     expect(dashboardSummary(exercises, scores, 'bob').gapToNext).toBe(rows[0].total - rows[1].total);

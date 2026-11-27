@@ -12,6 +12,7 @@ export type PlayerRow = {
   shortest: number;
   leanest: number;
   total: number;
+  disqualified: boolean;
 };
 
 export type ExerciseAward = {
@@ -57,8 +58,9 @@ export function rankPlayers(exercises: ExerciseModel[], scores: Score[], game?: 
       shortest,
       leanest,
       total: scored + (fastest + shortest + leanest) * AWARD_BONUS,
+      disqualified: mine.some(s => s.disqualified),
     };
-  }).sort((a, b) => b.total - a.total);
+  }).sort((a, b) => Number(a.disqualified) - Number(b.disqualified) || b.total - a.total);
 }
 
 export function exerciseAwards(exercises: ExerciseModel[], scores: Score[], game: ExerciseId): ExerciseAward[] {

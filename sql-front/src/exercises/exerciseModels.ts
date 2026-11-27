@@ -47,6 +47,8 @@ export type Score = {
   hint: boolean;
   expected: boolean;
   attempts: number;
+  /** Caught using AI: keeps own points, never holds a fastest/shortest/leanest award */
+  disqualified?: boolean;
 }
 
 export type ExerciseId = 'World' | 'Teachers' | 'Worldcup' | 'Company';

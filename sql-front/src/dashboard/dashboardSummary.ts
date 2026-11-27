@@ -11,7 +11,7 @@ type DashboardSummary = {
 
 export function dashboardSummary(exercises: ExerciseModel[], scores: Score[], you: string): DashboardSummary {
   const isYou = (name: string) => name.toLowerCase() === you.toLowerCase();
-  const rows = rankPlayers(exercises, scores);
+  const rows = rankPlayers(exercises, scores).filter(r => !r.disqualified);
   const index = rows.findIndex(r => isYou(r.name));
   const mine = scores.filter(s => isYou(s.player));
   const games = exercises.map(g => {

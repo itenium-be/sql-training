@@ -40,7 +40,7 @@ export function Beamer({projector = false}: {projector?: boolean}) {
       ) : view === 'exercises' ? (
         <BeamerExercises entities={entities} scores={scores} you={you} ended={mode === 'end'} />
       ) : (
-        <BeamerYou rows={overall} you={you} players={players} scores={scores} />
+        <BeamerYou rows={overall.filter(row => !row.disqualified)} you={you} players={players} scores={scores} />
       )}
     </div>
   );

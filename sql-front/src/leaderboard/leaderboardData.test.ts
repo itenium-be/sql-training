@@ -47,6 +47,22 @@ describe('rankPlayers', () => {
   });
 });
 
+describe('rankPlayers with a disqualified player', () => {
+  const rows = rankPlayers(exercises, scores.map(s => s.player === 'alice' ? { ...s, disqualified: true } : s));
+
+  test('ranks them after every regular player', () => {
+    expect(rows.map(r => [r.name, r.disqualified])).toEqual([['bob', false], ['alice', true]]);
+  });
+
+  test('keeps their regular points but no awards', () => {
+    expect(rows[1]).toMatchObject({ points: 8, fastest: 0, shortest: 0, leanest: 0, total: 8 });
+  });
+
+  test('hands their awards to the next-best player', () => {
+    expect(rows[0]).toMatchObject({ fastest: 1, shortest: 1, leanest: 1 });
+  });
+});
+
 describe('exerciseAwards', () => {
   const awards = exerciseAwards(exercises, scores, 'World');
 
