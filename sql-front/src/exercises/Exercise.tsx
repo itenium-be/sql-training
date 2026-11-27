@@ -14,13 +14,18 @@ import { SchemaPanel } from "./SchemaPanel";
 import { SchemaDiagram } from "./SchemaDiagram";
 import { QuestionTimer } from "./QuestionTimer";
 import { originFromElapsed } from "./questionElapsed";
-import { loadScores } from "../layout/fetchData";
 import { CopyButton } from "../layout/CopyButton";
 import { formatElapsed } from "./formatElapsed";
 import { formatScored } from "./formatScored";
 import { ActivityRow, findActivity } from "./myActivity";
 import { PostgresIcon, SqlServerIcon } from "../layout/Icons";
 import { loadDraft, saveDraft } from "./sqlDraft";
+import { useNavigate } from "react-router-dom";
+import { fetchData, loadScores } from "../layout/fetchData";
+import { dashboardSummary } from "../dashboard/dashboardSummary";
+import { datasets } from "../dashboard/datasets";
+import { GamePoster } from "../dashboard/GamePoster";
+import { nextGame } from "../dashboard/nextGame";
 
 const emojis = ['🎉', '🥳', '🎊', '💯', '🌟', '🚀', '🦄', '🎈', '🎆', '🏆'];
 
@@ -86,15 +91,29 @@ function ExerciseIntro({exercise, onStart}: {exercise: ExerciseModel, onStart: (
 function SqlExercises({exercise}: {exercise: ExerciseModel}) {
   const currentExIndex = useAppSelector(state => state.exercises.currentExercise);
   const currentEx = exercise.exercises.find(ex => ex.id === currentExIndex);
+  const entities = useAppSelector(state => state.exercises.entities);
+  const scores = useAppSelector(state => state.exercises.scores);
+  const you = useAppSelector(state => state.exercises.userName);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   if (!currentEx) {
+    const next = nextGame(dashboardSummary(entities, scores, you).games, exercise.id);
     return (
       <>
         <h1>{exercise.name}<ExercisePoints exercise={exercise} /></h1>
         <h2>All Done!</h2>
-        <p>Pick a different tab to continue scoring points!</p>
-        <Button variant="secondary" onClick={() => dispatch({type: 'exercises/firstQuestion'})}>
+        {next ? (
+          <>
+            <p>Continue with {datasets[next.id].title}</p>
+            <div className="df-next-game"><GamePoster game={next} /></div>
+          </>
+        ) : (
+          <Button variant="success" onClick={() => { dispatch(fetchData('home')); navigate('/'); }}>
+            Back to dashboard
+          </Button>
+        )}
+        <Button variant="secondary" onClick={() => dispatch({type: 'exercises/firstQuestion'})} className="df-first-question">
           Back to first question
         </Button>
       </>

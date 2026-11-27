@@ -1,7 +1,7 @@
 import { ExerciseId, ExerciseModel, Score } from '../exercises/exerciseModels';
 import { rankPlayers } from '../leaderboard/leaderboardData';
 
-type GameProgress = { id: ExerciseId; solved: number; total: number };
+export type GameProgress = { id: ExerciseId; solved: number; total: number };
 
 type DashboardSummary = {
   rank: number | null;

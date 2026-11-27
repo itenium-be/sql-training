@@ -1274,3 +1274,7 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
     color: var(--df-gold);
   }
 }
+
+.df-next-game { max-width: 280px; margin-bottom: 16px; }
+.df-first-question { margin-left: 8px; }
+.df-next-game + .df-first-question { margin-left: 0; }
