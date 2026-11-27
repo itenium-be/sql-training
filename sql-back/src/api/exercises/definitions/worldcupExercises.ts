@@ -163,5 +163,18 @@ ORDER BY m.[date], g.[minute]`,
         "total_scored_so_far",
       ],
     },
+    {
+      id: 7,
+      desc: "Which teams made their World Cup debut in 2026?",
+      points: 9,
+      expected: [["Curaçao"], ["Cape Verde"], ["Jordan"], ["DR Congo"], ["Uzbekistan"]],
+      expectedOrder: false,
+      solution: `SELECT t.name
+FROM events_teams et
+JOIN teams t ON t.id = et.team_id
+GROUP BY t.id, t.name
+HAVING MIN(et.event_id) = (SELECT id FROM events WHERE [key] = 'worldcup.2026')`,
+      expectedColumns: ["team.name"],
+    },
   ],
 };
