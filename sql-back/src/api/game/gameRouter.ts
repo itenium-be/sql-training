@@ -10,6 +10,7 @@ import { gameQuery } from "./gameDb";
 import { gameModes, getGameMode, parseGameMode, setGameMode, startRefusal } from "./gameMode";
 import type { ExerciseStart, ExerciseSubmit } from "./gameModel";
 import { validateName } from "./playerName";
+import { referenceCost } from "./referenceCost";
 import { calculatePoints } from "./scoring";
 import { solutionLength } from "./solutionLength";
 
@@ -317,7 +318,15 @@ const getSolutions: RequestHandler = async (req: Request, res: Response) => {
     game,
     exerciseId,
   ]);
-  return res.status(200).send({ reference, solutions: result.rows });
+  const cost = await referenceCost(
+    game,
+    exerciseId,
+    async () => (await checkSolution(game, exerciseId, reference)).responseObject?.cost ?? null,
+  );
+  return res.status(200).send({
+    reference: { solution: reference, length: solutionLength(reference), cost },
+    solutions: result.rows,
+  });
 };
 
 const getProgress: RequestHandler = async (_req: Request, res: Response) => {
