@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { cardMetrics, withSolutions } from './solutionCards';
+import { cardMetrics, playerMetrics, withSolutions } from './solutionCards';
 import { Score } from './exerciseModels';
 
 const score = (player: string, game: string, exerciseid: number): Score => ({
@@ -42,5 +42,16 @@ describe('cardMetrics', () => {
   test('explains a held award in the tooltip', () => {
     const [fastest] = cardMetrics({elapsed: 41, chars: 21, reads: 3}, ['fastest']);
     expect(fastest.tip).toContain('Fastest');
+  });
+});
+
+describe('playerMetrics', () => {
+  test('reads the time, length and reads from the score', () => {
+    const s = {...score('alice', 'World', 1), elapsed: 41, solutionlength: 21, cost: 3};
+    expect(playerMetrics(s, ['shortest']).map(m => [m.value, m.won])).toEqual([['0:41', false], ['21 ch', true], ['3 reads', false]]);
+  });
+
+  test('has nothing to show without a score', () => {
+    expect(playerMetrics(undefined, [])).toEqual([]);
   });
 });

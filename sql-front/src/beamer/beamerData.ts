@@ -1,8 +1,6 @@
 import { ExerciseModel, Score } from '../exercises/exerciseModels';
 import { ExerciseAward } from '../leaderboard/leaderboardData';
 
-export type MyResult = { elapsed: number; chars: number };
-
 export type SolutionTag = 'fastest' | 'shortest' | 'leanest';
 
 export type SolutionCard = {
@@ -42,24 +40,10 @@ export function exerciseSolutions(scores: Score[], you: string, award: ExerciseA
   return cards;
 }
 
-export const TAG_LABEL: Record<SolutionTag, string> = {fastest: 'Fastest', shortest: 'Shortest', leanest: 'Leanest'};
-
-export function tagMetric(tag: SolutionTag, award: ExerciseAward): string {
-  if (tag === 'fastest' && award.fastest) return formatClock(award.fastest.time);
-  if (tag === 'shortest' && award.shortest) return `${award.shortest.chars} ch`;
-  if (tag === 'leanest' && award.leanest) return `${award.leanest.reads} reads`;
-  return '';
-}
-
 export function formatClock(seconds: number): string {
   const mins = Math.floor(seconds / 60);
   const secs = seconds % 60;
   return `${mins}:${String(secs).padStart(2, '0')}`;
-}
-
-export function myExerciseResult(scores: Score[], player: string, game: string, exerciseId: number): MyResult | null {
-  const mine = scores.find(s => s.player === player && s.game === game && s.exerciseid === exerciseId);
-  return mine ? { elapsed: mine.elapsed, chars: mine.solutionlength } : null;
 }
 
 export function referenceSolution(entities: ExerciseModel[], game: string, exerciseId: number): string | undefined {

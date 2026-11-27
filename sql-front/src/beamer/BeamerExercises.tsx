@@ -1,8 +1,13 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { ExerciseId, ExerciseModel, Score } from '../exercises/exerciseModels';
-import { awardLabel, ExerciseAward, exerciseAwards } from '../leaderboard/leaderboardData';
+import { awardLabel, exerciseAwards } from '../leaderboard/leaderboardData';
 import { BoltIcon, CodeIcon, LeafIcon } from '../layout/Icons';
-import { SolutionCard, TAG_LABEL, exerciseSolutions, formatClock, myExerciseResult, referenceSolution, tagMetric } from './beamerData';
+import { exerciseSolutions, formatClock, referenceSolution } from './beamerData';
+import { config } from '../config';
+import { SolutionCard } from '../exercises/SolutionCard';
+import { cardMetrics, playerMetrics } from '../exercises/solutionCards';
+
+type ReferenceMetrics = { key: string; length: number; cost: number | null };
 
 function Holder({name, value, you, label}: {name: string | undefined; value: string; you: string; label: ReactNode}) {
   const caption = <span className="bm-aw-label">{label}</span>;
@@ -18,25 +23,6 @@ function Holder({name, value, you, label}: {name: string | undefined; value: str
   );
 }
 
-function SolutionCardView({card, award, scores, you}: {card: SolutionCard; award: ExerciseAward; scores: Score[]; you: string}) {
-  const label = card.tags.map(t => TAG_LABEL[t]).join(' · ');
-  const youLabel = card.isYou ? (label ? `${label} · You` : 'You') : label;
-  const mine = card.isYou ? myExerciseResult(scores, you, award.game, award.exerciseId) : null;
-  const metric = card.tags.length
-    ? card.tags.map(t => tagMetric(t, award)).join(' · ')
-    : mine ? `${formatClock(mine.elapsed)} · ${mine.chars} ch` : '';
-
-  return (
-    <div className={card.isYou ? 'bm-sol-card bm-sol-mine' : 'bm-sol-card'}>
-      <div className="bm-sol-head">
-        <span className="bm-sol-tag">{youLabel}</span>
-        <span className="bm-sol-who">{!card.isYou && <b>{card.player}</b>}{metric && <span className="bm-sol-metric">{metric}</span>}</span>
-      </div>
-      <pre>{card.solution || '—'}</pre>
-    </div>
-  );
-}
-
 export function BeamerExercises({entities, scores, you, ended}: {entities: ExerciseModel[]; scores: Score[]; you: string; ended: boolean}) {
   const [game, setGame] = useState<ExerciseId>(entities[0]?.id ?? 'World');
   const [open, setOpen] = useState<number | null>(null);
@@ -44,6 +30,17 @@ export function BeamerExercises({entities, scores, you, ended}: {entities: Exerc
   const totalPlayers = new Set(scores.map(s => s.player)).size;
 
   const switchGame = (id: ExerciseId) => { setGame(id); setOpen(null); };
+  const [fetchedMetrics, setFetchedMetrics] = useState<ReferenceMetrics | null>(null);
+  const openKey = `${game}-${open}`;
+  const referenceMetrics = fetchedMetrics?.key === openKey ? fetchedMetrics : null;
+
+  useEffect(() => {
+    if (!ended || open === null) return;
+    fetch(`${config.api}/game/solutions?game=${encodeURIComponent(game)}&exerciseId=${open}`)
+      .then(res => res.ok ? res.json() : null)
+      .then(data => { if (data) setFetchedMetrics({key: `${game}-${open}`, ...data.reference}); })
+      .catch(err => console.error('Could not fetch the reference metrics', err));
+  }, [ended, open, game]);
 
   return (
     <div className="bm-body">
@@ -86,13 +83,22 @@ export function BeamerExercises({entities, scores, you, ended}: {entities: Exerc
               {ended && isOpen && (
                 <div className="bm-sol-panel">
                   {reference && (
-                    <div className="bm-sol-card">
-                      <div className="bm-sol-head"><span className="bm-sol-tag">Reference</span></div>
-                      <pre>{reference}</pre>
-                    </div>
+                    <SolutionCard
+                      label={<span className="df-soltag">Reference</span>}
+                      metrics={referenceMetrics ? cardMetrics({chars: referenceMetrics.length, reads: referenceMetrics.cost}, []) : []}
+                      solution={reference}
+                    />
                   )}
                   {cards.length
-                    ? cards.map(card => <SolutionCardView key={card.player} card={card} award={award} scores={scores} you={you} />)
+                    ? cards.map(card => (
+                      <SolutionCard
+                        key={card.player}
+                        mine={card.isYou}
+                        label={card.isYou ? <span className="df-soltag df-soltag-you">You</span> : <span className="df-solcard-who">{card.player}</span>}
+                        metrics={playerMetrics(scores.find(s => s.player === card.player && s.game === game && s.exerciseid === award.exerciseId), card.tags)}
+                        solution={card.solution}
+                      />
+                    ))
                     : <span className="bm-you-none">No solutions yet</span>}
                 </div>
               )}

@@ -30,3 +30,7 @@ export function cardMetrics(m: {elapsed?: number; chars: number; reads: number |
       return { kind, value, tip: TIPS[kind][isWon ? 1 : 0], won: isWon };
     });
 }
+
+export function playerMetrics(score: Score | undefined, won: SolutionTag[]): Metric[] {
+  return score ? cardMetrics({elapsed: score.elapsed, chars: score.solutionlength, reads: score.cost}, won) : [];
+}

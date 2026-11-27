@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { authFetch, config } from '../config';
 import { useAppSelector } from '../store';
 import { exerciseAwards } from '../leaderboard/leaderboardData';
-import { exerciseSolutions, SolutionTag } from '../beamer/beamerData';
-import { ExerciseId, Score } from './exerciseModels';
-import { cardMetrics, PlayerSolution, withSolutions } from './solutionCards';
+import { exerciseSolutions } from '../beamer/beamerData';
+import { ExerciseId } from './exerciseModels';
+import { cardMetrics, PlayerSolution, playerMetrics, withSolutions } from './solutionCards';
 import { MySolution } from './MySolution';
 import { SolutionCard } from './SolutionCard';
 
@@ -12,9 +12,6 @@ type SolutionsModel = {
   reference: { solution: string; length: number; cost: number | null };
   solutions: PlayerSolution[];
 };
-
-const playerMetrics = (score: Score | undefined, won: SolutionTag[]) =>
-  score ? cardMetrics({elapsed: score.elapsed, chars: score.solutionlength, reads: score.cost}, won) : [];
 
 export function SolutionsPanel({game, exerciseId, solved, points, maxPoints}: {game: string, exerciseId: number, solved: boolean, points: number, maxPoints: number}) {
   const entities = useAppSelector(state => state.exercises.entities);
