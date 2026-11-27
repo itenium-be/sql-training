@@ -1,5 +1,5 @@
 .db-dash { margin-top: 24px; }
-.db-dash a { color: inherit; text-decoration: none; }
+a.db-card { color: inherit; text-decoration: none; }
 .db-title { margin: 4px 0 16px; }
 
 .db-card { background: var(--df-bg-raised); border: 1px solid var(--df-border); border-radius: 16px; }
