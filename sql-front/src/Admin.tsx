@@ -9,6 +9,8 @@ import { AdminOverview } from './admin/adminData';
 import { OverviewTab } from './admin/OverviewTab';
 import { PlayersTab } from './admin/PlayersTab';
 import { ExercisesTab } from './admin/ExercisesTab';
+import { AiTab } from './admin/AiTab';
+import { AiSuspect } from './admin/aiData';
 import { AdminTab, searchForTab, tabFromSearch } from './admin/adminTab';
 import { Health, healthDown, healthFrom } from './admin/health';
 import './admin/admin.css';
@@ -34,6 +36,7 @@ export function Admin() {
     history.replaceState(null, '', searchForTab(t));
   };
   const [overview, setOverview] = useState<AdminOverview | null>(null);
+  const [suspects, setSuspects] = useState<AiSuspect[] | null>(null);
   const [entities, setEntities] = useState<ExerciseModel[]>([]);
   const [health, setHealth] = useState<Health>(healthDown);
   const [now, setNow] = useState(() => Date.now());
@@ -43,6 +46,7 @@ export function Admin() {
       setOverview({ ...data, progress: normalizeScores(data.progress) });
       setNow(Date.now());
     }, () => {});
+    adminFetch(key, '/ai-detection').then(setSuspects, () => {});
     fetch(`${config.api}/health-check`)
       .then(res => res.json())
       .then(body => setHealth(healthFrom(body.responseObject)), () => setHealth(healthDown));
@@ -65,6 +69,7 @@ export function Admin() {
     setApiKey('');
     setAuthorized(false);
     setOverview(null);
+    setSuspects(null);
   };
 
   const changeMode = async (mode: GameMode) => {
@@ -167,11 +172,15 @@ export function Admin() {
           Players{overview && <span className="adm-badge">{overview.players.length}</span>}
         </button>
         <button className={`adm-tab ${tab === 'exercises' ? 'adm-on' : ''}`} onClick={() => setTab('exercises')}>Exercises</button>
+        <button className={`adm-tab ${tab === 'ai' ? 'adm-on' : ''}`} onClick={() => setTab('ai')}>
+          AI{!!suspects?.length && <span className="adm-badge adm-badge-red">{suspects.length}</span>}
+        </button>
       </nav>
 
       {overview && tab === 'overview' && <OverviewTab overview={overview} entities={entities} now={now} />}
       {overview && tab === 'players' && <PlayersTab overview={overview} entities={entities} now={now} onDisqualify={setDisqualified} />}
       {overview && tab === 'exercises' && <ExercisesTab overview={overview} entities={entities} />}
+      {suspects && tab === 'ai' && <AiTab suspects={suspects} onDisqualify={setDisqualified} />}
 
     </Container>
   );

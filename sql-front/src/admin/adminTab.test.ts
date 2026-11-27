@@ -3,6 +3,7 @@ import { tabFromSearch, searchForTab, gameFromSearch, searchWith } from './admin
 
 describe('tabFromSearch', () => {
   test('reads a known tab', () => expect(tabFromSearch('?tab=exercises')).toBe('exercises'));
+  test('reads the AI tab', () => expect(tabFromSearch('?tab=ai')).toBe('ai'));
   test('defaults to overview without a tab', () => expect(tabFromSearch('')).toBe('overview'));
   test('defaults to overview for an unknown tab', () => expect(tabFromSearch('?tab=nope')).toBe('overview'));
 });

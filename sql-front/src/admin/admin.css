@@ -106,3 +106,25 @@
 .adm-game[aria-pressed="true"] { background: rgba(233, 180, 76, .18); color: var(--df-gold); }
 
 .adm-sol-right { display: inline-flex; align-items: center; gap: 10px; }
+
+.adm-tab .adm-badge-red { background: rgba(var(--df-red-rgb), .16); color: var(--df-red); }
+.adm-ai-list { list-style: none; margin: 0; padding: 0; }
+.adm-ai-row { border-bottom: 1px solid var(--df-border-soft); }
+.adm-ai-row.adm-dq { opacity: .6; }
+.adm-ai-hd {
+  display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 4px;
+  background: none; border: none; text-align: left; color: inherit; cursor: pointer;
+}
+.adm-ai-main { flex-grow: 1; }
+.adm-ai-tells { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.adm-ai-tell { font-size: .72rem; border-radius: 999px; padding: 1px 8px; font-weight: 700; }
+.adm-ai-hard { background: rgba(var(--df-red-rgb), .16); color: var(--df-red); }
+.adm-ai-soft { background: rgba(233, 180, 76, .16); color: var(--df-gold); }
+.adm-ai-score { width: 56px; text-align: right; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 1.6rem; font-weight: 800; color: var(--df-cream); }
+.adm-ai-score.adm-ai-high { color: var(--df-red); }
+.adm-ai-detail { padding: 0 4px 12px 54px; }
+.adm-ai-table { width: 100%; font-size: .82rem; font-family: 'JetBrains Mono', ui-monospace, monospace; }
+.adm-ai-table th { color: var(--df-muted); font-weight: 700; text-align: left; padding: 4px 8px 4px 0; }
+.adm-ai-table td { color: var(--df-cream); padding: 3px 8px 3px 0; }
+.adm-ai-empty { text-align: center; padding: 24px; margin: 0; }
+.adm-ai-foot { margin-top: 10px; }

@@ -424,7 +424,7 @@ const getOverview: RequestHandler = async (_req: Request, res: Response) => {
 
 const getAiDetection: RequestHandler = async (_req: Request, res: Response) => {
   const [players, submissions, starts] = await Promise.all([
-    gameQuery("SELECT name, avatar, disqualified FROM players"),
+    gameQuery("SELECT id, name, avatar, disqualified FROM players"),
     gameQuery(
       `SELECT player, game, exerciseId AS "exerciseId", solution, correct, submittedAt AS "submittedAt",
               telemetry, secFetchSite AS "secFetchSite", userAgent AS "userAgent"
@@ -440,7 +440,7 @@ const getAiDetection: RequestHandler = async (_req: Request, res: Response) => {
   const firstStarts = starts.rows.map((s) => ({ ...s, exerciseId: Number(s.exerciseId) }));
   const suspects = aiSuspects(rows, firstStarts).map((s) => {
     const p = byName.get(s.player.toLowerCase());
-    return { ...s, avatar: p?.avatar ?? null, disqualified: p?.disqualified === true };
+    return { ...s, id: p?.id ?? 0, avatar: p?.avatar ?? null, disqualified: p?.disqualified === true };
   });
   return res.status(200).send(suspects);
 };
