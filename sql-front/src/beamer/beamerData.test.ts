@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
-import { ExerciseModel, Score } from '../exercises/exerciseModels';
+import { Score } from '../exercises/exerciseModels';
 import { ExerciseAward } from '../leaderboard/leaderboardData';
-import { exerciseSolutions, formatClock, referenceSolution } from './beamerData';
+import { exerciseSolutions, formatClock, solutionsVisible } from './beamerData';
 
 const score = (o: Partial<Score>): Score => ({
   player: 'alice', game: 'World', exerciseid: 1, solution: 'select 1', solutionlength: 84,
@@ -80,11 +80,15 @@ describe('exerciseSolutions', () => {
   });
 });
 
-describe('referenceSolution', () => {
-  const entities = [{ id: 'World', exercises: [{ id: 1, solution: 'SELECT name FROM countries' }, { id: 2 }] }] as ExerciseModel[];
+describe('solutionsVisible', () => {
+  const scores = [score({ player: 'wouter', exerciseid: 1 }), score({ player: 'mehdi', exerciseid: 2 })];
+  const gaveUp = [{ game: 'World', exerciseId: 3 }, { game: 'Teachers', exerciseId: 4 }];
+  const visible = (exerciseId: number, ended = false) =>
+    solutionsVisible({ ended, scores, gaveUp, you: 'wouter', game: 'World', exerciseId });
 
-  test('the solution once the definitions carry it', () =>
-    expect(referenceSolution(entities, 'World', 1)).toBe('SELECT name FROM countries'));
-
-  test('undefined before the game has ended', () => expect(referenceSolution(entities, 'World', 2)).toBeUndefined());
+  test('once you solved the exercise', () => expect(visible(1)).toBe(true));
+  test('once you gave up on the exercise', () => expect(visible(3)).toBe(true));
+  test('not when only someone else solved it', () => expect(visible(2)).toBe(false));
+  test('not when you gave up on that id in another game', () => expect(visible(4)).toBe(false));
+  test('always once the game has ended', () => expect(visible(2, true)).toBe(true));
 });

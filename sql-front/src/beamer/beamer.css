@@ -369,7 +369,7 @@
   border-bottom: 1px solid var(--df-border-soft);
   font-size: 22px;
 }
-.bm-awards-ended .bm-awrow {
+.bm-awards-solutions .bm-awrow {
   grid-template-columns: minmax(0, 1.5fr) 120px minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) 150px;
   row-gap: 14px;
 }
@@ -514,7 +514,7 @@ td.ys-gap { display: table-cell; }
     appearance: none;
   }
   .bm-awards { background: none; border: 0; gap: 10px; }
-  .bm-awrow, .bm-awards-ended .bm-awrow {
+  .bm-awrow, .bm-awards-solutions .bm-awrow {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
     align-items: start;

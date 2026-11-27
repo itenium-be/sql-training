@@ -1,5 +1,6 @@
-import { ExerciseModel, Score } from '../exercises/exerciseModels';
+import { Score } from '../exercises/exerciseModels';
 import { ExerciseAward } from '../leaderboard/leaderboardData';
+import { GaveUp } from '../exercises/lastSolved';
 
 export type SolutionTag = 'fastest' | 'shortest' | 'leanest';
 
@@ -46,6 +47,10 @@ export function formatClock(seconds: number): string {
   return `${mins}:${String(secs).padStart(2, '0')}`;
 }
 
-export function referenceSolution(entities: ExerciseModel[], game: string, exerciseId: number): string | undefined {
-  return entities.find(g => g.id === game)?.exercises.find(e => e.id === exerciseId)?.solution;
+
+export function solutionsVisible(o: {ended: boolean; scores: Score[]; gaveUp: GaveUp[]; you: string; game: string; exerciseId: number}): boolean {
+  const here = (x: {game: string}, id: number) => x.game === o.game && id === o.exerciseId;
+  return o.ended
+    || o.scores.some(s => s.player === o.you && here(s, s.exerciseid))
+    || o.gaveUp.some(g => here(g, g.exerciseId));
 }
