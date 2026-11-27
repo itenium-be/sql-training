@@ -96,7 +96,15 @@ export async function resolveExpected(game: string, exercise: SqlExerciseModel):
   return expected;
 }
 
-export function isCorrect(exercise: SqlExerciseModel, expected: unknown[][], { rows: actual }: QueryResult) {
+export function isCorrect(exercise: SqlExerciseModel, expected: unknown[][], { columns: actualColumns, rows: actual }: QueryResult) {
+  const expectedColumns = exercise.expectedColumns;
+  if (
+    expectedColumns?.length &&
+    (actualColumns.length !== expectedColumns.length ||
+      actualColumns.some((name, i) => name.toLowerCase() !== expectedColumns[i].toLowerCase()))
+  ) {
+    return false;
+  }
   if (actual.length !== expected.length) {
     return false;
   }
