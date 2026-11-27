@@ -20,6 +20,7 @@ import { formatElapsed } from "./formatElapsed";
 import { formatScored } from "./formatScored";
 import { ActivityRow, findActivity } from "./myActivity";
 import { PostgresIcon, SqlServerIcon } from "../layout/Icons";
+import { loadDraft, saveDraft } from "./sqlDraft";
 
 const emojis = ['🎉', '🥳', '🎊', '💯', '🌟', '🚀', '🦄', '🎈', '🎆', '🏆'];
 
@@ -105,7 +106,12 @@ function SqlExercises({exercise}: {exercise: ExerciseModel}) {
 
 
 function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExerciseModel}) {
-  const [sqlText, setSqlText] = useState('');
+  const currentGame = useAppSelector(state => state.exercises.selected);
+  const [sqlText, setSqlTextState] = useState(() => loadDraft(localStorage, currentGame ?? '', sql.id));
+  const setSqlText = (text: string) => {
+    setSqlTextState(text);
+    saveDraft(localStorage, currentGame ?? '', sql.id, text);
+  };
   const [error, setError] = useState('');
   const [result, setResult] = useState<null | Record<string, unknown>[]>(null);
   const [hint, setHint] = useState<string | null>(null);
@@ -117,7 +123,6 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
   const [resultTab, setResultTab] = useState<'result' | 'expected' | 'sample' | 'diagram'>('result');
   const [leftTab, setLeftTab] = useState<'exercises' | 'schema'>('exercises');
   const narrow = useMediaQuery('(max-width: 1100px)');
-  const currentGame = useAppSelector(state => state.exercises.selected);
   const registeredName = useAppSelector(state => state.exercises.userName);
   const scores = useAppSelector(state => state.exercises.scores);
   const myScores = scores.filter(score => score.player === registeredName && score.game === currentGame);
