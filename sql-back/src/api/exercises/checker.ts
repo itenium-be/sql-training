@@ -74,7 +74,25 @@ function rowEquals(actual: unknown[], expected: unknown[]) {
   return actual.length === expected.length && actual.every((cell, i) => cellEquals(cell, expected[i]));
 }
 
-const dynamicCache = new Map<string, unknown[][]>();
+// The reference solution result is cached once per exercise per day. Dynamic
+// exercises refresh daily; static exercises reuse the cached result so the
+// solution query is not re-run for every submission.
+const expectedResultCache = new Map<string, QueryResult>();
+
+function expectedResultKey(game: string, exercise: SqlExerciseModel) {
+  return `${game}-${exercise.id}-${new Date().toISOString().slice(0, 10)}`;
+}
+
+async function resolveExpectedResult(game: string, exercise: SqlExerciseModel): Promise<QueryResult> {
+  const key = expectedResultKey(game, exercise);
+  const cached = expectedResultCache.get(key);
+  if (cached) {
+    return cached;
+  }
+  const result = await runQuery(game, exercise.solution);
+  expectedResultCache.set(key, result);
+  return result;
+}
 
 function normalizeCell(cell: unknown) {
   return typeof cell === "string" && /^-?\d+(\.\d+)?$/.test(cell) ? Number(cell) : cell;
@@ -84,19 +102,33 @@ export async function resolveExpected(game: string, exercise: SqlExerciseModel):
   if (!exercise.dynamic) {
     return exercise.expected;
   }
-  const key = `${game}-${exercise.id}-${new Date().toISOString().slice(0, 10)}`;
-  const cached = dynamicCache.get(key);
-  if (cached) {
-    return cached;
-  }
-  const { rows } = await runQuery(game, exercise.solution);
-  const expected = rows.map((row) => row.map(normalizeCell));
-  dynamicCache.clear();
-  dynamicCache.set(key, expected);
-  return expected;
+  const { rows } = await resolveExpectedResult(game, exercise);
+  return rows.map((row) => row.map(normalizeCell));
 }
 
-export function isCorrect(exercise: SqlExerciseModel, expected: unknown[][], { rows: actual }: QueryResult) {
+// `expectedColumns` on an exercise are human-facing display labels ("team.name",
+// "averga gdp") and are not always the actual column names produced by the
+// reference solution. Compare submitted column names against the real columns
+// of that solution instead.
+export async function resolveExpectedColumns(game: string, exercise: SqlExerciseModel): Promise<string[]> {
+  const { columns } = await resolveExpectedResult(game, exercise);
+  return columns;
+}
+
+export function isCorrect(
+  exercise: SqlExerciseModel,
+  expected: unknown[][],
+  { columns: actualColumns, rows: actual }: QueryResult,
+  referenceColumns?: string[],
+) {
+  const expectedColumns = referenceColumns?.length ? referenceColumns : exercise.expectedColumns;
+  if (
+    expectedColumns?.length &&
+    (actualColumns.length !== expectedColumns.length ||
+      actualColumns.some((name, i) => name.toLowerCase() !== expectedColumns[i].toLowerCase()))
+  ) {
+    return false;
+  }
   if (actual.length !== expected.length) {
     return false;
   }

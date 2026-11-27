@@ -7,7 +7,8 @@ async function main() {
   for (const game of exercises.filter((g) => !games.length || games.includes(g.id))) {
     for (const ex of game.exercises) {
       try {
-        const ok = isCorrect(ex, await resolveExpected(game.id, ex), await runQuery(game.id, ex.solution));
+        const reference = await runQuery(game.id, ex.solution);
+        const ok = isCorrect(ex, await resolveExpected(game.id, ex), reference, reference.columns);
         console.log(`${ok ? "OK  " : "FAIL"} ${game.id}-${ex.id}`);
         failed += ok ? 0 : 1;
       } catch (err: any) {
