@@ -436,8 +436,16 @@ const getAiDetection: RequestHandler = async (_req: Request, res: Response) => {
     ),
   ]);
   const byName = new Map(players.rows.map((p) => [p.name.toLowerCase(), p]));
-  const rows = submissions.rows.map((s) => ({ ...s, exerciseId: Number(s.exerciseId) }));
-  const firstStarts = starts.rows.map((s) => ({ ...s, exerciseId: Number(s.exerciseId) }));
+  const rows = submissions.rows.map((s) => ({
+    ...s,
+    exerciseId: Number(s.exerciseId),
+    submittedAt: new Date(s.submittedAt),
+  }));
+  const firstStarts = starts.rows.map((s) => ({
+    ...s,
+    exerciseId: Number(s.exerciseId),
+    firstStart: new Date(s.firstStart),
+  }));
   const suspects = aiSuspects(rows, firstStarts).map((s) => {
     const p = byName.get(s.player.toLowerCase());
     return { ...s, id: p?.id ?? 0, avatar: p?.avatar ?? null, disqualified: p?.disqualified === true };
