@@ -5,12 +5,12 @@ import { Player } from '../game';
 import { BeamerAvatar } from './BeamerAvatar';
 
 function Badges({row}: {row: PlayerRow}) {
-  const badge = (value: number, icon: ReactNode) => (
-    <span className={value ? 'bm-ib' : 'bm-ib bm-ib0'}>{icon}{value}</span>
+  const badge = (value: number, icon: ReactNode, suffix = '') => (
+    <span className={value ? 'bm-ib' : 'bm-ib bm-ib0'}>{icon}{value}{suffix}</span>
   );
   return (
     <div className="bm-podbadges">
-      {badge(row.solved, <CheckIcon size={15} />)}
+      {badge(row.solved, <CheckIcon size={15} />, `/${row.totalExercises}`)}
       {badge(row.fastest, <BoltIcon size={15} />)}
       {badge(row.shortest, <CodeIcon size={15} />)}
       {badge(row.leanest, <LeafIcon size={15} />)}
@@ -63,9 +63,12 @@ export function BeamerPlayers({rows, you, players}: {rows: PlayerRow[]; you: str
 
       <div className="bm-board">
         <div className="bm-row bm-row-head">
-          <span>#</span><span></span><span>Player</span><span>Solved</span>
-          <span style={{textAlign: 'center'}}>Fastest</span><span style={{textAlign: 'center'}}>Shortest</span>
-          <span style={{textAlign: 'center'}}>Leanest</span><span style={{textAlign: 'right'}}>Total</span>
+          <span>#</span><span></span><span>Player</span>
+          <span className="bm-th"><CheckIcon size={15} />Solved</span>
+          <span className="bm-th bm-th-c"><BoltIcon size={15} />Fastest</span>
+          <span className="bm-th bm-th-c"><CodeIcon size={15} />Shortest</span>
+          <span className="bm-th bm-th-c"><LeafIcon size={15} />Leanest</span>
+          <span style={{textAlign: 'right'}}>Total</span>
         </div>
         {board.map((row, index) => (
           <div key={row.name} className={row.name === you ? 'bm-row bm-row-me' : 'bm-row'}>

@@ -197,6 +197,9 @@
   font-size: 21px;
 }
 .bm-row:last-child { border-bottom: 0; }
+.bm-th { display: inline-flex; align-items: center; gap: 6px; }
+.bm-th-c { justify-content: center; }
+.bm-th svg { flex: none; }
 .bm-row-head {
   font-size: 15px;
   font-weight: 700;
