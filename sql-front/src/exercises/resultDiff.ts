@@ -1,13 +1,13 @@
 import { ExpectedModel } from './exerciseModels';
 
-export type ColumnStatus = 'match' | 'extra' | 'missing';
-export type RowStatus = 'match' | 'wrong' | 'extra' | 'missing';
+type ColumnStatus = 'match' | 'extra' | 'missing';
+type RowStatus = 'match' | 'wrong' | 'extra' | 'missing';
 
-export type DiffColumn = { name: string; status: ColumnStatus };
-export type DiffCell = { value: unknown; expected?: unknown; status: 'match' | 'wrong' };
+type DiffColumn = { name: string; status: ColumnStatus };
+type DiffCell = { value: unknown; expected?: unknown; status: 'match' | 'wrong' };
 export type DiffRow = { status: RowStatus; cells: DiffCell[]; belongsAt?: number };
 
-export type DiffSummary = {
+type DiffSummary = {
   wrongValues: number;
   extraRows: number;
   missingRows: number;
