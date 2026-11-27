@@ -3,17 +3,24 @@ import { PlayerRow } from '../leaderboard/leaderboardData';
 import { BoltIcon, CheckIcon, CodeIcon, LeafIcon } from '../layout/Icons';
 import { Player } from '../game';
 import { BeamerAvatar } from './BeamerAvatar';
+import { BadgeKind, podiumBadges } from './podiumBadges';
+
+const badgeIcons: Record<BadgeKind, ReactNode> = {
+  solved: <CheckIcon size={15} />,
+  fastest: <BoltIcon size={15} />,
+  shortest: <CodeIcon size={15} />,
+  leanest: <LeafIcon size={15} />,
+};
 
 function Badges({row}: {row: PlayerRow}) {
-  const badge = (value: number, icon: ReactNode, suffix = '') => (
-    <span className={value ? 'bm-ib' : 'bm-ib bm-ib0'}>{icon}{value}{suffix}</span>
-  );
   return (
     <div className="bm-podbadges">
-      {badge(row.solved, <CheckIcon size={15} />, `/${row.totalExercises}`)}
-      {badge(row.fastest, <BoltIcon size={15} />)}
-      {badge(row.shortest, <CodeIcon size={15} />)}
-      {badge(row.leanest, <LeafIcon size={15} />)}
+      {podiumBadges(row).map(badge => (
+        <button key={badge.kind} type="button" aria-label={badge.tip} className={badge.value ? 'bm-ib' : 'bm-ib bm-ib0'}>
+          {badgeIcons[badge.kind]}{badge.text}
+          <span className="bm-tip" role="tooltip">{badge.tip}</span>
+        </button>
+      ))}
     </div>
   );
 }

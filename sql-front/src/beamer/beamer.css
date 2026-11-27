@@ -177,6 +177,33 @@
   font-variant-numeric: tabular-nums;
 }
 .bm-ib svg { width: 15px; height: 15px; flex: none; color: var(--df-gold); }
+.bm-ib { position: relative; border: 0; font-family: inherit; cursor: default; }
+.bm-tip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  background: var(--df-cream);
+  color: var(--df-ink);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 8px;
+  z-index: 2;
+  pointer-events: none;
+}
+.bm-tip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border: 5px solid transparent;
+  border-top-color: var(--df-cream);
+}
+.bm-ib:hover .bm-tip, .bm-ib:focus .bm-tip { display: block; }
 .bm-ib0 { background: rgba(22, 16, 10, 0.25); color: #6f5c3c; }
 .bm-ib0 svg { color: #6f5c3c; }
 
