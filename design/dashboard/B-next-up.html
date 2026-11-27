@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>B · Next up</title><link rel="stylesheet" href="mock.css">
+<style>
+.grid { display: grid; grid-template-columns: 1fr 340px; gap: 18px; align-items: start; }
+.hero { padding: 18px; display: grid; grid-template-columns: 120px 1fr; gap: 16px; align-items: center; background: linear-gradient(135deg, rgba(233,180,76,.14), transparent 60%), var(--df-bg-raised); border-color: var(--df-gold); margin-bottom: 18px; }
+.hero img { width: 120px; height: 120px; object-fit: cover; border-radius: 12px; }
+.hero h3 { margin: 4px 0 6px; color: var(--df-cream); font-size: 1.15rem; }
+.hero p { margin: 0 0 12px; font-size: .88rem; }
+.list { display: flex; flex-direction: column; gap: 8px; }
+.ds { display: grid; grid-template-columns: 56px 1fr auto; gap: 12px; align-items: center; padding: 10px 12px; }
+.ds:hover { border-color: var(--df-gold); }
+.ds img { width: 56px; height: 56px; border-radius: 10px; object-fit: cover; }
+.ds h3 { margin: 0 0 4px; color: var(--df-cream); font-size: .98rem; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.ds .bar { margin-top: 6px; max-width: 260px; }
+.ds .right { text-align: right; font-size: .78rem; }
+.ds .right .num { font-size: 1rem; display: block; }
+.side .card { padding: 14px; margin-bottom: 14px; }
+.lb-row { display: grid; grid-template-columns: 26px 32px 1fr auto; gap: 8px; align-items: center; padding: 6px 0; font-size: .88rem; }
+.lb-row.you { background: rgba(233,180,76,.1); border-radius: 8px; padding: 6px; margin: 4px -6px 0; }
+.lb-row .r { color: var(--df-muted); font-weight: 800; text-align: center; }
+.lb-row .n { color: var(--df-cream); font-weight: 700; }
+.sep { text-align: center; color: var(--df-muted); font-size: .8rem; line-height: .6; }
+.side .btn { width: 100%; margin-top: 10px; }
+.slides { display: flex; gap: 12px; align-items: center; }
+.slides .ico { font-size: 1.4rem; }
+@media (max-width: 860px) {
+  .grid { grid-template-columns: 1fr; }
+  .side { order: -1; }
+  .side .lb-full { display: none; }
+}
+@media (max-width: 560px) {
+  h1 { font-size: 1.3rem; }
+  .hero { grid-template-columns: 72px 1fr; padding: 14px; gap: 12px; }
+  .hero img { width: 72px; height: 72px; }
+  .hero p { display: none; }
+  .ds { grid-template-columns: 48px 1fr auto; }
+  .ds img { width: 48px; height: 48px; }
+  .ds .db { display: none; }
+  .me span { display: none; }
+}
+</style></head>
+<body><div class="wrap">
+  <header class="hdr">
+    <div class="brand"><div class="mark"></div><div><div class="bname">SQL Showdown</div><div class="bsub">DevFest Paris 2026</div></div></div>
+    <div class="me"><span>Ada</span><div class="av">AL</div></div>
+  </header>
+
+  <div class="eyebrow">Welcome back, Ada</div>
+  <h1>#7 · 118 pts</h1>
+
+  <div class="grid">
+    <main>
+      <a class="card hero" href="#">
+        <img src="../../slides/public/img/game-teachers.png" alt="">
+        <div><span class="eyebrow">Continue</span>
+          <h3>Teachers · question 4</h3>
+          <p class="muted">Which departments have no teachers?</p>
+          <span class="btn">Resume →</span></div>
+      </a>
+
+      <h2>Playgrounds</h2>
+      <div class="list">
+        <a class="card ds" href="#"><img src="../../slides/public/img/game-countries.png" alt="">
+          <div><h3>Countries <span class="lvl easy"><span class="pips"><i class="on"></i><i></i><i></i><i></i></span>Easy</span><span class="db">Postgres</span></h3>
+            <div class="muted" style="font-size:.8rem">The basics — one table.</div><div class="bar"><b style="width:100%"></b></div></div>
+          <div class="right"><span class="num">8/8</span><span class="muted">54 pts</span></div></a>
+        <a class="card ds" href="#"><img src="../../slides/public/img/game-teachers.png" alt="">
+          <div><h3>Teachers <span class="lvl medium"><span class="pips"><i class="on"></i><i class="on"></i><i></i><i></i></span>Medium</span><span class="db">Postgres</span></h3>
+            <div class="muted" style="font-size:.8rem">Start joining tables.</div><div class="bar"><b style="width:37%"></b></div></div>
+          <div class="right"><span class="num">3/8</span><span class="muted">60 pts</span></div></a>
+        <a class="card ds" href="#"><img src="../../slides/public/img/game-worldcup.png" alt="">
+          <div><h3>Worldcup <span class="lvl hard"><span class="pips"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span>Hard</span><span class="db">SQL Server</span></h3>
+            <div class="muted" style="font-size:.8rem">Many related tables.</div><div class="bar"><b style="width:0"></b></div></div>
+          <div class="right"><span class="num">0/6</span><span class="muted">105 pts</span></div></a>
+        <a class="card ds" href="#"><img src="../../slides/public/img/game-company.png" alt="">
+          <div><h3>Company <span class="lvl expert"><span class="pips"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span>Expert</span><span class="db">Postgres</span></h3>
+            <div class="muted" style="font-size:.8rem">Query at scale — many rows.</div><div class="bar"><b style="width:0"></b></div></div>
+          <div class="right"><span class="num">0/10</span><span class="muted">132 pts</span></div></a>
+      </div>
+    </main>
+
+    <aside class="side">
+      <div class="card">
+        <h2>🏆 Leaderboard</h2>
+        <div class="lb-full">
+          <div class="lb-row"><span class="r">1</span><div class="av">GH</div><span class="n">Grace</span><span class="num">212</span></div>
+          <div class="lb-row"><span class="r">2</span><div class="av">EC</div><span class="n">Edgar</span><span class="num">190</span></div>
+          <div class="lb-row"><span class="r">3</span><div class="av">LT</div><span class="n">Linus</span><span class="num">171</span></div>
+          <div class="sep">⋮</div>
+        </div>
+        <div class="lb-row you"><span class="r">7</span><div class="av">AL</div><span class="n">You</span><span class="num">118</span></div>
+        <a class="btn ghost" href="#">Full leaderboard →</a>
+      </div>
+      <a class="card slides" href="#" style="display:flex"><span class="ico">📽</span><div><strong style="color:var(--df-cream)">Slides</strong><div class="muted" style="font-size:.8rem">Rules &amp; prizes</div></div><span style="margin-left:auto;color:var(--df-gold)">↗</span></a>
+    </aside>
+  </div>
+</div></body></html>

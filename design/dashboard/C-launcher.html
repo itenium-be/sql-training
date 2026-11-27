@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>C · Launcher</title><link rel="stylesheet" href="mock.css">
+<style>
+.tiles { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 190px; gap: 12px; }
+.tile { position: relative; overflow: hidden; border-radius: 18px; border: 1px solid var(--df-border); display: flex; flex-direction: column; justify-content: flex-end; padding: 14px; }
+.tile:hover { border-color: var(--df-gold); }
+.tile > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+.tile::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(22,16,10,0) 30%, rgba(22,16,10,.92)); z-index: 1; }
+.tile > * { position: relative; z-index: 2; }
+.tile .lvl { position: absolute; top: 12px; left: 12px; background: rgba(22,16,10,.85); }
+.tile .prog { position: absolute; top: 12px; right: 12px; font-family: 'JetBrains Mono', monospace; font-size: .72rem; font-weight: 800; color: var(--df-cream); background: rgba(22,16,10,.85); padding: 3px 8px; border-radius: 999px; }
+.tile h3 { margin: 0; color: var(--df-cream); font-size: 1.25rem; }
+.tile p { margin: 2px 0 0; font-size: .8rem; color: var(--df-text); }
+.tile.lb { grid-row: span 2; background: linear-gradient(160deg, rgba(233,180,76,.25), rgba(178,71,42,.15)), var(--df-bg-raised); justify-content: space-between; }
+.tile.lb::after, .tile.sl::after { display: none; }
+.tile.lb .big { font-size: 3.2rem; color: var(--df-cream); font-weight: 800; line-height: 1; }
+.podium { display: flex; flex-direction: column; gap: 6px; font-size: .9rem; }
+.podium div { display: flex; gap: 8px; align-items: center; color: var(--df-cream); }
+.podium .num { margin-left: auto; }
+.tile.sl { background: var(--df-surface); margin-top: 12px; flex-direction: row; align-items: center; gap: 12px; }
+.tile.sl .ico, .tile.lb .ico { font-size: 1.8rem; }
+@media (max-width: 860px) { .tiles { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) {
+  h1 { font-size: 1.3rem; }
+  .tiles { grid-auto-rows: 150px; gap: 10px; }
+  .tile { padding: 10px; border-radius: 14px; }
+  .tile h3 { font-size: 1rem; }
+  .tile p { display: none; }
+  .tile.lb { grid-column: span 2; grid-row: span 1; flex-direction: row; align-items: center; }
+  .tile.lb .podium { display: none; }
+  .me span { display: none; }
+}
+</style></head>
+<body><div class="wrap">
+  <header class="hdr">
+    <div class="brand"><div class="mark"></div><div><div class="bname">SQL Showdown</div><div class="bsub">DevFest Paris 2026</div></div></div>
+    <div class="me"><span>Ada</span><div class="av">AL</div></div>
+  </header>
+
+  <div class="eyebrow">Where to?</div>
+  <h1>Dashboard</h1>
+
+  <div class="tiles">
+    <a class="tile lb" href="#">
+      <div><div class="ico">🏆</div><h3>Leaderboard</h3></div>
+      <div class="podium">
+        <div>🥇 Grace <span class="num">212</span></div>
+        <div>🥈 Edgar <span class="num">190</span></div>
+        <div>🥉 Linus <span class="num">171</span></div>
+      </div>
+      <div style="text-align:right"><div class="big">#7</div><span class="muted">118 pts</span></div>
+    </a>
+    <a class="tile" href="#"><img src="../../slides/public/img/game-countries.png" alt=""><span class="lvl easy">Easy</span><span class="prog">8/8 ✓</span><h3>Countries</h3><p>The basics — one table.</p></a>
+    <a class="tile" href="#"><img src="../../slides/public/img/game-teachers.png" alt=""><span class="lvl medium">Medium</span><span class="prog">3/8</span><h3>Teachers</h3><p>Start joining tables.</p></a>
+    <a class="tile" href="#"><img src="../../slides/public/img/game-worldcup.png" alt=""><span class="lvl hard">Hard</span><span class="prog">0/6</span><h3>Worldcup</h3><p>Many related tables.</p></a>
+    <a class="tile" href="#"><img src="../../slides/public/img/game-company.png" alt=""><span class="lvl expert">Expert</span><span class="prog">0/10</span><h3>Company</h3><p>Query at scale — many rows.</p></a>
+  </div>
+  <a class="tile sl" href="#"><span class="ico">📽</span><div><h3>Slides</h3><p class="muted">Rules &amp; prizes</p></div></a>
+</div></body></html>

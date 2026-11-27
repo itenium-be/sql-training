@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A · Posters</title><link rel="stylesheet" href="mock.css">
+<style>
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 22px; }
+.stat { padding: 12px 14px; }
+.stat .num { font-size: 1.5rem; display: block; }
+.stat small { font-size: .72rem; }
+.posters { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 22px; }
+.poster { overflow: hidden; display: flex; flex-direction: column; transition: border-color .15s; }
+.poster:hover { border-color: var(--df-gold); }
+.poster .art { aspect-ratio: 16/10; background: var(--df-surface); border-bottom: 1px solid var(--df-border-soft); position: relative; }
+.poster .art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.poster .art .lvl { position: absolute; top: 10px; left: 10px; background: rgba(22,16,10,.85); }
+.poster .pb { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.poster h3 { margin: 0; color: var(--df-cream); font-size: 1.05rem; }
+.poster p { margin: 0; font-size: .82rem; color: var(--df-muted); }
+.poster .row { display: flex; justify-content: space-between; align-items: center; font-size: .75rem; margin-top: auto; }
+.links { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; }
+.link { padding: 16px; display: flex; gap: 14px; align-items: center; }
+.link .ico { width: 44px; height: 44px; border-radius: 12px; background: var(--df-surface); display: grid; place-items: center; font-size: 1.3rem; flex: none; }
+.link h3 { margin: 0 0 2px; color: var(--df-cream); font-size: 1rem; }
+.link p { margin: 0; font-size: .8rem; }
+.link .go { margin-left: auto; color: var(--df-gold); font-size: 1.2rem; }
+@media (max-width: 900px) { .posters { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) {
+  h1 { font-size: 1.3rem; }
+  .stats .num { font-size: 1.2rem; }
+  .posters { gap: 10px; }
+  .poster .pb { padding: 10px; }
+  .poster p { display: none; }
+  .links { grid-template-columns: 1fr; gap: 10px; }
+  .me span { display: none; }
+}
+</style></head>
+<body><div class="wrap">
+  <header class="hdr">
+    <div class="brand"><div class="mark"></div><div><div class="bname">SQL Showdown</div><div class="bsub">DevFest Paris 2026</div></div></div>
+    <div class="me"><span>Ada</span><div class="av">AL</div></div>
+  </header>
+
+  <div class="eyebrow">Your dashboard</div>
+  <h1>Pick a playground</h1>
+
+  <div class="stats">
+    <div class="card stat"><span class="num">#7</span><small class="muted">of 42 players</small></div>
+    <div class="card stat"><span class="num">118</span><small class="muted">points</small></div>
+    <div class="card stat"><span class="num">11/32</span><small class="muted">solved</small></div>
+  </div>
+
+  <div class="posters">
+    <a class="card poster" href="#"><div class="art"><img src="../../slides/public/img/game-countries.png" alt=""><span class="lvl easy">Easy</span></div>
+      <div class="pb"><h3>Countries</h3><p>The basics — one table.</p>
+        <div class="bar"><b style="width:100%"></b></div>
+        <div class="row"><span class="num">8/8</span><span class="db">Postgres</span></div></div></a>
+    <a class="card poster" href="#"><div class="art"><img src="../../slides/public/img/game-teachers.png" alt=""><span class="lvl medium">Medium</span></div>
+      <div class="pb"><h3>Teachers</h3><p>Start joining tables.</p>
+        <div class="bar"><b style="width:37%"></b></div>
+        <div class="row"><span class="num">3/8</span><span class="db">Postgres</span></div></div></a>
+    <a class="card poster" href="#"><div class="art"><img src="../../slides/public/img/game-worldcup.png" alt=""><span class="lvl hard">Hard</span></div>
+      <div class="pb"><h3>Worldcup</h3><p>Many related tables.</p>
+        <div class="bar"><b style="width:0"></b></div>
+        <div class="row"><span class="num">0/6</span><span class="db">SQL Server</span></div></div></a>
+    <a class="card poster" href="#"><div class="art"><img src="../../slides/public/img/game-company.png" alt=""><span class="lvl expert">Expert</span></div>
+      <div class="pb"><h3>Company</h3><p>Query at scale — many rows.</p>
+        <div class="bar"><b style="width:0"></b></div>
+        <div class="row"><span class="num">0/10</span><span class="db">Postgres</span></div></div></a>
+  </div>
+
+  <div class="links">
+    <a class="card link" href="#"><div class="ico">🏆</div><div><h3>Leaderboard</h3><p class="muted">Ada is 9 pts behind #6</p></div><span class="go">→</span></a>
+    <a class="card link" href="#"><div class="ico">📽</div><div><h3>Slides</h3><p class="muted">Rules &amp; prizes</p></div><span class="go">↗</span></a>
+  </div>
+</div></body></html>

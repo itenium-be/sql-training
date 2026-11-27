@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Dashboard mockups</title><link rel="stylesheet" href="mock.css">
+<style>
+body { padding: 24px; }
+section { margin-bottom: 48px; }
+h2 { font-size: 1.3rem; }
+.frames { display: flex; gap: 28px; align-items: flex-start; }
+.desk { width: 1100px; height: 720px; border: 1px solid var(--df-border); border-radius: 10px; overflow: hidden; flex: none; }
+.desk iframe { width: 1375px; height: 900px; border: 0; transform: scale(.8); transform-origin: 0 0; }
+.phone { width: 390px; height: 780px; border: 10px solid #000; border-radius: 40px; overflow: hidden; flex: none; }
+.phone iframe { width: 100%; height: 100%; border: 0; }
+.lbl { font-size: .75rem; color: var(--df-muted); margin-bottom: 6px; font-family: 'JetBrains Mono', monospace; }
+</style></head>
+<body>
+<script>
+for (const [file, title, note] of [
+  ['A-posters.html',  'A · Posters',  'Stats strip, the slide posters with a difficulty badge + progress, leaderboard/slides as link cards.'],
+  ['B-next-up.html',  'B · Next up',  'Resume card for the current playground, compact list rows with pips, mini leaderboard (top 3 + you).'],
+  ['C-launcher.html', 'C · Launcher', 'Phone home-screen tiles: full-bleed art, leaderboard tile with podium.'],
+  ['D-ladder.html',   'D · Ladder',   'Playgrounds as a staircase from easy to expert; collapses into a stacked list on mobile.'],
+]) {
+  document.write(`<section><h2>${title}</h2><p class="muted">${note} <a href="${file}" style="color:var(--df-gold)">open alone</a></p>
+    <div class="frames"><div><div class="lbl">desktop · 1375px @ 80%</div><div class="desk"><iframe src="${file}"></iframe></div></div>
+    <div><div class="lbl">phone · 370px</div><div class="phone"><iframe src="${file}"></iframe></div></div></div></section>`);
+}
+</script>
+</body></html>
