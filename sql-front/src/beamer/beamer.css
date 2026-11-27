@@ -189,9 +189,9 @@
 }
 .bm-row {
   display: grid;
-  grid-template-columns: 56px 52px minmax(0, 1fr) 210px 104px 104px 104px 120px;
+  grid-template-columns: 56px 52px minmax(0, 1fr) 210px 150px 150px 150px 120px;
   align-items: center;
-  gap: 12px;
+  gap: 12px 32px;
   padding: 12px 24px;
   border-bottom: 1px solid var(--df-border-soft);
   font-size: 21px;
