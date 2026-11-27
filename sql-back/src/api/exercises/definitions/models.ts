@@ -10,7 +10,7 @@ export type SqlExerciseModel = {
   /** Require specific array order */
   expectedOrder: boolean;
   expectedColumns: string[];
-  /** Reference solution, only visible to the admin */
+  /** Reference solution, only visible to the admin, or to everyone once the game has ended */
   solution: string;
   hints?: string;
   /** Points deducted for showing the hint, default 1 */

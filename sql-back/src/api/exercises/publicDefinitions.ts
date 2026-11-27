@@ -9,7 +9,12 @@ export function publicDefinitions(games: ExerciseModel[], reveal: boolean) {
       points: ex.points,
       hasHint: !!ex.hints,
       ...penalties(ex),
-      ...(reveal && { desc: ex.desc, expectedColumns: ex.expectedColumns, expectedOrder: ex.expectedOrder }),
+      ...(reveal && {
+        desc: ex.desc,
+        expectedColumns: ex.expectedColumns,
+        expectedOrder: ex.expectedOrder,
+        solution: ex.solution,
+      }),
     })),
   }));
 }

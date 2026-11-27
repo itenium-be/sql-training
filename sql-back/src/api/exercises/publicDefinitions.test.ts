@@ -33,7 +33,7 @@ describe("publicDefinitions", () => {
     expect(publicDefinitions(games, false)[0].desc).toBe("Countries of the world");
   });
 
-  test("reveals the question, but never the answer", () => {
+  test("reveals the question and the reference solution", () => {
     const [ex] = publicDefinitions(games, true)[0].exercises;
     expect(ex).toEqual({
       id: 1,
@@ -44,6 +44,7 @@ describe("publicDefinitions", () => {
       desc: "Big countries",
       expectedColumns: ["name"],
       expectedOrder: true,
+      solution: "SELECT name FROM countries",
     });
   });
 });
