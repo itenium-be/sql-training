@@ -123,14 +123,14 @@ export function calculateEfficient(exercises: ExerciseModel[], allScores: Score[
   efficientTable.forEach(efficient => {
     const exScores = scores
       .filter(score => score.game === efficient.game && score.exerciseid === efficient.exerciseId && score.cost !== null)
-      .sort((a, b) => a.cost! - b.cost! || a.solutionlength - b.solutionlength);
+      .sort((a, b) => a.cost! - b.cost!);
 
     if (!exScores.length) {
       return;
     }
 
     const [best, second] = exScores;
-    if (second && second.cost === best.cost && second.solutionlength === best.solutionlength) {
+    if (second && second.cost === best.cost) {
       return;
     }
 

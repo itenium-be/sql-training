@@ -59,6 +59,14 @@ describe('calculateEfficient', () => {
     const [first] = calculateEfficient(exercises, scores);
     expect(first).toMatchObject({player: 'alice', cost: 5});
   });
+
+  test('has no winner on a cost tie, even when one solution is shorter', () => {
+    const [first] = calculateEfficient(exercises, [
+      score({player: 'alice', cost: 5, solutionlength: 10}),
+      score({player: 'bob', cost: 5, solutionlength: 20}),
+    ]);
+    expect(first.player).toBe('');
+  });
 });
 
 describe('disqualified players', () => {
