@@ -35,6 +35,7 @@ export async function migrate() {
   await gameQuery("CREATE UNIQUE INDEX IF NOT EXISTS game_progress_unique ON game_progress (player, game, exerciseId)");
   await gameQuery("CREATE TABLE IF NOT EXISTS settings (key VARCHAR(50) PRIMARY KEY, value TEXT NOT NULL)");
   await gameQuery("ALTER TABLE players ADD COLUMN IF NOT EXISTS avatar SMALLINT");
+  await gameQuery("ALTER TABLE exercise_activity ADD COLUMN IF NOT EXISTS gaveUp BOOLEAN NOT NULL DEFAULT FALSE");
   await gameQuery(`CREATE TABLE IF NOT EXISTS submissions (
     id SERIAL PRIMARY KEY,
     player VARCHAR(100) NOT NULL,

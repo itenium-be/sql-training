@@ -76,6 +76,22 @@ const docs: Doc[] = [
   },
   {
     method: "post",
+    path: "/giveup",
+    summary: "Give up on an exercise",
+    description: "Forfeits all points on it and unlocks GET /solutions. Refused once solved.",
+    auth: "player",
+    request: json(z.object(exercise)),
+  },
+  {
+    method: "get",
+    path: "/solutions",
+    summary: "Reference solution and every accepted solution",
+    description: "Only once you solved or gave up on the exercise, or after the game has ended.",
+    auth: "player",
+    request: { query: z.object({ game: z.string(), exerciseId: z.coerce.number().int() }) },
+  },
+  {
+    method: "post",
     path: "/activity",
     summary: "Mark an exercise as being worked on",
     description: "Feeds the admin's 'stuck' view.",

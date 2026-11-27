@@ -1,9 +1,9 @@
 import express, { type Request, type RequestHandler, type Response, type Router } from "express";
 import { exercises } from "@/api/exercises/definitions/exercises";
-import { checkSolution, exerciseHint, referenceSolutions } from "@/api/exercises/exerciseService";
+import { checkSolution, exerciseHint, referenceSolution, referenceSolutions } from "@/api/exercises/exerciseService";
 import { exerciseDetails, publicDefinitions } from "@/api/exercises/publicDefinitions";
 import { env } from "@/common/utils/envConfig";
-import { shouldRecordActivity } from "./activity";
+import { canSeeSolutions, shouldRecordActivity } from "./activity";
 import { type AuthRequest, mintToken, requirePlayer } from "./auth";
 import { gameQuery } from "./gameDb";
 import { gameModes, getGameMode, parseGameMode, setGameMode, startRefusal } from "./gameMode";
@@ -85,7 +85,7 @@ const NOT_STARTED = "Open the exercise first";
 
 async function getActivity(player: string, game: string, exerciseId: number) {
   const result = await gameQuery(
-    "SELECT attempts, hint, expected FROM exercise_activity WHERE player=$1 AND game=$2 AND exerciseId=$3",
+    "SELECT attempts, hint, expected, gaveUp FROM exercise_activity WHERE player=$1 AND game=$2 AND exerciseId=$3",
     [player, game, exerciseId],
   );
   const row = result.rows[0];
@@ -93,6 +93,7 @@ async function getActivity(player: string, game: string, exerciseId: number) {
     attempts: row ? Number(row.attempts) : 0,
     hint: row?.hint === true,
     expected: row?.expected === true,
+    gaveUp: row?.gaveup === true,
   };
 }
 
@@ -123,7 +124,9 @@ const checkExercise: RequestHandler = async (req: Request, res: Response) => {
     [player, data.game, data.exerciseId, data.solution, correct, body.message ?? null],
   ).catch((err) => console.error("Could not log submission", err));
   const rows = body.responseObject?.rows ?? null;
-  const recording = getGameMode() === "running" && !(await isSolved(player, data.game, data.exerciseId));
+  const solved = await isSolved(player, data.game, data.exerciseId);
+  const { gaveUp } = await getActivity(player, data.game, data.exerciseId);
+  const recording = shouldRecordActivity(getGameMode(), solved || gaveUp);
 
   if (!correct) {
     let attempts = 0;
@@ -142,8 +145,9 @@ const checkExercise: RequestHandler = async (req: Request, res: Response) => {
   const result = body.responseObject!;
   const cost = result.cost;
   if (!recording) {
-    const message =
-      getGameMode() === "running"
+    const message = gaveUp
+      ? "You gave up on this one"
+      : getGameMode() === "running"
         ? "Already solved!"
         : getGameMode() === "init"
           ? "Game has not yet started!"
@@ -210,7 +214,9 @@ const getHint: RequestHandler = async (req: Request, res: Response) => {
 const getMyActivity: RequestHandler = async (req: Request, res: Response) => {
   const player = (req as AuthRequest).player;
   const [activity, started] = await Promise.all([
-    gameQuery("SELECT game, exerciseId, attempts, hint, expected FROM exercise_activity WHERE player=$1", [player]),
+    gameQuery("SELECT game, exerciseId, attempts, hint, expected, gaveUp FROM exercise_activity WHERE player=$1", [
+      player,
+    ]),
     gameQuery("SELECT DISTINCT game, exerciseId FROM game_start WHERE player=$1", [player]),
   ]);
   const opened = started.rows.map((row) => {
@@ -257,6 +263,56 @@ const getMySolution: RequestHandler = async (req: Request, res: Response) => {
 
   const rows = (await checkSolution(game, exerciseId, row.solution)).responseObject?.rows ?? null;
   return res.status(200).send({ solution: row.solution, elapsed: Number(row.elapsed), rows });
+};
+
+const giveUp: RequestHandler = async (req: Request, res: Response) => {
+  const player = (req as AuthRequest).player;
+  const game = req.body?.game;
+  const exerciseId = req.body?.exerciseId;
+  if (typeof game !== "string" || !Number.isInteger(exerciseId)) {
+    return res.status(400).send({ message: "game and exerciseId are required" });
+  }
+
+  if (!(await hasStarted(player, game, exerciseId))) {
+    return res.status(409).send({ message: NOT_STARTED });
+  }
+  if (await isSolved(player, game, exerciseId)) {
+    return res.status(409).send({ message: "Already solved!" });
+  }
+
+  if (getGameMode() === "running") {
+    await gameQuery(
+      `INSERT INTO exercise_activity (player, game, exerciseId, gaveUp) VALUES ($1, $2, $3, TRUE)
+       ON CONFLICT (player, game, exerciseId) DO UPDATE SET gaveUp = TRUE`,
+      [player, game, exerciseId],
+    );
+  }
+  return res.status(200).send({ ok: true });
+};
+
+const getSolutions: RequestHandler = async (req: Request, res: Response) => {
+  const player = (req as AuthRequest).player;
+  const game = req.query.game;
+  const exerciseId = Number(req.query.exerciseId);
+  if (typeof game !== "string" || !Number.isInteger(exerciseId)) {
+    return res.status(400).send({ message: "game and exerciseId are required" });
+  }
+
+  const reference = referenceSolution(game, exerciseId);
+  if (reference === undefined) {
+    return res.status(404).send({ message: `Unknown exercise ${game}-${exerciseId}` });
+  }
+  const solved = await isSolved(player, game, exerciseId);
+  const { gaveUp } = await getActivity(player, game, exerciseId);
+  if (!canSeeSolutions(getGameMode(), { solved, gaveUp })) {
+    return res.status(403).send({ message: "Solve the exercise or give up first" });
+  }
+
+  const result = await gameQuery("SELECT player, solution FROM game_progress WHERE game=$1 AND exerciseId=$2", [
+    game,
+    exerciseId,
+  ]);
+  return res.status(200).send({ reference, solutions: result.rows });
 };
 
 const getProgress: RequestHandler = async (_req: Request, res: Response) => {
@@ -367,6 +423,8 @@ gameRouter.post("/check", requirePlayer, checkExercise);
 gameRouter.post("/hint", requirePlayer, getHint);
 gameRouter.get("/me", requirePlayer, getMyActivity);
 gameRouter.get("/solution", requirePlayer, getMySolution);
+gameRouter.post("/giveup", requirePlayer, giveUp);
+gameRouter.get("/solutions", requirePlayer, getSolutions);
 gameRouter.post("/activity", requirePlayer, recordActivity);
 gameRouter.get("/", getProgress);
 gameRouter.get("/state", getState);

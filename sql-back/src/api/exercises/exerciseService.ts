@@ -90,3 +90,7 @@ export function referenceSolutions() {
     })),
   );
 }
+
+export function referenceSolution(game: string, exerciseId: number): string | undefined {
+  return exercises.find((g) => g.id === game)?.exercises.find((ex) => ex.id === exerciseId)?.solution;
+}
