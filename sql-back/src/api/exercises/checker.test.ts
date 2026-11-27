@@ -32,7 +32,18 @@ describe("isCorrect column names", () => {
   });
 
   test("keeps row-only comparison when no columns are expected", () => {
-    expect(isCorrect({ ...exercise, expectedColumns: [] }, exercise.expected, { columns: ["anything"], rows: [[8]] })).toBe(true);
+    expect(
+      isCorrect({ ...exercise, expectedColumns: [] }, exercise.expected, { columns: ["anything"], rows: [[8]] }),
+    ).toBe(true);
+  });
+
+  test("compares against the reference solution columns, not display labels", () => {
+    const displayLabels = { ...exercise, expectedColumns: ["team.name", "owngoal_count"] };
+    const reference = ["name", "owngoal_count"];
+    expect(isCorrect(displayLabels, [[8]], { columns: reference, rows: [[8]] }, reference)).toBe(true);
+    expect(isCorrect(displayLabels, [[8]], { columns: ["wrong", "owngoal_count"], rows: [[8]] }, reference)).toBe(
+      false,
+    );
   });
 });
 

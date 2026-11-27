@@ -7,6 +7,7 @@ import {
   penalties,
   QueryError,
   resolveExpected,
+  resolveExpectedColumns,
   runQuery,
   toObjects,
 } from "./checker";
@@ -38,7 +39,8 @@ export async function checkSolution(
   }
   try {
     const result = await runQuery(game, query);
-    const correct = isCorrect(exercise, await resolveExpected(game, exercise), result);
+    const referenceColumns = await resolveExpectedColumns(game, exercise);
+    const correct = isCorrect(exercise, await resolveExpected(game, exercise), result, referenceColumns);
     const rows = toObjects(result);
     const cost = correct ? await measureCost(game, query) : null;
     return ServiceResponse.success<CheckResult | null>(
