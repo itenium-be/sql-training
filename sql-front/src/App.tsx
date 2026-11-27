@@ -64,6 +64,7 @@ function Game() {
         <TopNavigation />
         <Routes>
           <Route path="/" element={ <Home /> } />
+          <Route path="/leaderboard" element={ <Beamer /> } />
           {exercises.map(ex => (
             <Route key={ex.id} path={ex.id} element={ <Exercise exercise={ex} /> } />
           ))}

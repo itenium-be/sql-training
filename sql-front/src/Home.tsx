@@ -2,14 +2,14 @@ import { useState } from "react";
 import { Image, Row } from "react-bootstrap";
 import { useAppSelector } from "./store";
 import { RegisterForm } from "./RegisterForm";
-import { Beamer } from "./beamer/Beamer";
+import { Dashboard } from "./dashboard/Dashboard";
 
 export function Home() {
   const registeredName = useAppSelector(state => state.exercises.userName);
   const [meme] = useState(() => Math.floor(Math.random() * 18) + 1);
 
   if (registeredName) {
-    return <Beamer />;
+    return <Dashboard />;
   }
 
   return (

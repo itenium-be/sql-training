@@ -1,5 +1,5 @@
 import Nav from 'react-bootstrap/Nav';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../store';
 import { fetchData } from './fetchData';
 import { useEffect } from 'react';
@@ -7,6 +7,7 @@ import { ExerciseId } from '../exercises/exerciseModels';
 import { DatabaseIcon } from './Icons';
 import { avatarIndex, usePlayers } from '../game';
 import { Avatar } from '../Avatar';
+import { datasets } from '../dashboard/datasets';
 
 export function TopNavigation() {
   const exercises = useAppSelector(state => state.exercises.entities);
@@ -17,8 +18,8 @@ export function TopNavigation() {
   const me = players.find(p => p.name.toLowerCase() === registeredName.toLowerCase());
 
   useEffect(() => {
-    if (document.location.pathname !== '/') {
-      const selectedEx = document.location.pathname.substring(1);
+    const selectedEx = document.location.pathname.substring(1);
+    if (selectedEx in datasets) {
       dispatch(fetchData(selectedEx as ExerciseId));
     }
   }, [dispatch]);
@@ -44,7 +45,7 @@ export function TopNavigation() {
       </div>
     </header>
     <div className="df-tabs">
-      <Link to="/" onClick={() => dispatch(fetchData('home'))} className={selected ? 'df-tab' : 'df-tab df-tab-active'}>Leaderboard</Link>
+      <NavLink to="/leaderboard" onClick={() => dispatch(fetchData('home'))} className={({isActive}) => isActive ? 'df-tab df-tab-active' : 'df-tab'}>Leaderboard</NavLink>
       {registeredName && (
         <Nav variant="tabs" activeKey={selected ?? undefined}>
           {exercises.map(ex => (
