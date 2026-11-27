@@ -14,3 +14,20 @@ BEGIN
   ALTER ROLE db_datareader ADD MEMBER player;
 END
 GO
+
+USE [master];
+GO
+
+IF NOT EXISTS (SELECT 1 FROM sys.server_principals WHERE name = 'shadow')
+  CREATE LOGIN shadow WITH PASSWORD = 'Shadow123!', DEFAULT_DATABASE = [sportdb_shadow], CHECK_POLICY = OFF;
+GO
+
+USE [sportdb_shadow];
+GO
+
+IF NOT EXISTS (SELECT 1 FROM sys.database_principals WHERE name = 'shadow')
+BEGIN
+  CREATE USER shadow FOR LOGIN shadow;
+  ALTER ROLE db_datareader ADD MEMBER shadow;
+END
+GO

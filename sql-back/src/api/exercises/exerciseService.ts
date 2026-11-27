@@ -2,14 +2,15 @@ import { StatusCodes } from "http-status-codes";
 import { ServiceResponse } from "@/common/models/serviceResponse";
 import {
   findExercise,
-  isCorrect,
+  grade,
+  grader,
   measureCost,
   penalties,
   QueryError,
   resolveExpected,
   resolveExpectedColumns,
-  runQuery,
   toObjects,
+  type Verdict,
 } from "./checker";
 import { exercises } from "./definitions/exercises";
 
@@ -20,6 +21,12 @@ export type CheckResult = {
   expectedCost: number;
   cost: number | null;
   rows: Record<string, unknown>[];
+};
+
+const VERDICT_MESSAGES: Record<Verdict, string> = {
+  correct: "Correct",
+  wrong: "Query result does not match expected output!",
+  dataDependent: "Right result, but your query wouldn't give the right result on other data.",
 };
 
 export type HintResult = {
@@ -38,15 +45,18 @@ export async function checkSolution(
     return ServiceResponse.failure(`Unknown exercise ${game}-${exerciseId}`, null, StatusCodes.NOT_FOUND);
   }
   try {
-    const result = await runQuery(game, query);
     const referenceColumns = await resolveExpectedColumns(game, exercise);
-    const correct = isCorrect(exercise, await resolveExpected(game, exercise), result, referenceColumns);
+    const { verdict, result } = await grade(exercise, grader(game, exercise, query, referenceColumns));
+    const correct = verdict === "correct";
     const rows = toObjects(result);
     const cost = correct ? await measureCost(game, query) : null;
-    return ServiceResponse.success<CheckResult | null>(
-      correct ? "Correct" : "Query result does not match expected output!",
-      { correct, cost, rows, points: exercise.points, ...penalties(exercise) },
-    );
+    return ServiceResponse.success<CheckResult | null>(VERDICT_MESSAGES[verdict], {
+      correct,
+      cost,
+      rows,
+      points: exercise.points,
+      ...penalties(exercise),
+    });
   } catch (err: any) {
     const status = err instanceof QueryError ? StatusCodes.BAD_REQUEST : StatusCodes.INTERNAL_SERVER_ERROR;
     return ServiceResponse.failure(err.message, null, status);

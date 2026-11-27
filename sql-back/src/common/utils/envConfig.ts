@@ -17,6 +17,8 @@ export const env = cleanEnv(process.env, {
   SQL_SERVER_PORT: port({ testDefault: 5174 }),
   SQL_SERVER_USER: str({ testDefault: "player" }),
   SQL_SERVER_PASSWORD: str({ testDefault: "Player123!" }),
+  SQL_SERVER_SHADOW_USER: str({ testDefault: "shadow" }),
+  SQL_SERVER_SHADOW_PASSWORD: str({ testDefault: "Shadow123!" }),
 
   API_KEY: str({ testDefault: "secret" }),
 

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { findExercise, isCorrect, penalties, toObjects } from "./checker";
+import { findExercise, grade, isCorrect, penalties, type QueryResult, type Target, toObjects } from "./checker";
 import type { SqlExerciseModel } from "./definitions/models";
 
 describe("toObjects", () => {
@@ -82,5 +82,59 @@ describe("findExercise", () => {
   test("returns undefined for unknown exercises", () => {
     expect(findExercise("World", 9999)).toBeUndefined();
     expect(findExercise("Unknown", 1)).toBeUndefined();
+  });
+});
+
+describe("grade", () => {
+  const exercise: SqlExerciseModel = {
+    id: 1,
+    desc: "",
+    points: 1,
+    expected: [["Mozambique"]],
+    expectedOrder: false,
+    expectedColumns: ["name"],
+    solution: "",
+  };
+  const expected = { real: [["Mozambique"]], shadow: [["Mozambique"], ["Montequiaru"]] };
+  const rows = (...names: string[]): QueryResult => ({ columns: ["name"], rows: names.map((n) => [n]) });
+
+  function grader(results: Record<Target, QueryResult | Error>) {
+    const ran: Target[] = [];
+    return {
+      ran,
+      grader: {
+        referenceColumns: ["name"],
+        expected: async (target: Target) => expected[target],
+        run: async (target: Target) => {
+          ran.push(target);
+          const result = results[target];
+          if (result instanceof Error) {
+            throw result;
+          }
+          return result;
+        },
+      },
+    };
+  }
+
+  test("is correct when both the real and the shadow data match", async () => {
+    const { grader: g } = grader({ real: rows("Mozambique"), shadow: rows("Mozambique", "Montequiaru") });
+    expect((await grade(exercise, g)).verdict).toBe("correct");
+  });
+
+  test("is data dependent when only the real data matches, and returns the real rows", async () => {
+    const { grader: g } = grader({ real: rows("Mozambique"), shadow: rows("Mozambique") });
+    expect(await grade(exercise, g)).toEqual({ verdict: "dataDependent", result: rows("Mozambique") });
+  });
+
+  test("is data dependent when the query fails on the shadow data", async () => {
+    const { grader: g } = grader({ real: rows("Mozambique"), shadow: new Error("Invalid object name") });
+    expect((await grade(exercise, g)).verdict).toBe("dataDependent");
+  });
+
+  test("is wrong without touching the shadow data when the real data does not match", async () => {
+    const { grader: g, ran } = grader({ real: rows("Belgium"), shadow: rows("Mozambique", "Montequiaru") });
+    expect((await grade(exercise, g)).verdict).toBe("wrong");
+    expect(ran).toEqual(["real"]);
   });
 });

@@ -103,6 +103,7 @@ done
 
 # initdb scripts only run on an empty volume
 docker compose exec -T postgres psql -U admin -d world -v ON_ERROR_STOP=1 -q -f /docker-entrypoint-initdb.d/04-hardening.sql
+docker compose exec -T -e POSTGRES_USER=admin postgres /docker-entrypoint-initdb.d/05-shadow.sh
 
 docker compose ps
 REMOTE

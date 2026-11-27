@@ -1,7 +1,7 @@
-CREATE DATABASE [sportdb]
+CREATE DATABASE [$(DB)]
 GO
 
-USE [sportdb];
+USE [$(DB)];
 GO
 
 PRINT 'Creating worldcup db'

@@ -1,5 +1,5 @@
 import sql from "mssql";
-import { executeArrayQuery, sqlConfig } from "../query";
+import { executeArrayQuery, SHADOW_PG_DATABASE, shadowSqlConfig, sqlConfig } from "../query";
 import { measurePostgres, measureSqlServer } from "./cost";
 import { exercises } from "./definitions/exercises";
 import type { SqlExerciseModel } from "./definitions/models";
@@ -11,13 +11,28 @@ export type QueryResult = {
   rows: unknown[][];
 };
 
-export async function runQuery(game: string, query: string): Promise<QueryResult> {
+export type Target = "real" | "shadow";
+
+let shadowPool: Promise<sql.ConnectionPool> | undefined;
+
+function sqlServerPool(target: Target) {
+  if (target === "real") {
+    return sql.connect(sqlConfig);
+  }
+  shadowPool ??= new sql.ConnectionPool(shadowSqlConfig).connect().catch((err) => {
+    shadowPool = undefined;
+    throw err;
+  });
+  return shadowPool;
+}
+
+export async function runQuery(game: string, query: string, target: Target = "real"): Promise<QueryResult> {
   if (/statement_timeout/i.test(query)) {
     throw new QueryError("Changing statement_timeout is not allowed");
   }
   let result: QueryResult;
   if (game === "Worldcup") {
-    const pool = await sql.connect(sqlConfig);
+    const pool = await sqlServerPool(target);
     const request = pool.request();
     request.arrayRowMode = true;
     const response: any = await request.query(query);
@@ -26,7 +41,7 @@ export async function runQuery(game: string, query: string): Promise<QueryResult
       rows: response.recordset ?? [],
     };
   } else {
-    const response = await executeArrayQuery(query);
+    const response = await executeArrayQuery(query, target === "shadow" ? SHADOW_PG_DATABASE : undefined);
     result = {
       columns: (response.fields ?? []).map((field) => field.name),
       rows: response.rows ?? [],
@@ -74,22 +89,22 @@ function rowEquals(actual: unknown[], expected: unknown[]) {
   return actual.length === expected.length && actual.every((cell, i) => cellEquals(cell, expected[i]));
 }
 
-// The reference solution result is cached once per exercise per day. Dynamic
+// The reference solution result is cached once per exercise per target per day. Dynamic
 // exercises refresh daily; static exercises reuse the cached result so the
 // solution query is not re-run for every submission.
 const expectedResultCache = new Map<string, QueryResult>();
 
-function expectedResultKey(game: string, exercise: SqlExerciseModel) {
-  return `${game}-${exercise.id}-${new Date().toISOString().slice(0, 10)}`;
+function expectedResultKey(game: string, exercise: SqlExerciseModel, target: Target) {
+  return `${game}-${exercise.id}-${target}-${new Date().toISOString().slice(0, 10)}`;
 }
 
-async function resolveExpectedResult(game: string, exercise: SqlExerciseModel): Promise<QueryResult> {
-  const key = expectedResultKey(game, exercise);
+async function resolveExpectedResult(game: string, exercise: SqlExerciseModel, target: Target): Promise<QueryResult> {
+  const key = expectedResultKey(game, exercise, target);
   const cached = expectedResultCache.get(key);
   if (cached) {
     return cached;
   }
-  const result = await runQuery(game, exercise.solution);
+  const result = await runQuery(game, exercise.solution, target);
   expectedResultCache.set(key, result);
   return result;
 }
@@ -98,11 +113,15 @@ function normalizeCell(cell: unknown) {
   return typeof cell === "string" && /^-?\d+(\.\d+)?$/.test(cell) ? Number(cell) : cell;
 }
 
-export async function resolveExpected(game: string, exercise: SqlExerciseModel): Promise<unknown[][]> {
-  if (!exercise.dynamic) {
+export async function resolveExpected(
+  game: string,
+  exercise: SqlExerciseModel,
+  target: Target = "real",
+): Promise<unknown[][]> {
+  if (target === "real" && !exercise.dynamic) {
     return exercise.expected;
   }
-  const { rows } = await resolveExpectedResult(game, exercise);
+  const { rows } = await resolveExpectedResult(game, exercise, target);
   return rows.map((row) => row.map(normalizeCell));
 }
 
@@ -111,7 +130,7 @@ export async function resolveExpected(game: string, exercise: SqlExerciseModel):
 // reference solution. Compare submitted column names against the real columns
 // of that solution instead.
 export async function resolveExpectedColumns(game: string, exercise: SqlExerciseModel): Promise<string[]> {
-  const { columns } = await resolveExpectedResult(game, exercise);
+  const { columns } = await resolveExpectedResult(game, exercise, "real");
   return columns;
 }
 
@@ -144,6 +163,40 @@ export function isCorrect(
     unmatched.splice(index, 1);
     return true;
   });
+}
+
+export type Verdict = "correct" | "wrong" | "dataDependent";
+
+export type Grader = {
+  referenceColumns: string[];
+  run(target: Target): Promise<QueryResult>;
+  expected(target: Target): Promise<unknown[][]>;
+};
+
+export async function grade(
+  exercise: SqlExerciseModel,
+  grader: Grader,
+): Promise<{ verdict: Verdict; result: QueryResult }> {
+  const result = await grader.run("real");
+  if (!isCorrect(exercise, await grader.expected("real"), result, grader.referenceColumns)) {
+    return { verdict: "wrong", result };
+  }
+  let shadow: QueryResult | undefined;
+  try {
+    shadow = await grader.run("shadow");
+  } catch {
+    // An error only on the shadow data (a 3-part name into the real db, a hardcoded id) is data dependence too.
+  }
+  const correct = shadow && isCorrect(exercise, await grader.expected("shadow"), shadow, grader.referenceColumns);
+  return { verdict: correct ? "correct" : "dataDependent", result };
+}
+
+export function grader(game: string, exercise: SqlExerciseModel, query: string, referenceColumns: string[]): Grader {
+  return {
+    referenceColumns,
+    run: (target) => runQuery(game, query, target),
+    expected: (target) => resolveExpected(game, exercise, target),
+  };
 }
 
 export async function measureCost(game: string, query: string): Promise<number | null> {

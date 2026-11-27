@@ -7,10 +7,10 @@ types.setTypeParser(types.builtins.INTERVAL, (value: string) => value);
 types.setTypeParser(types.builtins.DATE, (value: string) => value);
 types.setTypeParser(types.builtins.TIMESTAMP, (value: string) => value);
 
-function pgOptions(): ClientConfig {
+function pgOptions(database: string): ClientConfig {
   return {
     user: env.PG_USER,
-    database: "world",
+    database,
     password: env.PG_PASSWORD,
     port: env.PG_PORT,
     host: env.PG_HOST,
@@ -20,8 +20,8 @@ function pgOptions(): ClientConfig {
   };
 }
 
-async function withClient<T>(fn: (client: Client) => Promise<T>) {
-  const client = new Client(pgOptions());
+async function withClient<T>(fn: (client: Client) => Promise<T>, database = "world") {
+  const client = new Client(pgOptions(database));
   await client.connect();
   try {
     return await fn(client);
@@ -34,13 +34,15 @@ export async function executeQuery(sql: string) {
   return withClient((client) => client.query(sql));
 }
 
-export async function executeArrayQuery(sql: string) {
-  return withClient((client) => client.query({ text: sql, rowMode: "array" }));
+export async function executeArrayQuery(sql: string, database?: string) {
+  return withClient((client) => client.query({ text: sql, rowMode: "array" }), database);
 }
 
 export async function explainQuery(sql: string) {
   return withClient((client) => client.query({ text: sql, queryMode: "extended" } as QueryConfig));
 }
+
+export const SHADOW_PG_DATABASE = "world_shadow";
 
 export const sqlConfig = {
   user: env.SQL_SERVER_USER,
@@ -58,4 +60,12 @@ export const sqlConfig = {
   options: {
     trustServerCertificate: true,
   },
+};
+
+// The shadow login can only reach sportdb_shadow, so a 3-part name into sportdb fails.
+export const shadowSqlConfig = {
+  ...sqlConfig,
+  user: env.SQL_SERVER_SHADOW_USER,
+  password: env.SQL_SERVER_SHADOW_PASSWORD,
+  database: "sportdb_shadow",
 };

@@ -16,7 +16,10 @@ data with different contents, and it counts only if it is correct there too.
   query across databases. On MSSQL a `shadow` login maps only to `sportdb_shadow`, and `player`
   has no user there, so a 3-part name fails in either direction.
 - `player` (pg) gets the same read-only grants on `world_shadow` as on `world`.
-- The init scripts run only on an empty volume: the first deploy needs `./deploy.sh --reset`.
+- Each shadow database is built only when it is missing: on pg by the initdb script
+  `postgres-shadow.sh`, which `deploy.sh` also runs on existing volumes, and on MSSQL by
+  `run-initialization.sh` at container start. To apply a changed delta, drop the shadow database
+  and redeploy.
 
 ## Shadow data
 
