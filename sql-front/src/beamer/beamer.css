@@ -443,6 +443,17 @@ td.ys-gap { display: table-cell; }
   padding: 4px 2px 8px;
 }
 .bm-sol-panel .df-sample-query { font-size: 14px; line-height: 1.55; }
+.bm-sol-q {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 12px 16px;
+  border-left: 3px solid var(--df-gold);
+  border-radius: 8px;
+  background: rgba(233, 180, 76, 0.07);
+  color: var(--df-cream);
+  font-size: 18px;
+  line-height: 1.45;
+}
 @media (max-width: 820px) {
   .bm-frame-inline { gap: 14px; }
   .bm-title { font-size: 26px; }
@@ -546,6 +557,7 @@ td.ys-gap { display: table-cell; }
   .bm-sol-btn { grid-column: 1 / -1; justify-self: stretch; justify-content: center; padding: 6px 12px; font-size: 12px; }
   .bm-sol-panel { grid-template-columns: minmax(0, 1fr); }
   .bm-sol-panel .df-sample-query { font-size: 12px; }
+  .bm-sol-q { font-size: 14px; padding: 10px 12px; }
 
   /* You */
   .bm-you-head { font-size: 18px; }

@@ -92,6 +92,7 @@ export function BeamerExercises({entities, scores, you, ended}: {entities: Exerc
               ) : withColumn && <span />}
               {isOpen && data && (
                 <div className="bm-sol-panel">
+                  {award.desc && <p className="bm-sol-q">{award.desc}</p>}
                   <SolutionCard
                     label={<span className="df-soltag">Reference</span>}
                     metrics={cardMetrics({chars: data.reference.length, reads: data.reference.cost}, [])}
