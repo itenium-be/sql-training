@@ -504,6 +504,11 @@ td.ys-gap { display: table-cell; }
   .bm-podbadges { gap: 3px; }
   .bm-ib { padding: 2px 6px; gap: 3px; font-size: 12px; }
   .bm-ib svg { width: 11px; height: 11px; }
+  .bm-tip { white-space: normal; width: max-content; max-width: 150px; text-align: center; }
+  .bm-pod-2 .bm-tip { left: 0; transform: none; text-align: left; }
+  .bm-pod-2 .bm-tip::after { left: 14px; }
+  .bm-pod-3 .bm-tip { left: auto; right: 0; transform: none; text-align: right; }
+  .bm-pod-3 .bm-tip::after { left: auto; right: 14px; margin-left: 0; margin-right: -5px; }
 
   /* Players: board keeps rank, avatar, name, solved ratio, total */
   .bm-board { border-radius: 14px; }
