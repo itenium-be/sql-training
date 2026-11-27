@@ -30,8 +30,8 @@ with human timing passes everything except Too quick and cadence.
 
 ## Client telemetry
 
-`SqlEditor` keeps counters per exercise, accumulated from its first open, in `sessionStorage` keyed
-by `game/exerciseId` so a reload does not wipe them.
+`SqlEditor` keeps counters per exercise, accumulated from its first open, in `localStorage` next to
+the SQL draft, so a reload does not wipe them.
 
 | Counter        | Meaning                                                                                       |
 | -------------- | --------------------------------------------------------------------------------------------- |
@@ -43,7 +43,8 @@ by `game/exerciseId` so a reload does not wipe them.
 | `keyGapCv`     | stddev / mean of the last 200 gaps between keystrokes, ignoring gaps over 2 s; `null` under 20 keys |
 | `webdriver`    | `navigator.webdriver === true`                                                                 |
 
-Insertions are classified by keydown, not by CodeMirror's `userEvent`. A CDP `Input.insertText`
+Edits from the editor's `value` prop (draft restore, a revealed solution) and undo/redo are not
+counted. Insertions are classified by keydown, not by CodeMirror's `userEvent`. A CDP `Input.insertText`
 reaches CodeMirror as ordinary DOM input and is annotated `input.type`, just like typing. Paste,
 drop, and a script dispatching into the view have no keydown either, so all of them count as
 unkeyed. Autocomplete and auto-closed brackets follow a keydown, so they count as keyed.
@@ -108,22 +109,21 @@ Detection (`aiDetection.test.ts`):
 - Solve time is measured from the earliest `game_start` for that player+exercise.
 - Suspects are sorted by score, then by correct submissions.
 
-Endpoint:
+`parseTelemetry` accepts a complete snapshot and rejects anything else. The router has no handler
+tests in this repo; the endpoint wiring is checked by hand.
 
-- `POST /game/check` stores `telemetry`, `secFetchSite` and `userAgent` on the submission row.
-- `GET /game/admin/ai-detection` returns 401 without the admin key.
-
-Editor telemetry (`SqlEditor` counters, driven through a CodeMirror `EditorView`):
+Editor telemetry (`telemetry.ts`, the pure counters the CodeMirror extension feeds):
 
 - Typed characters with keydowns count as `keys`, never as `unkeyedChars`.
 - A paste, and a `view.dispatch` insert with no keydown, add to `unkeyedChars` and `maxInsert`.
 - An accepted completion after a Tab keydown counts as keyed.
+- AltGr characters (Ctrl+Alt on Windows) and mobile keyboards (`Unidentified`) count as keyed.
 - An edit while `document.hidden` increments `hiddenEdits`.
 - `keyGapCv` is `null` under 20 keys and near 0 for evenly spaced keys.
 - The counters survive a reload of the same exercise.
 
-Admin tab: a render test. A suspect shows its badges and score, and an empty list shows the empty
-message.
+Admin tab: the badge and cell derivation (`aiData.ts`) is unit-tested. The frontend has no DOM test
+environment, so the tab itself is checked by hand.
 
 ## Out of scope
 
