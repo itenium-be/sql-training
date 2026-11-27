@@ -14,8 +14,10 @@ import { Beamer } from './beamer/Beamer'
 import { useGameMode } from './game'
 import { screenFor } from './flow'
 import { TOKEN_STORAGE } from './config'
+import { pageTitle } from './pageTitle'
 
 export function App() {
+  document.title = pageTitle(window.location.pathname);
   if (window.location.pathname.startsWith('/admin')) {
     return <Admin />;
   }

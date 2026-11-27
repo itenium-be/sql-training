@@ -1,6 +1,6 @@
 ---
 theme: default
-title: SQL Showdown · DevFest Paris
+title: Slides · SQL Showdown
 info: |
   SQL Showdown by itenium, DevFest Paris 2026.
 gameUrl: http://sql.lan
