@@ -1275,6 +1275,14 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
   }
 }
 
-.df-next-game { max-width: 280px; margin-bottom: 16px; }
-.df-first-question { margin-left: 8px; }
-.df-next-game + .df-first-question { margin-left: 0; }
+.df-alldone { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; margin-top: 32px; }
+.df-alldone-head { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px; }
+.df-alldone-head h2 { margin: 0; }
+.df-alldone-label { margin-top: 22px; }
+.df-alldone-poster { width: 260px; max-width: 100%; text-align: left; }
+
+@media (max-width: 560px) {
+  .df-alldone { margin-top: 16px; }
+  .df-alldone-head h2 { width: 100%; }
+  .df-alldone-cta { width: 100%; }
+}

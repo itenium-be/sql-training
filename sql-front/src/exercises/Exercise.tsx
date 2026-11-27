@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Button from 'react-bootstrap/Button';
 import Badge from 'react-bootstrap/Badge';
-import { ATTEMPTS_PER_PENALTY, ExerciseDetails, ExerciseModel, ExpectedModel, SqlExerciseModel } from "./exerciseModels";
+import { ATTEMPTS_PER_PENALTY, ExerciseDetails, ExerciseId, ExerciseModel, ExpectedModel, SqlExerciseModel } from "./exerciseModels";
 import { livePoints } from "./livePoints";
 import { ExerciseSampleData, ExercisesData } from "./ExerciseSampleData";
 import { ResultDiffTable } from "./ResultDiffTable";
@@ -98,25 +98,39 @@ function SqlExercises({exercise}: {exercise: ExerciseModel}) {
   const navigate = useNavigate();
 
   if (!currentEx) {
-    const next = nextGame(dashboardSummary(entities, scores, you).games, exercise.id);
+    const games = dashboardSummary(entities, scores, you).games;
+    const done = games.find(g => g.id === exercise.id);
+    const next = nextGame(games, exercise.id);
+    const go = (key: 'home' | ExerciseId) => {
+      dispatch(fetchData(key));
+      navigate(key === 'home' ? '/' : `/${key}`);
+    };
     return (
-      <>
-        <h1>{exercise.name}<ExercisePoints exercise={exercise} /></h1>
-        <h2>All Done!</h2>
+      <div className="df-alldone">
+        <div className="df-alldone-head">
+          <h2>{next ? '🎉' : '👑'} {datasets[exercise.id].title} complete</h2>
+          {done && <>
+            <Badge bg="primary">{done.solved}/{done.total}</Badge>
+            <Badge bg="primary">{done.points} pts</Badge>
+          </>}
+        </div>
         {next ? (
           <>
-            <p>Continue with {datasets[next.id].title}</p>
-            <div className="df-next-game"><GamePoster game={next} /></div>
+            <div className="df-eyebrow df-alldone-label">Up next</div>
+            <div className="df-alldone-poster"><GamePoster game={next} /></div>
+            <Button variant="success" className="df-alldone-cta" onClick={() => go(next.id)}>
+              Continue with {datasets[next.id].title} →
+            </Button>
           </>
         ) : (
-          <Button variant="success" onClick={() => { dispatch(fetchData('home')); navigate('/'); }}>
-            Back to dashboard
-          </Button>
+          <>
+            <div className="df-eyebrow df-alldone-label">That was the last playground</div>
+            <Button variant="success" className="df-alldone-cta" onClick={() => go('home')}>
+              Back to dashboard
+            </Button>
+          </>
         )}
-        <Button variant="secondary" onClick={() => dispatch({type: 'exercises/firstQuestion'})} className="df-first-question">
-          Back to first question
-        </Button>
-      </>
+      </div>
     )
   }
 

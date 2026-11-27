@@ -28,11 +28,11 @@ describe('dashboardSummary', () => {
     expect(dashboardSummary(exercises, scores, 'bob').rank).toBe(2);
   });
 
-  test('solved per dataset counts only your scores in that dataset', () => {
+  test('solved and points per dataset count only your scores in that dataset', () => {
     const alice = dashboardSummary(exercises, scores, 'alice');
     expect(alice.games).toEqual([
-      { id: 'World', solved: 2, total: 2 },
-      { id: 'Teachers', solved: 1, total: 3 },
+      { id: 'World', solved: 2, total: 2, points: 8 },
+      { id: 'Teachers', solved: 1, total: 3, points: 4 },
     ]);
   });
 
