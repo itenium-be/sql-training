@@ -15,7 +15,7 @@ const base: AdminOverview = {
 describe('overviewStats', () => {
   test('counts registrations and chosen avatars', () => {
     const o = { ...base, players: [
-      { id: 1, name: 'A', avatar: 5 }, { id: 2, name: 'B', avatar: null }, { id: 3, name: 'C', avatar: 2 },
+      { id: 1, name: 'A', avatar: 5, disqualified: false }, { id: 2, name: 'B', avatar: null, disqualified: false }, { id: 3, name: 'C', avatar: 2, disqualified: false },
     ]};
     const s = overviewStats(o, NOW, 10);
     expect(s.registered).toBe(3);
@@ -24,7 +24,7 @@ describe('overviewStats', () => {
 
   test('active = players who pinged within the idle window; idle is the rest', () => {
     const o = { ...base,
-      players: [{ id: 1, name: 'A', avatar: null }, { id: 2, name: 'B', avatar: null }, { id: 3, name: 'C', avatar: null }],
+      players: [{ id: 1, name: 'A', avatar: null, disqualified: false }, { id: 2, name: 'B', avatar: null, disqualified: false }, { id: 3, name: 'C', avatar: null, disqualified: false }],
       activity: [
         { player: 'A', game: 'W', exerciseid: 1, attempts: 1, lastactiveat: ago(10), hint: false, expected: false },
         { player: 'B', game: 'W', exerciseid: 1, attempts: 1, lastactiveat: ago(400), hint: false, expected: false },
@@ -47,7 +47,7 @@ describe('overviewStats', () => {
   test('fully solved = players whose solved count reaches the total', () => {
     const p = (player: string, exerciseid: number): Score => ({ player, game: 'W', exerciseid, solutionlength: 1, elapsed: 1, cost: 1, points: 1, hint: false, expected: false, attempts: 0 });
     const o = { ...base,
-      players: [{ id: 1, name: 'A', avatar: null }, { id: 2, name: 'B', avatar: null }],
+      players: [{ id: 1, name: 'A', avatar: null, disqualified: false }, { id: 2, name: 'B', avatar: null, disqualified: false }],
       progress: [p('A', 1), p('A', 2), p('B', 1)],
     };
     expect(overviewStats(o, NOW, 2).fullySolved).toBe(1);

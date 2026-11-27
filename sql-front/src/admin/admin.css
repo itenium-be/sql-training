@@ -36,6 +36,13 @@
 .adm-players { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
 .adm-pcard.adm-stuck { border-color: rgba(239, 107, 91, .4); }
 .adm-pcard.adm-gone { opacity: .72; }
+.adm-pcard.adm-dq { opacity: .6; }
+.adm-pcard.adm-dq img { filter: grayscale(1); }
+.adm-dq-btn {
+  margin-top: 10px; border: 1px solid var(--df-border); background: transparent; color: var(--df-muted);
+  border-radius: 6px; font-size: .78rem; padding: 2px 10px;
+}
+.adm-dq-btn-red { border-color: rgba(var(--df-red-rgb), .6); color: var(--df-red); }
 .adm-d { width: 15px; height: 15px; border-radius: 4px; background: var(--df-bg-raised); border: 1px solid var(--df-border-soft); }
 .adm-d.adm-done { background: var(--df-gold); border-color: transparent; }
 .adm-exn { color: var(--df-cream); font-weight: 700; }

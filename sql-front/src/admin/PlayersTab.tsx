@@ -28,7 +28,14 @@ function QuestionBox({ row }: { row: StuckRow }) {
   );
 }
 
-export function PlayersTab({ overview, entities, now }: { overview: AdminOverview; entities: ExerciseModel[]; now: number }) {
+type PlayersTabProps = {
+  overview: AdminOverview;
+  entities: ExerciseModel[];
+  now: number;
+  onDisqualify: (name: string, disqualified: boolean) => void;
+};
+
+export function PlayersTab({ overview, entities, now, onDisqualify }: PlayersTabProps) {
   const ranked = new Map(rankPlayers(entities, overview.progress).map(r => [r.name, r]));
   const total = entities.reduce((n, g) => n + g.exercises.length, 0);
 
@@ -41,11 +48,26 @@ export function PlayersTab({ overview, entities, now }: { overview: AdminOvervie
     const started = stuck.length > 0 || solved > 0;
     const anyActive = stuck.some(r => r.lastActiveSec !== null && r.lastActiveSec < IDLE_SEC);
     return { p, solved, points, stuck, solvedRow, started, anyActive };
-  }).sort((a, b) => b.stuck.length - a.stuck.length || b.points - a.points);
+  }).sort((a, b) => Number(a.p.disqualified) - Number(b.p.disqualified) || b.stuck.length - a.stuck.length || b.points - a.points);
 
   return (
     <div className="adm-players">
       {cards.map(({ p, solved, points, stuck, solvedRow, started, anyActive }) => {
+        if (p.disqualified) {
+          return (
+            <div key={p.id} className="df-register adm-pcard adm-dq">
+              <div className="adm-pc-hd">
+                <Avatar index={avatarIndex(p)} label={p.name} size={38} />
+                <div>
+                  <strong style={{ color: 'var(--df-cream)' }}><s>{p.name}</s></strong>
+                  <div className="adm-sub">disqualified</div>
+                </div>
+                <span className="adm-frac">{solved}/{total}</span>
+              </div>
+              <button type="button" className="adm-dq-btn" onClick={() => onDisqualify(p.name, false)}>Reinstate</button>
+            </div>
+          );
+        }
         const sub = !started ? 'registered'
           : stuck.length ? `${points} pts · ${stuck.length} open`
           : `${points} pts`;
@@ -76,6 +98,8 @@ export function PlayersTab({ overview, entities, now }: { overview: AdminOvervie
                 : solved >= total
                   ? <div className="adm-fin">🏁 finished all {total}</div>
                   : <div className="adm-sub" style={{ marginTop: 9 }}>nothing open right now</div>}
+            <button type="button" className="adm-dq-btn adm-dq-btn-red"
+              onClick={() => window.confirm(`Disqualify ${p.name}?`) && onDisqualify(p.name, true)}>Disqualify…</button>
           </div>
         );
       })}

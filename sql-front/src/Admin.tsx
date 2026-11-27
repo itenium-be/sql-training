@@ -77,6 +77,15 @@ export function Admin() {
     }
   };
 
+  const setDisqualified = async (name: string, disqualified: boolean) => {
+    try {
+      await adminFetch(apiKey, '/disqualify', { name, disqualified });
+      load(apiKey);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : String(error));
+    }
+  };
+
   useEffect(() => {
     const link = document.querySelector<HTMLLinkElement>('link[rel~="icon"][type="image/svg+xml"]');
     if (link) link.href = '/favicon-admin.svg';
@@ -161,7 +170,7 @@ export function Admin() {
       </nav>
 
       {overview && tab === 'overview' && <OverviewTab overview={overview} entities={entities} now={now} />}
-      {overview && tab === 'players' && <PlayersTab overview={overview} entities={entities} now={now} />}
+      {overview && tab === 'players' && <PlayersTab overview={overview} entities={entities} now={now} onDisqualify={setDisqualified} />}
       {overview && tab === 'exercises' && <ExercisesTab overview={overview} entities={entities} />}
 
     </Container>

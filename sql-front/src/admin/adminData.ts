@@ -1,7 +1,7 @@
 import { GameMode } from '../game';
 import { Score } from '../exercises/exerciseModels';
 
-export type PlayerInfo = { id: number; name: string; avatar: number | null };
+export type PlayerInfo = { id: number; name: string; avatar: number | null; disqualified: boolean };
 type ReferenceSolution = { game: string; exerciseId: number; desc: string; points: number; solution: string };
 type ExerciseStartRow = { player: string; game: string; exerciseid: number; firststart: string };
 type ActivityRow = { player: string; game: string; exerciseid: number; attempts: number; lastactiveat: string | null; hint: boolean; expected: boolean };
