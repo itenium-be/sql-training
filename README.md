@@ -43,6 +43,25 @@ Venue LAN cable → router **WAN** port, minipc → router **LAN** port. Never c
 
 Players on a VPN or with forced DNS can't resolve `sql.lan`: give them `http://10.42.42.42/`.
 
+#### No LAN cable
+
+The game runs without internet; an uplink is only needed for players' own browsing.
+Admin UI at `http://10.42.42.1`, from `IteniumWorkshop` or a LAN port.
+
+Venue WiFi:
+
+1. **Internet → Repeater → Connect**, pick the venue SSID (prefer its 5 GHz network), enter its password.
+2. Leave **Use Random MAC** off, so a captive portal login sticks.
+3. Captive portal: from a laptop on `IteniumWorkshop`, browse to any `http://` site and accept.
+
+`IteniumWorkshop-5G` follows the venue's 5 GHz channel. If the venue also uses `10.42.42.x`, change the router LAN subnet.
+
+Android phone:
+
+1. Phone → router USB port.
+2. Phone: **Settings → Network & internet → Hotspot & tethering → USB tethering** on.
+3. Router: **Internet → Tethering → Connect**.
+
 ### Reset
 
 ```sh
