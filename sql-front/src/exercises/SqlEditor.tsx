@@ -173,7 +173,7 @@ export function SqlEditor({ game, exerciseId, value, onChange, onSubmit, height 
         height={height}
         theme="none"
         extensions={extensions}
-        autoFocus
+        autoFocus={!window.matchMedia('(pointer: coarse)').matches}
         basicSetup={{ foldGutter: false, highlightActiveLineGutter: true, autocompletion: true }}
       />
     </div>
