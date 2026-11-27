@@ -24,14 +24,6 @@ export function Dashboard() {
       <div className="df-eyebrow">Your dashboard</div>
       <h1 className="db-title">Pick a playground</h1>
 
-      <div className="db-stats">
-        <div className="db-card db-stat">
-          <span className="db-num">{summary.rank === null ? '—' : `#${summary.rank}`}</span>
-          <small>of {summary.players} players</small>
-        </div>
-        <div className="db-card db-stat"><span className="db-num">{summary.points}</span><small>points</small></div>
-        <div className="db-card db-stat"><span className="db-num">{summary.solved}/{summary.totalExercises}</span><small>solved</small></div>
-      </div>
 
       <div className="db-posters">
         {summary.games.map(game => {

@@ -24,12 +24,8 @@ const scores: Score[] = [
 ];
 
 describe('dashboardSummary', () => {
-  test('rank and points match the leaderboard', () => {
-    const rows = rankPlayers(exercises, scores);
-    const bob = dashboardSummary(exercises, scores, 'bob');
-    expect(bob.rank).toBe(2);
-    expect(bob.players).toBe(2);
-    expect(bob.points).toBe(rows[1].total);
+  test('rank matches the leaderboard', () => {
+    expect(dashboardSummary(exercises, scores, 'bob').rank).toBe(2);
   });
 
   test('solved per dataset counts only your scores in that dataset', () => {
@@ -38,15 +34,11 @@ describe('dashboardSummary', () => {
       { id: 'World', solved: 2, total: 2 },
       { id: 'Teachers', solved: 1, total: 3 },
     ]);
-    expect(alice.solved).toBe(3);
-    expect(alice.totalExercises).toBe(5);
   });
 
   test('a player without scores has no rank and nothing solved', () => {
     const carol = dashboardSummary(exercises, scores, 'carol');
     expect(carol.rank).toBeNull();
-    expect(carol.points).toBe(0);
-    expect(carol.solved).toBe(0);
     expect(carol.games.map(g => g.solved)).toEqual([0, 0]);
   });
 

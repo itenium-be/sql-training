@@ -6,10 +6,6 @@
 .db-num { color: var(--df-cream); font-weight: 800; font-variant-numeric: tabular-nums; }
 .db-dash small { color: var(--df-muted); font-size: .75rem; }
 
-.db-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 22px; }
-.db-stat { padding: 12px 14px; }
-.db-stat .db-num { font-size: 1.5rem; display: block; }
-
 .db-posters { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 22px; }
 .db-poster { overflow: hidden; display: flex; flex-direction: column; transition: border-color .15s; }
 .db-poster:hover { border-color: var(--df-gold); }
@@ -48,7 +44,6 @@
 @media (max-width: 560px) {
   .db-dash { margin-top: 12px; }
   .db-title { font-size: 1.3rem; }
-  .db-stat .db-num { font-size: 1.2rem; }
   .db-posters { gap: 10px; }
   .db-pbody { padding: 10px; }
   .db-pbody p { display: none; }
