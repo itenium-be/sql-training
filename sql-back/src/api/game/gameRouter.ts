@@ -5,12 +5,17 @@ import { exerciseDetails, publicDefinitions } from "@/api/exercises/publicDefini
 import { env } from "@/common/utils/envConfig";
 import { canSeeSolutions, shouldRecordActivity } from "./activity";
 import { type AuthRequest, mintToken, requirePlayer } from "./auth";
+import { parseDisqualify } from "./disqualify";
 import { gameQuery } from "./gameDb";
 import { gameModes, getGameMode, parseGameMode, setGameMode, startRefusal } from "./gameMode";
 import type { ExerciseStart, ExerciseSubmit } from "./gameModel";
 import { validateName } from "./playerName";
 import { calculatePoints } from "./scoring";
 import { solutionLength } from "./solutionLength";
+
+const PROGRESS_COLUMNS =
+  "gp.player, gp.game, gp.exerciseId, gp.solutionLength, gp.elapsed, gp.cost, gp.points, gp.hint, gp.expected, gp.attempts, COALESCE(p.disqualified, FALSE) AS disqualified";
+const PROGRESS_FROM = "FROM game_progress gp LEFT JOIN players p ON LOWER(p.name) = LOWER(gp.player)";
 
 export async function restoreGameMode() {
   const result = await gameQuery("SELECT value FROM settings WHERE key='game_mode'");
@@ -321,15 +326,11 @@ const getProgress: RequestHandler = async (_req: Request, res: Response) => {
   }
 
   if (getGameMode() === "end") {
-    const data = await gameQuery(
-      "SELECT player, game, exerciseId, solution, solutionLength, elapsed, cost, points, hint, expected, attempts FROM game_progress",
-    );
+    const data = await gameQuery(`SELECT ${PROGRESS_COLUMNS}, gp.solution ${PROGRESS_FROM}`);
     return res.status(200).send(data.rows);
   }
 
-  const data = await gameQuery(
-    "SELECT player, game, exerciseId, solutionLength, elapsed, cost, points, hint, expected, attempts FROM game_progress",
-  );
+  const data = await gameQuery(`SELECT ${PROGRESS_COLUMNS} ${PROGRESS_FROM}`);
   return res.status(200).send(data.rows);
 };
 
@@ -377,10 +378,8 @@ const getAdminDefinitions: RequestHandler = async (_req: Request, res: Response)
 
 const getOverview: RequestHandler = async (_req: Request, res: Response) => {
   const [players, progress, starts, activity, submissions] = await Promise.all([
-    gameQuery("SELECT id, name, avatar FROM players ORDER BY id"),
-    gameQuery(
-      "SELECT player, game, exerciseId, solution, solutionLength, elapsed, cost, points, hint, expected, attempts FROM game_progress",
-    ),
+    gameQuery("SELECT id, name, avatar, disqualified FROM players ORDER BY id"),
+    gameQuery(`SELECT ${PROGRESS_COLUMNS}, gp.solution ${PROGRESS_FROM}`),
     gameQuery(
       "SELECT player, game, exerciseId, MIN(startTime) AS firstStart FROM game_start GROUP BY player, game, exerciseId",
     ),
@@ -417,6 +416,22 @@ const setMode: RequestHandler = async (req: Request, res: Response) => {
   return res.status(200).send({ mode: newMode, message: `Going into ${newMode} game mode!` });
 };
 
+const setDisqualified: RequestHandler = async (req: Request, res: Response) => {
+  const parsed = parseDisqualify(req.body);
+  if ("error" in parsed) {
+    return res.status(400).send({ message: parsed.error });
+  }
+
+  const result = await gameQuery("UPDATE players SET disqualified=$2 WHERE LOWER(name)=LOWER($1)", [
+    parsed.name,
+    parsed.disqualified,
+  ]);
+  if (!result.rowCount) {
+    return res.status(404).send({ message: "Player not found" });
+  }
+  return res.status(200).send(parsed);
+};
+
 gameRouter.post("/register", registerUser);
 gameRouter.post("/start", requirePlayer, startExercise);
 gameRouter.post("/check", requirePlayer, checkExercise);
@@ -434,3 +449,4 @@ gameRouter.get("/admin", requireAdmin, getAdmin);
 gameRouter.post("/admin/mode", requireAdmin, setMode);
 gameRouter.get("/admin/overview", requireAdmin, getOverview);
 gameRouter.get("/admin/definitions", requireAdmin, getAdminDefinitions);
+gameRouter.post("/admin/disqualify", requireAdmin, setDisqualified);
