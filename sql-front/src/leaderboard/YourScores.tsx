@@ -4,6 +4,7 @@ import { useAppSelector } from "../store";
 import { config, authFetch } from "../config";
 import { Score } from "../exercises/exerciseModels";
 import { MySolution } from "../exercises/MySolution";
+import { cardMetrics } from "../exercises/solutionCards";
 import { formatClock } from "../beamer/beamerData";
 import { ExerciseAward, exerciseAwards } from "./leaderboardData";
 import { compareToLeader } from "./compareToLeader";
@@ -104,7 +105,8 @@ export function YourScores({scores, you}: {scores: Score[]; you: string}) {
             {questions[key(open.game, open.exerciseid)] && <p className="ys-modal-q">{questions[key(open.game, open.exerciseid)]}</p>}
             <MySolution game={open.game} exerciseId={open.exerciseid}
               points={open.points ?? maxPoints.get(key(open.game, open.exerciseid)) ?? 0}
-              maxPoints={maxPoints.get(key(open.game, open.exerciseid)) ?? 0} />
+              maxPoints={maxPoints.get(key(open.game, open.exerciseid)) ?? 0}
+              metrics={cardMetrics({elapsed: open.elapsed, chars: open.solutionlength, reads: open.cost}, [])} />
           </Modal.Body>
         </Modal>
       )}

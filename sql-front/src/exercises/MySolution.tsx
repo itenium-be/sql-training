@@ -1,13 +1,13 @@
-import { ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { authFetch, config } from "../config";
-import { CopyButton } from "../layout/CopyButton";
 import { ExercisesData } from "./ExerciseSampleData";
-import { formatElapsed } from "./formatElapsed";
 import { formatScored } from "./formatScored";
+import { SolutionCard } from "./SolutionCard";
+import { Metric } from "./solutionCards";
 
-type MySolutionModel = { solution: string; elapsed: number; rows: Record<string, unknown>[] | null };
+type MySolutionModel = { solution: string; rows: Record<string, unknown>[] | null };
 
-export function MySolution({game, exerciseId, points, maxPoints, tags}: {game: string, exerciseId: number, points: number, maxPoints: number, tags?: ReactNode}) {
+export function MySolution({game, exerciseId, points, maxPoints, metrics}: {game: string, exerciseId: number, points: number, maxPoints: number, metrics: Metric[]}) {
   const [data, setData] = useState<MySolutionModel | null>(null);
 
   useEffect(() => {
@@ -20,10 +20,14 @@ export function MySolution({game, exerciseId, points, maxPoints, tags}: {game: s
   if (!data) return null;
 
   return (
-    <>
-      <div className="df-eyebrow">Your query · <span className="df-timer"><span className="df-timer-bolt">⚡</span> {formatElapsed(data.elapsed)}</span> <span className="df-timer">{formatScored(points, maxPoints)}</span> {tags} <CopyButton text={data.solution} /></div>
-      <pre className="df-sample-query">{data.solution}</pre>
+    <SolutionCard
+      mine
+      label={<span className="df-soltag df-soltag-you">You</span>}
+      extra={<span className="df-solcard-pts">{formatScored(points, maxPoints)}</span>}
+      metrics={metrics}
+      solution={data.solution}
+    >
       {data.rows && <ExercisesData data={data.rows} />}
-    </>
+    </SolutionCard>
   );
 }

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { withSolutions } from './solutionCards';
+import { cardMetrics, withSolutions } from './solutionCards';
 import { Score } from './exerciseModels';
 
 const score = (player: string, game: string, exerciseid: number): Score => ({
@@ -18,5 +18,29 @@ describe('withSolutions', () => {
 
   test('leaves other exercises alone', () => {
     expect(withSolutions(scores, 'World', 1, solutions)[2]).toBe(scores[2]);
+  });
+});
+
+describe('cardMetrics', () => {
+  test('lists time, characters and reads, flagging the awards held', () => {
+    const metrics = cardMetrics({elapsed: 133, chars: 34, reads: 11}, ['leanest']);
+    expect(metrics.map(m => [m.kind, m.value, m.won])).toEqual([
+      ['fastest', '2:13', false],
+      ['shortest', '34 ch', false],
+      ['leanest', '11 reads', true],
+    ]);
+  });
+
+  test('omits the time for the reference solution', () => {
+    expect(cardMetrics({chars: 40, reads: 3}, []).map(m => m.kind)).toEqual(['shortest', 'leanest']);
+  });
+
+  test('omits reads that could not be measured', () => {
+    expect(cardMetrics({elapsed: 5, chars: 40, reads: null}, []).map(m => m.kind)).toEqual(['fastest', 'shortest']);
+  });
+
+  test('explains a held award in the tooltip', () => {
+    const [fastest] = cardMetrics({elapsed: 41, chars: 21, reads: 3}, ['fastest']);
+    expect(fastest.tip).toContain('Fastest');
   });
 });

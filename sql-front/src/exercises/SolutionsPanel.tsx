@@ -1,14 +1,20 @@
 import { useEffect, useState } from 'react';
 import { authFetch, config } from '../config';
 import { useAppSelector } from '../store';
-import { ExerciseAward, exerciseAwards } from '../leaderboard/leaderboardData';
-import { exerciseSolutions, SolutionCard, TAG_LABEL, tagMetric } from '../beamer/beamerData';
-import { CopyButton } from '../layout/CopyButton';
-import { ExerciseId } from './exerciseModels';
-import { PlayerSolution, withSolutions } from './solutionCards';
+import { exerciseAwards } from '../leaderboard/leaderboardData';
+import { exerciseSolutions, SolutionTag } from '../beamer/beamerData';
+import { ExerciseId, Score } from './exerciseModels';
+import { cardMetrics, PlayerSolution, withSolutions } from './solutionCards';
 import { MySolution } from './MySolution';
+import { SolutionCard } from './SolutionCard';
 
-type SolutionsModel = { reference: string; solutions: PlayerSolution[] };
+type SolutionsModel = {
+  reference: { solution: string; length: number; cost: number | null };
+  solutions: PlayerSolution[];
+};
+
+const playerMetrics = (score: Score | undefined, won: SolutionTag[]) =>
+  score ? cardMetrics({elapsed: score.elapsed, chars: score.solutionlength, reads: score.cost}, won) : [];
 
 export function SolutionsPanel({game, exerciseId, solved, points, maxPoints}: {game: string, exerciseId: number, solved: boolean, points: number, maxPoints: number}) {
   const entities = useAppSelector(state => state.exercises.entities);
@@ -27,41 +33,30 @@ export function SolutionsPanel({game, exerciseId, solved, points, maxPoints}: {g
   const filled = data ? withSolutions(scores, game, exerciseId, data.solutions) : scores;
   const award = exerciseAwards(entities, filled, game as ExerciseId).find(a => a.exerciseId === exerciseId);
   const cards = data && award ? exerciseSolutions(filled, you, award) : [];
-  const mine = cards.find(c => c.isYou);
+  const scoreOf = (player: string) => filled.find(s => s.player === player && s.game === game && s.exerciseid === exerciseId);
+  const myTags = cards.find(c => c.isYou)?.tags ?? [];
 
   return (
     <div className="df-solutions">
       {solved && (
         <MySolution game={game} exerciseId={exerciseId} points={points} maxPoints={maxPoints}
-          tags={award && mine ? <Tags card={mine} award={award} /> : null} />
+          metrics={playerMetrics(scoreOf(you), myTags)} />
       )}
       {data && (
-        <section className="df-solcard">
-          <div className="df-solcard-head">
-            <span className="df-soltag">Reference</span>
-            <CopyButton text={data.reference} />
-          </div>
-          <pre className="df-sample-query">{data.reference}</pre>
-        </section>
+        <SolutionCard
+          label={<span className="df-soltag">Reference</span>}
+          metrics={cardMetrics({chars: data.reference.length, reads: data.reference.cost}, [])}
+          solution={data.reference.solution}
+        />
       )}
-      {award && cards.filter(c => !c.isYou).map(card => (
-        <section key={card.player} className="df-solcard">
-          <div className="df-solcard-head">
-            <Tags card={card} award={award} />
-            <span className="df-solcard-who">{card.player}</span>
-            <CopyButton text={card.solution} />
-          </div>
-          <pre className="df-sample-query">{card.solution}</pre>
-        </section>
+      {cards.filter(c => !c.isYou).map(card => (
+        <SolutionCard
+          key={card.player}
+          label={<span className="df-solcard-who">{card.player}</span>}
+          metrics={playerMetrics(scoreOf(card.player), card.tags)}
+          solution={card.solution}
+        />
       ))}
     </div>
   );
-}
-
-function Tags({card, award}: {card: SolutionCard, award: ExerciseAward}) {
-  return card.tags.map(tag => (
-    <span key={tag} className={`df-soltag df-soltag-${tag}`}>
-      {TAG_LABEL[tag]} · {tagMetric(tag, award)}
-    </span>
-  ));
 }
