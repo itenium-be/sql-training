@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
-import { loadDefinitions, loadScores } from '../layout/fetchData';
+import { loadDefinitions } from '../layout/fetchData';
+import { useLiveScores } from '../layout/useLiveScores';
 import { usePlayers, useGameMode } from '../game';
 import { rankPlayers } from '../leaderboard/leaderboardData';
 import { BeamerHeader, BeamerView } from './BeamerHeader';
@@ -8,8 +9,6 @@ import { BeamerPlayers } from './BeamerPlayers';
 import { BeamerExercises } from './BeamerExercises';
 import { BeamerYou } from './BeamerYou';
 import './beamer.css';
-
-const REFRESH_MS = 5000;
 
 export function Beamer({projector = false}: {projector?: boolean}) {
   const dispatch = useAppDispatch();
@@ -25,11 +24,7 @@ export function Beamer({projector = false}: {projector?: boolean}) {
     if (mode) dispatch(loadDefinitions());
   }, [dispatch, mode]);
 
-  useEffect(() => {
-    dispatch(loadScores());
-    const timer = setInterval(() => dispatch(loadScores()), REFRESH_MS);
-    return () => clearInterval(timer);
-  }, [dispatch]);
+  useLiveScores();
 
   const overall = rankPlayers(entities, scores);
 

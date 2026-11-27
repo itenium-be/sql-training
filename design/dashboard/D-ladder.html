@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D · Ladder</title><link rel="stylesheet" href="mock.css">
+<style>
+.top { display: flex; gap: 10px; margin-bottom: 22px; flex-wrap: wrap; }
+.top .card { padding: 10px 14px; display: flex; align-items: center; gap: 10px; flex: 1; min-width: 150px; }
+.top .card:hover { border-color: var(--df-gold); }
+.top .num { font-size: 1.2rem; }
+.ladder { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; align-items: end; position: relative; }
+.step { overflow: hidden; display: flex; flex-direction: column; }
+.step:hover { border-color: var(--df-gold); }
+.step:nth-child(1) { margin-top: 90px; } .step:nth-child(2) { margin-top: 60px; } .step:nth-child(3) { margin-top: 30px; }
+.step .art { height: 120px; position: relative; }
+.step .art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.step .no { position: absolute; bottom: -16px; left: 14px; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; background: var(--df-bg); border: 2px solid currentColor; }
+.step .pb { padding: 22px 14px 14px; display: flex; flex-direction: column; gap: 8px; }
+.step h3 { margin: 0; color: var(--df-cream); font-size: 1.05rem; display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+.step p { margin: 0; font-size: .8rem; }
+.step .row { display: flex; justify-content: space-between; font-size: .75rem; }
+.step.done { opacity: .75; }
+.step.current { border-color: var(--df-gold); box-shadow: 0 0 0 3px rgba(233,180,76,.15); }
+.axis { display: flex; justify-content: space-between; margin-top: 10px; font-family: 'JetBrains Mono', monospace; font-size: .66rem; letter-spacing: .1em; color: var(--df-muted); }
+.axis span:last-child { color: var(--expert); }
+.axis::before { content: ''; }
+@media (max-width: 860px) {
+  .ladder { grid-template-columns: 1fr; gap: 0; }
+  .step { margin: 0 !important; flex-direction: row; border-radius: 0; border-bottom-width: 0; }
+  .step:first-child { border-radius: 16px 16px 0 0; }
+  .step:last-child { border-radius: 0 0 16px 16px; border-bottom-width: 1px; }
+  .step .art { width: 84px; height: auto; flex: none; }
+  .step .no { bottom: auto; top: 8px; left: 8px; width: 26px; height: 26px; font-size: .8rem; }
+  .step .pb { padding: 10px 12px; flex: 1; gap: 6px; }
+  .step p { display: none; }
+  .axis { display: none; }
+}
+@media (max-width: 560px) { h1 { font-size: 1.3rem; } .me span { display: none; } .top .card { min-width: 0; padding: 8px 10px; } .top small { display: none; } }
+</style></head>
+<body><div class="wrap">
+  <header class="hdr">
+    <div class="brand"><div class="mark"></div><div><div class="bname">SQL Showdown</div><div class="bsub">DevFest Paris 2026</div></div></div>
+    <div class="me"><span>Ada</span><div class="av">AL</div></div>
+  </header>
+
+  <div class="top">
+    <a class="card" href="#"><span>🏆</span><span class="num">#7</span><small class="muted">118 pts · Leaderboard →</small></a>
+    <a class="card" href="#"><span>📽</span><strong style="color:var(--df-cream)">Slides</strong><small class="muted">↗</small></a>
+  </div>
+
+  <div class="eyebrow">Climb the ladder</div>
+  <h1>Easy to expert</h1>
+
+  <div class="ladder">
+    <a class="card step done" href="#"><div class="art"><img src="../../slides/public/img/game-countries.png" alt=""><span class="no" style="color:var(--easy)">✓</span></div>
+      <div class="pb"><h3>Countries <span class="lvl easy">Easy</span></h3><p class="muted">The basics — one table.</p><div class="bar"><b style="width:100%"></b></div><div class="row"><span class="num">8/8</span><span class="db">Postgres</span></div></div></a>
+    <a class="card step current" href="#"><div class="art"><img src="../../slides/public/img/game-teachers.png" alt=""><span class="no" style="color:var(--medium)">2</span></div>
+      <div class="pb"><h3>Teachers <span class="lvl medium">Medium</span></h3><p class="muted">Start joining tables.</p><div class="bar"><b style="width:37%"></b></div><div class="row"><span class="num">3/8</span><span class="db">Postgres</span></div></div></a>
+    <a class="card step" href="#"><div class="art"><img src="../../slides/public/img/game-worldcup.png" alt=""><span class="no" style="color:var(--hard)">3</span></div>
+      <div class="pb"><h3>Worldcup <span class="lvl hard">Hard</span></h3><p class="muted">Many related tables.</p><div class="bar"><b style="width:0"></b></div><div class="row"><span class="num">0/6</span><span class="db">SQL Server</span></div></div></a>
+    <a class="card step" href="#"><div class="art"><img src="../../slides/public/img/game-company.png" alt=""><span class="no" style="color:var(--expert)">4</span></div>
+      <div class="pb"><h3>Company <span class="lvl expert">Expert</span></h3><p class="muted">Query at scale — many rows.</p><div class="bar"><b style="width:0"></b></div><div class="row"><span class="num">0/10</span><span class="db">Postgres</span></div></div></a>
+  </div>
+  <div class="axis"><span>EASY</span><span>EXPERT →</span></div>
+</div></body></html>
