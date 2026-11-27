@@ -4,6 +4,7 @@ import { checkSolution, exerciseHint, referenceSolution, referenceSolutions } fr
 import { exerciseDetails, publicDefinitions } from "@/api/exercises/publicDefinitions";
 import { env } from "@/common/utils/envConfig";
 import { canSeeSolutions, shouldRecordActivity } from "./activity";
+import { aiSuspects, parseTelemetry } from "./aiDetection";
 import { type AuthRequest, mintToken, optionalPlayer, requirePlayer } from "./auth";
 import { parseDisqualify } from "./disqualify";
 import { gameQuery } from "./gameDb";
@@ -126,8 +127,19 @@ const checkExercise: RequestHandler = async (req: Request, res: Response) => {
   const body = await checkSolution(data.game, data.exerciseId, data.solution);
   const correct = body.success && body.responseObject?.correct === true;
   await gameQuery(
-    "INSERT INTO submissions (player, game, exerciseId, solution, correct, message) VALUES ($1, $2, $3, $4, $5, $6)",
-    [player, data.game, data.exerciseId, data.solution, correct, body.message ?? null],
+    `INSERT INTO submissions (player, game, exerciseId, solution, correct, message, telemetry, secFetchSite, userAgent)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+    [
+      player,
+      data.game,
+      data.exerciseId,
+      data.solution,
+      correct,
+      body.message ?? null,
+      parseTelemetry(req.body.telemetry),
+      req.header("sec-fetch-site")?.slice(0, 20) ?? null,
+      req.header("user-agent") ?? "",
+    ],
   ).catch((err) => console.error("Could not log submission", err));
   const rows = body.responseObject?.rows ?? null;
   const solved = await isSolved(player, data.game, data.exerciseId);
@@ -410,6 +422,29 @@ const getOverview: RequestHandler = async (_req: Request, res: Response) => {
   });
 };
 
+const getAiDetection: RequestHandler = async (_req: Request, res: Response) => {
+  const [players, submissions, starts] = await Promise.all([
+    gameQuery("SELECT name, avatar, disqualified FROM players"),
+    gameQuery(
+      `SELECT player, game, exerciseId AS "exerciseId", solution, correct, submittedAt AS "submittedAt",
+              telemetry, secFetchSite AS "secFetchSite", userAgent AS "userAgent"
+       FROM submissions`,
+    ),
+    gameQuery(
+      `SELECT player, game, exerciseId AS "exerciseId", MIN(startTime) AS "firstStart"
+       FROM game_start GROUP BY player, game, exerciseId`,
+    ),
+  ]);
+  const byName = new Map(players.rows.map((p) => [p.name.toLowerCase(), p]));
+  const rows = submissions.rows.map((s) => ({ ...s, exerciseId: Number(s.exerciseId) }));
+  const firstStarts = starts.rows.map((s) => ({ ...s, exerciseId: Number(s.exerciseId) }));
+  const suspects = aiSuspects(rows, firstStarts).map((s) => {
+    const p = byName.get(s.player.toLowerCase());
+    return { ...s, avatar: p?.avatar ?? null, disqualified: p?.disqualified === true };
+  });
+  return res.status(200).send(suspects);
+};
+
 const setMode: RequestHandler = async (req: Request, res: Response) => {
   const newMode = req.body?.mode;
   if (!gameModes.includes(newMode)) {
@@ -459,3 +494,4 @@ gameRouter.post("/admin/mode", requireAdmin, setMode);
 gameRouter.get("/admin/overview", requireAdmin, getOverview);
 gameRouter.get("/admin/definitions", requireAdmin, getAdminDefinitions);
 gameRouter.post("/admin/disqualify", requireAdmin, setDisqualified);
+gameRouter.get("/admin/ai-detection", requireAdmin, getAiDetection);

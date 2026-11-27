@@ -47,4 +47,7 @@ export async function migrate() {
     message TEXT,
     submittedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   )`);
+  await gameQuery("ALTER TABLE submissions ADD COLUMN IF NOT EXISTS telemetry JSONB");
+  await gameQuery("ALTER TABLE submissions ADD COLUMN IF NOT EXISTS secFetchSite VARCHAR(20)");
+  await gameQuery("ALTER TABLE submissions ADD COLUMN IF NOT EXISTS userAgent TEXT");
 }
