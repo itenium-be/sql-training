@@ -91,3 +91,9 @@ export function exerciseAwards(exercises: ExerciseModel[], scores: Score[], game
 export function awardLabel(award: Pick<ExerciseAward, 'exerciseId' | 'desc'>): string {
   return award.desc ? `#${award.exerciseId} · ${award.desc}` : `#${award.exerciseId}`;
 }
+
+export const questionKey = (game: string, exerciseId: number) => `${game}-${exerciseId}`;
+
+export function questionOf(award: Pick<ExerciseAward, 'game' | 'exerciseId' | 'desc'>, opened: Record<string, string | undefined>): string | undefined {
+  return award.desc ?? opened[questionKey(award.game, award.exerciseId)];
+}

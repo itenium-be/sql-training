@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import { ExerciseModel, Score } from '../exercises/exerciseModels';
-import { AWARD_BONUS, awardLabel, exerciseAwards, rankPlayers } from './leaderboardData';
+import { AWARD_BONUS, awardLabel, exerciseAwards, questionOf, rankPlayers } from './leaderboardData';
 
 const exercises: ExerciseModel[] = [{
   id: 'World',
@@ -84,4 +84,14 @@ describe('awardLabel', () => {
     expect(awardLabel({ exerciseId: 3, desc: 'Big countries' })).toBe('#3 · Big countries'));
   test('shows only the number while the question is hidden', () =>
     expect(awardLabel({ exerciseId: 3 })).toBe('#3'));
+});
+
+describe('questionOf', () => {
+  const opened = { 'World-3': 'Big countries' };
+  test('prefers the question the definitions reveal', () =>
+    expect(questionOf({ game: 'World', exerciseId: 3, desc: 'Revealed' }, opened)).toBe('Revealed'));
+  test('falls back to the question you opened while the game runs', () =>
+    expect(questionOf({ game: 'World', exerciseId: 3 }, opened)).toBe('Big countries'));
+  test('stays hidden when you never opened it', () =>
+    expect(questionOf({ game: 'World', exerciseId: 4 }, opened)).toBeUndefined());
 });

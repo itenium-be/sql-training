@@ -1,6 +1,7 @@
 import { ReactNode, useEffect, useState } from 'react';
 import { ExerciseId, ExerciseModel, Score } from '../exercises/exerciseModels';
-import { awardLabel, exerciseAwards } from '../leaderboard/leaderboardData';
+import { awardLabel, exerciseAwards, questionOf } from '../leaderboard/leaderboardData';
+import { useOpenedQuestions } from '../leaderboard/useOpenedQuestions';
 import { BoltIcon, CodeIcon, LeafIcon } from '../layout/Icons';
 import { exerciseSolutions, formatClock, solutionsVisible } from './beamerData';
 import { authFetch, config } from '../config';
@@ -31,7 +32,8 @@ function Holder({name, value, you, label}: {name: string | undefined; value: str
 export function BeamerExercises({entities, scores, you, ended}: {entities: ExerciseModel[]; scores: Score[]; you: string; ended: boolean}) {
   const [game, setGame] = useState<ExerciseId>(entities[0]?.id ?? 'World');
   const [open, setOpen] = useState<number | null>(null);
-  const awards = exerciseAwards(entities, scores, game);
+  const opened = useOpenedQuestions();
+  const awards = exerciseAwards(entities, scores, game).map(a => ({...a, desc: questionOf(a, opened)}));
   const totalPlayers = new Set(scores.map(s => s.player)).size;
 
   const switchGame = (id: ExerciseId) => { setGame(id); setOpen(null); };

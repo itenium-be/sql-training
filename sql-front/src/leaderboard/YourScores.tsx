@@ -1,18 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Modal, Table } from "react-bootstrap";
 import { useAppSelector } from "../store";
-import { config, authFetch } from "../config";
 import { Score } from "../exercises/exerciseModels";
 import { MySolution } from "../exercises/MySolution";
 import { cardMetrics } from "../exercises/solutionCards";
 import { formatClock } from "../beamer/beamerData";
-import { ExerciseAward, exerciseAwards } from "./leaderboardData";
+import { ExerciseAward, exerciseAwards, questionKey as key } from "./leaderboardData";
+import { useOpenedQuestions } from "./useOpenedQuestions";
 import { compareToLeader } from "./compareToLeader";
 import { helpLabel } from "./helpLabel";
-
-type Opened = { game: string; exerciseId: number; desc?: string };
-
-const key = (game: string, exerciseId: number) => `${game}-${exerciseId}`;
 
 function Metric({ value, format, formatGap = format, holder, you, award }: {
   value: number | null;
@@ -36,18 +32,8 @@ function Metric({ value, format, formatGap = format, holder, you, award }: {
 
 export function YourScores({scores, you}: {scores: Score[]; you: string}) {
   const exercises = useAppSelector(state => state.exercises.entities);
-  const [questions, setQuestions] = useState<Record<string, string | undefined>>({});
+  const questions = useOpenedQuestions();
   const [open, setOpen] = useState<Score | null>(null);
-
-  useEffect(() => {
-    authFetch(`${config.api}/game/me`)
-      .then(res => res.ok ? res.json() : null)
-      .then(data => {
-        if (!data) return;
-        setQuestions(Object.fromEntries((data.exercises as Opened[]).map(ex => [key(ex.game, ex.exerciseId), ex.desc])));
-      })
-      .catch(err => console.error('Could not fetch your exercises', err));
-  }, []);
 
   const awards = new Map<string, ExerciseAward>();
   exercises.forEach(game => exerciseAwards(exercises, scores, game.id).forEach(a => awards.set(key(a.game, a.exerciseId), a)));
