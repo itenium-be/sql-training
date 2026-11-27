@@ -17,7 +17,9 @@ import { TOKEN_STORAGE } from './config'
 import { pageTitle } from './pageTitle'
 
 export function App() {
-  document.title = pageTitle(window.location.pathname);
+  useEffect(() => {
+    document.title = pageTitle(window.location.pathname);
+  }, []);
   if (window.location.pathname.startsWith('/admin')) {
     return <Admin />;
   }
