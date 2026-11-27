@@ -103,6 +103,26 @@ layout: center
 layout: default
 ---
 
+<span class="eyebrow">Internet &amp; AI</span>
+<h1>Use it to <span class="gradient-gold">learn</span>, not to <span class="gradient-copper">win</span></h1>
+
+<div class="ai-rules">
+  <div class="ai-rule"><span class="mark ok">✓</span><b>Look it up</b><span>Docs, Stack Overflow, AI: syntax, functions, error messages.</span></div>
+  <div class="ai-rule"><span class="mark ok">✓</span><b>Ask it to explain</b><span>How does this join work? Why is this slow?</span></div>
+  <div class="ai-rule" v-click><span class="mark no">✗</span><b>Let it play</b><span>Pasting the puzzle in gets you disqualified.</span></div>
+</div>
+
+<div class="ai-mic" v-click>
+  <svg viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" x2="12" y1="18" y2="22"/></svg>
+  <div>The winner explains their hardest query on stage. <span>Should be easy if you wrote it.</span></div>
+</div>
+
+<img src="/img/itenium-logo.png" class="brand" alt="itenium" />
+
+---
+layout: default
+---
+
 <h1 class="!mb-2">Let’s get this <span class="gradient-copper">party</span> started!</h1>
 
 <JoinCards steps />

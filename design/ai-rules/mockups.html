@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>AI rules slide — mockups</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --df-bg: #16100a; --df-bg-raised: #1f170f; --df-surface: #241a11; --df-border: #4a3820; --df-border-soft: #33271a;
+  --df-cream: #f0e2c2; --df-text: #d6c49e; --df-muted: #a38e66; --df-gold: #e9b44c; --df-copper: #c47a35;
+  --df-orange-1: #d8862f; --df-red: #ef6b5b; --ok: #7cc47a;
+}
+body { margin: 0; background: #0b0805; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; color: var(--df-text); padding: 2rem; }
+.label { font-family: 'JetBrains Mono', monospace; color: var(--df-gold); margin: 2.5rem auto .6rem; width: 980px; font-size: .9rem; }
+.label b { color: var(--df-cream); }
+.label span { color: var(--df-muted); }
+.slide { position: relative; width: 980px; height: 551px; margin: 0 auto; box-sizing: border-box; padding: 2.5rem 3.5rem; overflow: hidden; border-radius: 8px;
+  background: radial-gradient(900px 420px at 50% -15%, rgba(201,154,62,.18), transparent 70%), var(--df-bg); }
+h1 { color: var(--df-cream); font-weight: 800; letter-spacing: -.03em; line-height: 1.05; font-size: 3rem; margin: 0 0 1.25rem; }
+.eyebrow { font-family: 'JetBrains Mono', monospace; font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: var(--df-gold); }
+.gold { background: linear-gradient(90deg, #f3cf7a, #e9b44c, #c99a3e); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.copper { background: linear-gradient(90deg, #d8862f, #b2472a); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.brand { position: absolute; right: 2rem; bottom: 1.5rem; font-weight: 800; color: var(--df-muted); font-size: .9rem; opacity: .6; }
+.card { border: 1px solid var(--df-border); border-radius: 16px; background: var(--df-bg-raised); padding: 1.1rem 1.3rem; }
+.mono { font-family: 'JetBrains Mono', monospace; }
+
+/* A */
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+.two .card h3 { margin: 0 0 .6rem; font-size: 1.3rem; display: flex; align-items: center; gap: .6rem; }
+.two ul { margin: 0; padding-left: 1.1rem; }
+.two li { font-size: 1.1rem; line-height: 1.6; }
+.yes { border-color: rgba(124,196,122,.45); } .yes h3 { color: var(--ok); }
+.no { border-color: rgba(239,107,91,.45); background: rgba(239,107,91,.06); } .no h3 { color: var(--df-red); }
+.foot { margin-top: 1.4rem; font-size: 1.15rem; color: var(--df-cream); }
+.foot em { color: var(--df-gold); font-style: normal; }
+
+/* B */
+.center { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 100%; }
+.big { font-size: 2.6rem; font-weight: 800; color: var(--df-cream); letter-spacing: -.03em; line-height: 1.15; margin: .8rem 0; }
+.sub { font-size: 1.35rem; color: var(--df-muted); max-width: 40rem; }
+.reveal { margin-top: 1.8rem; font-size: 1.6rem; font-weight: 800; }
+.fine { position: absolute; bottom: 1.6rem; left: 3.5rem; font-size: .85rem; color: var(--df-muted); }
+
+/* C */
+.chat { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-top: .4rem; }
+.chat .col h4 { margin: 0 0 .6rem; font-family: 'JetBrains Mono', monospace; font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; }
+.bubble { border-radius: 14px 14px 14px 4px; padding: .7rem 1rem; margin-bottom: .6rem; font-size: 1rem; line-height: 1.4; border: 1px solid var(--df-border-soft); background: var(--df-surface); color: var(--df-cream); }
+.col.good h4 { color: var(--ok); } .col.good .bubble { border-left: 3px solid var(--ok); }
+.col.bad h4 { color: var(--df-red); } .col.bad .bubble { border-left: 3px solid var(--df-red); opacity: .85; }
+.bubble code { color: var(--df-gold); font-family: 'JetBrains Mono', monospace; font-size: .9em; }
+
+/* D */
+.rules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.rule { display: flex; flex-direction: column; gap: .5rem; }
+.rule .n { font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 1.8rem; }
+.rule b { color: var(--df-cream); font-size: 1.2rem; }
+.rule span { color: var(--df-muted); font-size: .95rem; line-height: 1.4; }
+.mic { margin-top: 1.4rem; display: flex; align-items: center; gap: 1rem; border: 1px dashed var(--df-gold); border-radius: 14px; padding: .9rem 1.2rem; color: var(--df-cream); font-size: 1.1rem; }
+.mic .ico { font-size: 1.8rem; }
+</style>
+</head>
+<body>
+
+<div class="label"><b>A · Allowed / Not allowed</b> <span>— plain rules, rhetorical question as footer. No mention of public shaming.</span></div>
+<div class="slide">
+  <span class="eyebrow">House rules</span>
+  <h1>Internet &amp; <span class="gold">AI</span></h1>
+  <div class="two">
+    <div class="card yes">
+      <h3>✓ Go ahead</h3>
+      <ul>
+        <li>Look up the exact syntax</li>
+        <li>Ask how a <span class="mono">LEFT JOIN</span> or window function works</li>
+        <li>Have AI explain an error message</li>
+      </ul>
+    </div>
+    <div class="card no">
+      <h3>✗ Don't</h3>
+      <ul>
+        <li>Paste the question, paste the answer</li>
+        <li>Let an agent play for you</li>
+      </ul>
+      <div class="mono" style="margin-top:.8rem;color:var(--df-red);font-size:.9rem">→ disqualified</div>
+    </div>
+  </div>
+  <div class="foot">You came to a SQL workshop. <em>Not to watch an AI solve it in 5 minutes.</em></div>
+  <div class="brand">itenium</div>
+</div>
+
+<div class="label"><b>B · The rhetorical question</b> <span>— one big punchline, v-click reveal. Teasing lives in the fine print.</span></div>
+<div class="slide">
+  <div class="center">
+    <span class="eyebrow">Internet &amp; AI</span>
+    <div class="big">Why did you join<br>a <span class="gold">SQL workshop</span>?</div>
+    <div class="sub">To watch an AI solve every puzzle in five minutes?</div>
+    <div class="reveal"><span class="copper">Use AI as your tutor — not your ghostwriter.</span></div>
+  </div>
+  <div class="fine">Top of the leaderboard? We may ask you to explain your query. 😉</div>
+  <div class="brand">itenium</div>
+</div>
+
+<div class="label"><b>C · Good prompt / bad prompt</b> <span>— shows by example where the line is.</span></div>
+<div class="slide">
+  <span class="eyebrow">Internet &amp; AI</span>
+  <h1>Ask <span class="gold">how</span>, not <span class="copper">what</span></h1>
+  <div class="chat">
+    <div class="col good">
+      <h4>✓ Fine</h4>
+      <div class="bubble">What's the syntax for <code>STRING_AGG</code> in SQL Server?</div>
+      <div class="bubble">Why does my <code>GROUP BY</code> complain about this column?</div>
+      <div class="bubble">Explain <code>ROW_NUMBER() OVER (PARTITION BY …)</code></div>
+    </div>
+    <div class="col bad">
+      <h4>✗ Disqualified</h4>
+      <div class="bubble">Here's the schema and the question. Write the query.</div>
+      <div class="bubble">Make it shorter so I get the bonus.</div>
+    </div>
+  </div>
+  <div class="brand">itenium</div>
+</div>
+
+<div class="label"><b>D · Explain-it rule</b> <span>— turns the "make fun of you" idea into a friendly, public check.</span></div>
+<div class="slide">
+  <span class="eyebrow">Internet &amp; AI</span>
+  <h1>Use it to <span class="gold">learn</span>, not to <span class="copper">win</span></h1>
+  <div class="rules">
+    <div class="card rule"><span class="n" style="color:var(--ok)">✓</span><b>Look it up</b><span>Docs, Stack Overflow, AI: syntax, functions, error messages.</span></div>
+    <div class="card rule"><span class="n" style="color:var(--ok)">✓</span><b>Ask it to explain</b><span>How does this join work? Why is this slow?</span></div>
+    <div class="card rule"><span class="n" style="color:var(--df-red)">✗</span><b>Let it play</b><span>Pasting the puzzle in gets you disqualified.</span></div>
+  </div>
+  <div class="mic"><span class="ico">🎤</span><div>The winner explains their hardest query on stage. <span style="color:var(--df-muted)">Should be easy if you wrote it.</span></div></div>
+  <div class="brand">itenium</div>
+</div>
+
+</body>
+</html>
