@@ -25,8 +25,7 @@ class: cover
 
 <div class="relative w-full">
   <img src="/img/itenium-logo.png" class="h-10 mb-8" alt="itenium" />
-  <div class="pill eyebrow !text-xs mb-6">27 November 2026 · La Fabrique de la Connaissance</div>
-  <h1 class="!text-7xl !mb-6 !leading-none">SQL Showdown<br><span class="gradient-gold">DevFest Paris</span> <span class="gradient-copper">edition.</span></h1>
+  <h1 class="!text-7xl !mb-6 !leading-none">SQL Showdown</h1>
   <JoinCards />
 </div>
 
@@ -63,19 +62,19 @@ layout: default
 <div class="posters">
   <div class="poster" v-click>
     <div class="art"><img src="/img/game-countries.png" alt="" /></div>
-    <div class="pbody"><h3>Countries</h3><p>The basics — one table.</p><span class="db db-pg">Postgres</span></div>
+    <div class="pbody"><h3>Countries</h3><p>The basics — one table.</p><div class="pfoot"><span class="db db-pg">Postgres</span><span class="db lvl-easy">easy</span></div></div>
   </div>
   <div class="poster" v-click>
     <div class="art"><img src="/img/game-teachers.png" alt="" /></div>
-    <div class="pbody"><h3>Teachers</h3><p>Start joining tables.</p><span class="db db-pg">Postgres</span></div>
+    <div class="pbody"><h3>Teachers</h3><p>Start joining tables.</p><div class="pfoot"><span class="db db-pg">Postgres</span><span class="db lvl-medium">medium</span></div></div>
   </div>
   <div class="poster" v-click>
     <div class="art"><img src="/img/game-worldcup.png" alt="" /></div>
-    <div class="pbody"><h3>Worldcup</h3><p>Many related tables.</p><span class="db db-ms">SQL Server</span></div>
+    <div class="pbody"><h3>Worldcup</h3><p>Many related tables.</p><div class="pfoot"><span class="db db-ms">SQL Server</span><span class="db lvl-hard">hard</span></div></div>
   </div>
   <div class="poster" v-click>
     <div class="art"><img src="/img/game-company.png" alt="" /></div>
-    <div class="pbody"><h3>Company</h3><p>Query at scale — many rows.</p><span class="db db-pg">Postgres</span></div>
+    <div class="pbody"><h3>Company</h3><p>Query at scale — many rows.</p><div class="pfoot"><span class="db db-pg">Postgres</span><span class="db lvl-expert">expert</span></div></div>
   </div>
 </div>
 
