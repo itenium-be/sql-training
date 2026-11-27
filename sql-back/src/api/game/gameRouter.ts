@@ -10,6 +10,7 @@ import { gameModes, getGameMode, parseGameMode, setGameMode, startRefusal } from
 import type { ExerciseStart, ExerciseSubmit } from "./gameModel";
 import { validateName } from "./playerName";
 import { calculatePoints } from "./scoring";
+import { solutionLength } from "./solutionLength";
 
 export async function restoreGameMode() {
   const result = await gameQuery("SELECT value FROM settings WHERE key='game_mode'");
@@ -155,13 +156,13 @@ const checkExercise: RequestHandler = async (req: Request, res: Response) => {
   const { attempts, hint, expected } = await getActivity(player, data.game, data.exerciseId);
   const { points: basePoints, hintCost, expectedCost } = result;
   const points = calculatePoints(basePoints, { hint, hintCost, expected, expectedCost }, attempts);
-  const solutionLength = data.solution.replace(/\s/g, "").length;
+  const length = solutionLength(data.solution);
   const values = [
     player,
     data.game,
     data.exerciseId,
     data.solution,
-    solutionLength,
+    length,
     elapsed,
     cost,
     points,
