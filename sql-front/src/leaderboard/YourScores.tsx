@@ -3,7 +3,7 @@ import { Modal, Table } from "react-bootstrap";
 import { useAppSelector } from "../store";
 import { config, authFetch } from "../config";
 import { Score } from "../exercises/exerciseModels";
-import { MySolution } from "../exercises/Exercise";
+import { MySolution } from "../exercises/MySolution";
 import { formatClock } from "../beamer/beamerData";
 import { ExerciseAward, exerciseAwards } from "./leaderboardData";
 import { compareToLeader } from "./compareToLeader";

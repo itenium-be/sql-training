@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { findActivity } from './myActivity';
+import { findActivity, gaveUpExercises } from './myActivity';
 
 const rows = [
   { game: 'World', exerciseid: 1, attempts: 2, hint: true, expected: false },
@@ -20,5 +20,16 @@ describe('findActivity', () => {
 
   test('defaults to no help used when there is no row', () => {
     expect(findActivity(rows, 'Teachers', 1)).toEqual({ hint: false, expected: false, attempts: 0 });
+  });
+});
+
+describe('gaveUpExercises', () => {
+  test('lists the given-up exercises, parsing NUMERIC ids', () => {
+    const raw = [
+      { game: 'World', exerciseid: '3', attempts: '0', hint: false, expected: false, gaveup: true },
+      { game: 'World', exerciseid: '4', attempts: '0', hint: false, expected: false, gaveup: false },
+      { game: 'World', exerciseid: '5', attempts: '0', hint: false, expected: false },
+    ];
+    expect(gaveUpExercises(raw)).toEqual([{ game: 'World', exerciseId: 3 }]);
   });
 });

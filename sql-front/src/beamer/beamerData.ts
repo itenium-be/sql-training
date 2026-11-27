@@ -42,6 +42,15 @@ export function exerciseSolutions(scores: Score[], you: string, award: ExerciseA
   return cards;
 }
 
+export const TAG_LABEL: Record<SolutionTag, string> = {fastest: 'Fastest', shortest: 'Shortest', leanest: 'Leanest'};
+
+export function tagMetric(tag: SolutionTag, award: ExerciseAward): string {
+  if (tag === 'fastest' && award.fastest) return formatClock(award.fastest.time);
+  if (tag === 'shortest' && award.shortest) return `${award.shortest.chars} ch`;
+  if (tag === 'leanest' && award.leanest) return `${award.leanest.reads} reads`;
+  return '';
+}
+
 export function formatClock(seconds: number): string {
   const mins = Math.floor(seconds / 60);
   const secs = seconds % 60;

@@ -49,6 +49,6 @@ holders with the existing award calculations. Players only see it after they can
 - `bun test`, as in both packages.
 - Solutions are visible when solved, when given up, and in `end` mode; never while the exercise is open.
 - A correct query after giving up is not recorded.
-- Resuming a playground lands after the highest solved or given-up exercise.
+- Resuming a playground lands on the highest solved or given-up exercise.
 - The solution cards: yours first carrying your award tags, then the reference, then each other
   award holder once with all their tags.

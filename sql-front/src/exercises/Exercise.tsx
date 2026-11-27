@@ -8,15 +8,12 @@ import { ResultDiffTable } from "./ResultDiffTable";
 import { SampleQuery } from "./SampleQuery";
 import { authFetch, config } from "../config";
 import { useAppDispatch, useAppSelector } from "../store";
-import { Alert } from "react-bootstrap";
+import { Alert, Modal } from "react-bootstrap";
 import { SqlEditor } from "./SqlEditor";
 import { SchemaPanel } from "./SchemaPanel";
 import { SchemaDiagram } from "./SchemaDiagram";
 import { QuestionTimer } from "./QuestionTimer";
 import { originFromElapsed } from "./questionElapsed";
-import { CopyButton } from "../layout/CopyButton";
-import { formatElapsed } from "./formatElapsed";
-import { formatScored } from "./formatScored";
 import { ActivityRow, findActivity } from "./myActivity";
 import { PostgresIcon, SqlServerIcon } from "../layout/Icons";
 import { loadDraft, saveDraft } from "./sqlDraft";
@@ -26,6 +23,7 @@ import { dashboardSummary } from "../dashboard/dashboardSummary";
 import { datasets } from "../dashboard/datasets";
 import { GamePoster } from "../dashboard/GamePoster";
 import { nextGame } from "../dashboard/nextGame";
+import { SolutionsPanel } from "./SolutionsPanel";
 
 const emojis = ['🎉', '🥳', '🎊', '💯', '🌟', '🚀', '🦄', '🎈', '🎆', '🏆'];
 
@@ -161,6 +159,11 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
   const myScores = scores.filter(score => score.player === registeredName && score.game === currentGame);
   const solvedIds = new Set(myScores.map(score => score.exerciseid));
   const solved = solvedIds.has(sql.id);
+  const gaveUpIds = new Set(useAppSelector(state => state.exercises.gaveUp)
+    .filter(g => g.game === currentGame)
+    .map(g => g.exerciseId));
+  const gaveUp = gaveUpIds.has(sql.id);
+  const [confirmGiveUp, setConfirmGiveUp] = useState(false);
   const scoredPoints = points ?? myScores.find(score => score.exerciseid === sql.id)?.points ?? sql.points;
   const [origin, setOrigin] = useState(() => Date.now());
   const [details, setDetails] = useState<ExerciseDetails | null>(null);
@@ -270,6 +273,25 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
     }
   };
 
+  const giveUp = async () => {
+    setConfirmGiveUp(false);
+    try {
+      const res = await authFetch(`${config.api}/game/giveup`, {
+        method: 'POST',
+        body: JSON.stringify({ game: currentGame, exerciseId: sql.id }),
+      });
+      if (!res.ok) {
+        setError((await res.json()).message ?? 'Could not give up');
+        return;
+      }
+      reset();
+      dispatch({type: 'exercises/giveUp', payload: {game: currentGame, exerciseId: sql.id}});
+    } catch (err) {
+      console.error('Could not give up', err);
+      setError('Could not give up');
+    }
+  };
+
   const requestHelp = async (type: HelpType) => {
     try {
       const help = await fetchHelp(currentGame ?? '', sql.id, type);
@@ -294,7 +316,7 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
       <div className="df-eyebrow">{exercise.name} · {exercise.exercises.length} exercises</div>
       <ol className="df-exgrid">
         {exercise.exercises.map(ex => {
-          const state = solvedIds.has(ex.id) ? 'df-ex-solved' : 'df-ex-todo';
+          const state = solvedIds.has(ex.id) ? 'df-ex-solved' : gaveUpIds.has(ex.id) ? 'df-ex-gaveup' : 'df-ex-todo';
           const cls = ex.id === sql.id ? `${state} df-ex-current` : state;
           return (
             <li key={ex.id}>
@@ -336,25 +358,50 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
       ))}
 
       <div className="df-panel-nav">
-        {sql.id > 1 && (
-          <Button variant="secondary" onClick={() => {reset(); dispatch({type: 'exercises/prevQuestion'})}} style={{flex: 1}}>
-            Previous
+        {!solved && !gaveUp && !success && (
+          <Button variant="outline-danger" onClick={() => setConfirmGiveUp(true)} style={{flex: 1}}>
+            🏳 Give up
           </Button>
         )}
         <Button variant="secondary" onClick={() => {reset(); dispatch({type: 'exercises/nextQuestion'})}} style={{flex: 1}}>
-          {solved ? 'Next' : 'Skip'}
+          {solved || gaveUp || success ? 'Next' : 'Skip'}
         </Button>
       </div>
+
+      <Modal show={confirmGiveUp} onHide={() => setConfirmGiveUp(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>🏳 Give up on exercise {sql.id}?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>You'll see the reference solution and the current fastest, shortest and leanest queries.</p>
+          <p className="df-giveup-warning">You won't be able to score on this exercise any more.</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setConfirmGiveUp(false)}>Keep trying</Button>
+          <Button variant="danger" onClick={giveUp}>Give up</Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 
-  if (solved && !success) {
+  const solutions = (
+    <SolutionsPanel game={currentGame ?? ''} exerciseId={sql.id} solved={solved} points={scoredPoints} maxPoints={sql.points} />
+  );
+
+  if ((solved || gaveUp) && !success) {
     return (
       <div className="df-ide">
         <aside className="df-ide-left">{exercisesPanel}</aside>
         <section className="df-ide-main">
-          <ExerciseSolved reset={reset} text="Greato success, you've already solved this one!" />
-          <MySolution game={currentGame ?? ''} exerciseId={sql.id} points={scoredPoints} maxPoints={sql.points} />
+          {error && (
+            <Alert variant="danger" onClose={() => setError('')} dismissible>
+              {error}
+            </Alert>
+          )}
+          {solved
+            ? <ExerciseSolved reset={reset} text="Greato success, you've already solved this one!" />
+            : <ExerciseSolved reset={reset} variant="secondary" emoji="🏳" text="You gave up on this one, no points" />}
+          {solutions}
         </section>
         {!narrow && <aside className="df-ide-schema">{<SchemaPanel game={currentGame ?? ''} sqlText={sqlText} />}</aside>}
       </div>
@@ -385,7 +432,7 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
         {success ? (
           <>
             <ExerciseSolved reset={reset} cost={cost} />
-            <MySolution game={currentGame ?? ''} exerciseId={sql.id} points={scoredPoints} maxPoints={sql.points} />
+            {solutions}
           </>
         ) : (
           <>
@@ -498,17 +545,17 @@ function expectedRows(expected: ExpectedModel): Record<string, unknown>[] {
 }
 
 
-function ExerciseSolved({reset, text, cost}: {reset: () => void, text?: string, cost?: number | null}) {
-  const [emoji] = useState(() => emojis[Math.floor(Math.random() * emojis.length)]);
+function ExerciseSolved({reset, text, cost, variant = 'success', emoji: fixedEmoji}: {reset: () => void, text?: string, cost?: number | null, variant?: 'success' | 'secondary', emoji?: string}) {
+  const [emoji] = useState(() => fixedEmoji ?? emojis[Math.floor(Math.random() * emojis.length)]);
   const dispatch = useAppDispatch();
 
   return (
-    <Alert variant="success">
+    <Alert variant={variant}>
       <Alert.Heading>
         {emoji}
         &nbsp;{text ?? 'Greato success'}
       </Alert.Heading>
-      <Button variant="success" onClick={() => {reset(); dispatch({type: 'exercises/nextQuestion'})}} className="float-end">
+      <Button variant={variant} onClick={() => {reset(); dispatch({type: 'exercises/nextQuestion'})}} className="float-end">
         Next Question
       </Button>
       <div className="float-none" style={{marginBottom: 8}}>
@@ -516,30 +563,6 @@ function ExerciseSolved({reset, text, cost}: {reset: () => void, text?: string, 
       </div>
     </Alert>
   )
-}
-
-
-type MySolutionModel = { solution: string; elapsed: number; rows: Record<string, unknown>[] | null };
-
-export function MySolution({game, exerciseId, points, maxPoints}: {game: string, exerciseId: number, points: number, maxPoints: number}) {
-  const [data, setData] = useState<MySolutionModel | null>(null);
-
-  useEffect(() => {
-    authFetch(`${config.api}/game/solution?game=${encodeURIComponent(game)}&exerciseId=${exerciseId}`)
-      .then(res => res.ok ? res.json() : null)
-      .then(setData)
-      .catch(err => console.error('Could not fetch your solution', err));
-  }, [game, exerciseId]);
-
-  if (!data) return null;
-
-  return (
-    <>
-      <div className="df-eyebrow">Your query · <span className="df-timer"><span className="df-timer-bolt">⚡</span> {formatElapsed(data.elapsed)}</span> <span className="df-timer">{formatScored(points, maxPoints)}</span> <CopyButton text={data.solution} /></div>
-      <pre className="df-sample-query">{data.solution}</pre>
-      {data.rows && <ExercisesData data={data.rows} />}
-    </>
-  );
 }
 
 

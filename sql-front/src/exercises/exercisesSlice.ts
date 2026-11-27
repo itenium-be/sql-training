@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { ExerciseId, ExerciseModel, Score } from './exerciseModels'
-import { lastSolvedQuestion } from './lastSolved'
+import { GaveUp, lastSolvedQuestion } from './lastSolved'
 import { normalizeScores } from './normalizeScores'
 
 type StoreState = {
@@ -9,6 +9,7 @@ type StoreState = {
   currentExercise: number;
   userName: string;
   scores: Score[];
+  gaveUp: GaveUp[];
   World: ExerciseState;
   Teachers: ExerciseState;
   Worldcup: ExerciseState;
@@ -25,6 +26,7 @@ const initialState: StoreState = {
   currentExercise: 0,
   userName: '',
   scores: [],
+  gaveUp: [],
   World: {
     exampleData: [],
   },
@@ -50,17 +52,12 @@ const exercisesSlice = createSlice({
       } else {
         state.selected = action.payload.key as ExerciseId;
         state[state.selected].exampleData = action.payload.data;
-        state.currentExercise = lastSolvedQuestion(state.scores, state.userName, state.selected);
+        state.currentExercise = lastSolvedQuestion(state.scores, state.userName, state.selected, state.gaveUp);
       }
     },
     nextQuestion: state => {
       if (state.selected) {
         state.currentExercise++;
-      }
-    },
-    prevQuestion: state => {
-      if (state.selected) {
-        state.currentExercise--;
       }
     },
     firstQuestion: state => {
@@ -81,6 +78,15 @@ const exercisesSlice = createSlice({
     },
     setScores: (state, action) => {
       state.scores = normalizeScores(action.payload);
+    },
+    setGaveUp: (state, action) => {
+      state.gaveUp = action.payload;
+    },
+    giveUp: (state, action) => {
+      const {game, exerciseId} = action.payload;
+      if (!state.gaveUp.some(g => g.game === game && g.exerciseId === exerciseId)) {
+        state.gaveUp.push({game, exerciseId});
+      }
     }
   },
 })

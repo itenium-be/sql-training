@@ -879,6 +879,13 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
   color: #a9c97a;
 }
 
+.df-exgrid .df-ex-gaveup {
+  background: rgba(163, 142, 102, 0.12);
+  border-style: dashed;
+  color: var(--df-muted);
+  text-decoration: line-through;
+}
+
 .df-exgrid .df-ex-current {
   border: 2px solid var(--df-gold);
   color: var(--df-cream);
@@ -953,6 +960,35 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
 .df-cost-inline { background: rgba(0, 0, 0, 0.22); border-radius: 999px; padding: 2px 9px; font-size: 0.75rem; }
 
 .df-panel-nav { display: flex; gap: 8px; margin-top: 8px; }
+
+.df-giveup-warning { color: var(--df-red); font-weight: 700; margin: 0; }
+
+.df-solutions { display: flex; flex-direction: column; gap: 12px; }
+.df-solcard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--df-bg-raised);
+  border: 1px solid var(--df-border-soft);
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+.df-solcard .df-sample-query { margin: 0; white-space: pre-wrap; }
+.df-solcard-head { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.df-solcard-who { color: var(--df-cream); font-weight: 700; margin-right: auto; }
+.df-soltag {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: rgba(233, 180, 76, 0.18);
+  color: var(--df-gold);
+}
+.df-solcard-head > .df-soltag:only-of-type { margin-right: auto; }
+.df-soltag-shortest { background: rgba(216, 134, 47, 0.15); color: var(--df-orange-1); }
+.df-soltag-leanest { background: rgba(240, 210, 138, 0.12); color: #f0d28a; }
 
 .df-ide-main { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
 

@@ -26,4 +26,9 @@ describe('lastSolvedQuestion', () => {
   test('returns 0 when the player has solved nothing in the game', () => {
     expect(lastSolvedQuestion(scores, 'wouter', 'Worldcup')).toBe(0);
   });
+
+  test('counts given-up exercises of that game as done', () => {
+    const gaveUp = [{game: 'World', exerciseId: 4}, {game: 'Teachers', exerciseId: 7}];
+    expect(lastSolvedQuestion(scores, 'wouter', 'World', gaveUp)).toBe(4);
+  });
 });

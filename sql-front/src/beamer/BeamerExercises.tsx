@@ -2,7 +2,7 @@ import { ReactNode, useState } from 'react';
 import { ExerciseId, ExerciseModel, Score } from '../exercises/exerciseModels';
 import { awardLabel, ExerciseAward, exerciseAwards } from '../leaderboard/leaderboardData';
 import { BoltIcon, CodeIcon, LeafIcon } from '../layout/Icons';
-import { SolutionCard, SolutionTag, exerciseSolutions, formatClock, myExerciseResult } from './beamerData';
+import { SolutionCard, TAG_LABEL, exerciseSolutions, formatClock, myExerciseResult, tagMetric } from './beamerData';
 
 function Holder({name, value, you, label}: {name: string | undefined; value: string; you: string; label: ReactNode}) {
   const caption = <span className="bm-aw-label">{label}</span>;
@@ -16,15 +16,6 @@ function Holder({name, value, you, label}: {name: string | undefined; value: str
       <span className="bm-awval">{value}</span>
     </div>
   );
-}
-
-const TAG_LABEL: Record<SolutionTag, string> = {fastest: 'Fastest', shortest: 'Shortest', leanest: 'Leanest'};
-
-function tagMetric(tag: SolutionTag, award: ExerciseAward): string {
-  if (tag === 'fastest' && award.fastest) return formatClock(award.fastest.time);
-  if (tag === 'shortest' && award.shortest) return `${award.shortest.chars} ch`;
-  if (tag === 'leanest' && award.leanest) return `${award.leanest.reads} reads`;
-  return '';
 }
 
 function SolutionCardView({card, award, scores, you}: {card: SolutionCard; award: ExerciseAward; scores: Score[]; you: string}) {
