@@ -224,7 +224,6 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
 .df-brand:hover { color: var(--df-cream); }
 .df-brand-mark { color: var(--df-gold); display: flex; }
 .df-brand-name { font-weight: 800; font-size: 1.1rem; }
-.df-brand-sub { display: block; color: var(--df-gold); font-size: .75rem; font-weight: 600; }
 
 .df-player {
   display: inline-flex;

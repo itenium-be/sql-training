@@ -31,10 +31,7 @@ export function TopNavigation() {
     <header className="df-header">
       <Link to="/" className="df-brand" onClick={() => dispatch(fetchData('home'))}>
         <span className="df-brand-mark"><DatabaseIcon /></span>
-        <span>
-          <span className="df-brand-name">SQL Showdown</span>
-          <span className="df-brand-sub">DevFest Paris 2026</span>
-        </span>
+        <span className="df-brand-name">SQL Showdown</span>
       </Link>
       <div className="df-header-right">
         <a href="/slides/" className="df-slides-link" target="_blank" rel="noreferrer">Slides</a>
