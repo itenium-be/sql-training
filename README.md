@@ -106,6 +106,7 @@ docker compose -f compose.yaml -f compose.dev.yaml up -d postgres sqlserver lead
 ```
 
 Check all reference solutions against the databases: `cd sql-back && bun run verify-solutions` (optionally pass game ids, e.g. `Company`).
+A submission only counts if it is also correct on the shadow databases (`world_shadow`, `sportdb_shadow`). A new exercise needs a change in `sql-data/shadow-postgres.sql` or `sql-server/shadow-worldcup.sql` so its shadow result differs; verify-solutions fails until it does. After changing a delta, drop the shadow database and redeploy.
 
 Set `PG_HOST="localhost"`, `PG_PORT="5175"`, `SQL_SERVER_HOST="localhost"`, `SQL_SERVER_PORT="5174"`, `GAME_PG_HOST="localhost"`, `GAME_PG_PORT="6000"`, `GAME_PG_USER="admin"`, `GAME_PG_PASSWORD="password"` and `API_KEY` in `sql-back/.env`.
 
