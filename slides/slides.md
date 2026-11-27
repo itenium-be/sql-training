@@ -107,8 +107,8 @@ layout: default
 <h1>Use it to <span class="gradient-gold">learn</span>, not to <span class="gradient-copper">win</span></h1>
 
 <div class="ai-rules">
-  <div class="ai-rule"><span class="mark ok">✓</span><b>Look it up</b><span>Docs, Stack Overflow, AI: syntax, functions, error messages.</span></div>
-  <div class="ai-rule"><span class="mark ok">✓</span><b>Ask it to explain</b><span>How does this join work? Why is this slow?</span></div>
+  <div class="ai-rule" v-click><span class="mark ok">✓</span><b>Look it up</b><span>Docs, Stack Overflow, AI: syntax, functions, error messages.</span></div>
+  <div class="ai-rule" v-click><span class="mark ok">✓</span><b>Ask it to explain</b><span>How does this join work? Why is this slow?</span></div>
   <div class="ai-rule" v-click><span class="mark no">✗</span><b>Let it play</b><span>Pasting the puzzle in gets you disqualified.</span></div>
 </div>
 
