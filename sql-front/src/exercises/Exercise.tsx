@@ -17,6 +17,7 @@ import { originFromElapsed } from "./questionElapsed";
 import { ActivityRow, findActivity } from "./myActivity";
 import { PostgresIcon, SqlServerIcon } from "../layout/Icons";
 import { loadDraft, saveDraft } from "./sqlDraft";
+import { telemetrySnapshot } from "./editorTelemetry";
 import { useNavigate } from "react-router-dom";
 import { fetchData, loadScores } from "../layout/fetchData";
 import { dashboardSummary } from "../dashboard/dashboardSummary";
@@ -242,7 +243,12 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
 
       const res = await authFetch(`${config.api}/game/check`, {
         method: 'POST',
-        body: JSON.stringify({ game: currentGame, exerciseId: sql.id, solution: sqlText }),
+        body: JSON.stringify({
+          game: currentGame,
+          exerciseId: sql.id,
+          solution: sqlText,
+          telemetry: telemetrySnapshot(currentGame ?? '', sql.id),
+        }),
       });
       const data = await res.json();
       if (!res.ok) {

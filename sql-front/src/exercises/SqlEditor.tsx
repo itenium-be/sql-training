@@ -12,6 +12,7 @@ import { SqlSchema } from "./schema";
 import { loadSchema } from "./loadSchema";
 import { ExerciseId } from "./exerciseModels";
 import { pingActivity } from "./activityPing";
+import { telemetryExtension } from "./editorTelemetry";
 
 const SUBMIT_EVENT = 'sql-editor-submit';
 
@@ -170,6 +171,7 @@ export function SqlEditor({ game, exerciseId, value, onChange, onSubmit, height 
     }, { delay: 600 }),
     submitKeymap,
     tabCompletionKeymap,
+    ...(exerciseId != null ? telemetryExtension(game, exerciseId) : []),
   ];
   }, [game, exerciseId, schema]);
 
