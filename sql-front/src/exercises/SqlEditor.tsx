@@ -6,7 +6,7 @@ import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import { EditorView, keymap, placeholder } from "@codemirror/view";
 import { Prec } from "@codemirror/state";
 import { tags as t } from "@lezer/highlight";
-import { completeFromList } from "@codemirror/autocomplete";
+import { acceptCompletion, completeFromList } from "@codemirror/autocomplete";
 import { config } from "../config";
 import { SqlSchema } from "./schema";
 import { loadSchema } from "./loadSchema";
@@ -21,6 +21,13 @@ const submitKeymap = Prec.highest(keymap.of([{
     view.dom.dispatchEvent(new CustomEvent(SUBMIT_EVENT, { bubbles: true }));
     return true;
   },
+}]));
+
+// Tab accepts an open autocomplete suggestion; acceptCompletion returns false
+// when no popup is open, so Tab keeps its normal behaviour in that case.
+const tabCompletionKeymap = Prec.highest(keymap.of([{
+  key: 'Tab',
+  run: view => acceptCompletion(view),
 }]));
 
 type SqlProblem = { message: string; from: number; to: number };
@@ -162,6 +169,7 @@ export function SqlEditor({ game, exerciseId, value, onChange, onSubmit, height 
       }
     }, { delay: 600 }),
     submitKeymap,
+    tabCompletionKeymap,
   ];
   }, [game, exerciseId, schema]);
 
