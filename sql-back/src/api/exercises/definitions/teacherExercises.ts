@@ -43,7 +43,7 @@ LEFT JOIN departments d ON d.id = t.dept`,
     },
     {
       id: 3,
-      desc: 'Show the name of the teacher and, depending on the department, show "Sci", "Art" or "None".',
+      desc: 'Show the name of the teacher and the department type: "Sci" for Computing and Engineering, "Art" for Design, "None" for anything else.',
       points: 6,
       expected: [
         ["Splint", "Sci"],

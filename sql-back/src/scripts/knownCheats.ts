@@ -21,6 +21,14 @@ WHERE name LIKE '%e%' AND name LIKE '%e%' AND name LIKE '%i%' AND name LIKE '%o%
 FROM teachers t
 LEFT JOIN departments d ON d.id = t.dept`,
   },
+  {
+    game: "Teachers",
+    exerciseId: 3,
+    query: `SELECT t.name,
+  CASE WHEN d.name = 'Computing' THEN 'Sci' WHEN d.name = 'Design' THEN 'Art' ELSE 'None' END AS "department type"
+FROM teachers t
+LEFT JOIN departments d ON d.id = t.dept`,
+  },
   { game: "Teachers", exerciseId: 6, query: "SELECT 'Throd' AS name" },
   { game: "Company", exerciseId: 4, query: "SELECT 277 AS count" },
   { game: "Worldcup", exerciseId: 1, query: "SELECT 'Brazil' AS name" },

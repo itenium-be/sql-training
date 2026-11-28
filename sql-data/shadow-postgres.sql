@@ -37,7 +37,9 @@ VALUES
 -- T5: an s but not at the start; T6: born on 10/3
 (4, 'Moss', 'EXT 4101', NULL, '2018-01-15', '1985-03-10', 1800),
 -- T7: a third Administration teacher who is not in the top 2
-(4, 'Gaskell', NULL, '0485 12 34 56', '2020-05-04', '1992-07-21', 1200);
+(4, 'Gaskell', NULL, '0485 12 34 56', '2020-05-04', '1992-07-21', 1200),
+-- T3: Engineering is Sci too
+(3, 'Gearwick', 'EXT 3001', NULL, '2016-04-11', '1983-06-27', 2200);
 
 
 -- COMPANY

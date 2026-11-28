@@ -26,7 +26,8 @@ data with different contents, and it counts only if it is correct there too.
 The shadow delta scripts edit the real seed. Per exercise they add:
 
 - **Decoys** that catch a likely wrong filter. Examples: for World 2, a spaceless name with every
-  vowel except `e` and one with every vowel except `a`. For Teachers 3, a fourth department.
+  vowel except `e` and one with every vowel except `a`. For Teachers 3, a fourth department and an
+  Engineering teacher.
 - **Perturbations** (changed values, added or deleted rows), so every exercise's result differs
   from the real one.
 
