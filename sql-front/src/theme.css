@@ -1298,7 +1298,8 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
 .df-query-full { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font-size: .9rem; color: var(--df-cream); }
 
 @media (max-width: 820px) {
-  .df-mobile-only { display: inline-block; margin-bottom: 12px; }
+  .df-intro-meta { margin-bottom: 8px; }
+  .df-mobile-only { display: inline-block; margin-bottom: 20px; }
   .df-query-wrap pre { padding-right: 44px; }
   .df-query-expand {
     display: flex;
