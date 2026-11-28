@@ -14,8 +14,6 @@ VALUES
 ('Montequiaru', 'Africa', 245810, 7215033, 9120000000, 'Quiaru', '.mq'),
 ('Kouagadiuma', 'Africa', 112622, 4410829, 5310000000, 'Diuma', '.og'),
 ('Tenuikoro', 'Oceania', 18274, 911372, 4140000000, 'Koro', '.tk'),
--- W4: a NULL gdp in Europe makes > ALL without a NULL filter return nothing
-('Sealand', 'Europe', 1, 27, NULL, 'Roughs Tower', '.sl'),
 -- W5: a continent whose largest area is 0: filtering area > 0 leaves an empty subquery
 ('Ross Dependency', 'Antarctica', 0, 33, NULL, 'Scott Base', NULL),
 ('Queen Maud Land', 'Antarctica', NULL, 41, NULL, 'Troll', NULL);

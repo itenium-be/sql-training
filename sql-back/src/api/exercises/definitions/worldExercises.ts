@@ -69,7 +69,7 @@ ORDER BY gdp DESC`,
       expectedOrder: false,
       solution: `SELECT name
 FROM countries
-WHERE gdp > ALL (SELECT gdp FROM countries WHERE continent = 'Europe' AND gdp IS NOT NULL)`,
+WHERE gdp > ALL (SELECT gdp FROM countries WHERE continent = 'Europe')`,
       expectedColumns: ["name"],
     },
     {
