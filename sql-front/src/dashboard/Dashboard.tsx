@@ -19,7 +19,6 @@ export function Dashboard() {
 
   return (
     <div className="db-dash">
-      <div className="df-eyebrow">Your dashboard</div>
       <h1 className="db-title">Pick a playground</h1>
 
 
