@@ -1039,6 +1039,33 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
 .df-dialect-pg { color: #4169e1; }
 .df-dialect-mssql { color: #cc2927; }
 
+.df-intro-eyebrow { margin-top: 1.5rem; }
+.df-intro-title { margin: 4px 0 10px; font-size: clamp(1.9rem, 5vw, 2.6rem); line-height: 1.1; }
+.df-intro-desc { margin: 0; font-size: 1.05rem; }
+.df-intro-meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 20px; }
+
+.df-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--df-border);
+  color: var(--df-muted);
+}
+.df-pill > span { display: inline-flex; }
+.df-pill-easy { color: #7cc47a; border-color: currentColor; }
+.df-pill-medium { color: var(--df-gold); border-color: currentColor; }
+.df-pill-hard { color: var(--df-orange-1); border-color: currentColor; }
+.df-pill-expert { color: var(--df-red); border-color: currentColor; }
+.df-pill-points { color: var(--df-gold); }
+
 @media (pointer: coarse) {
   .df-shortcut { display: none; }
 }

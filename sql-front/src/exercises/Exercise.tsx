@@ -57,11 +57,10 @@ function ExerciseIntro({exercise, onStart}: {exercise: ExerciseModel, onStart: (
 
   return (
     <>
-      <h1>
-        {exercise.name}
-        <ExercisePoints exercise={exercise} />
-      </h1>
-      <p>{exercise.desc}</p>
+      <div className="df-eyebrow df-intro-eyebrow">Playground</div>
+      <h1 className="df-intro-title">{exercise.name}</h1>
+      <p className="df-intro-desc">{exercise.desc}</p>
+      <ExerciseMeta exercise={exercise} />
       <div className="df-rtabs" role="tablist">
         <button type="button" role="tab" aria-selected={tab === 'sample'} onClick={() => setTab('sample')}>Example Data</button>
         <button type="button" role="tab" aria-selected={tab === 'diagram'} onClick={() => setTab('diagram')}>Diagram</button>
@@ -572,17 +571,21 @@ function ExerciseSolved({reset, text, cost, variant = 'success', emoji: fixedEmo
 }
 
 
-function ExercisePoints({exercise}: {exercise: ExerciseModel}) {
+function ExerciseMeta({exercise}: {exercise: ExerciseModel}) {
   const totalPoints = exercise.exercises.reduce((pts, ex) => ex.points + pts, 0);
+  const ds = datasets[exercise.id];
 
   return (
-    <small>
-      <Badge bg="primary" style={{fontSize: 14, marginLeft: 8}} title="Exercise count">
-        #{exercise.exercises.length}
-      </Badge>
-      <Badge bg="primary" style={{fontSize: 14, marginLeft: 8}}>
-        {totalPoints} points
-      </Badge>
-    </small>
+    <div className="df-intro-meta">
+      <span className={`df-pill df-pill-${ds.level}`}>{ds.level}</span>
+      <span className="df-pill">
+        {ds.db === 'SQL Server'
+          ? <span className="df-dialect-mssql"><SqlServerIcon size={14} /></span>
+          : <span className="df-dialect-pg"><PostgresIcon size={14} /></span>}
+        {ds.db}
+      </span>
+      <span className="df-pill">{exercise.exercises.length} exercises</span>
+      <span className="df-pill df-pill-points">{totalPoints} pts</span>
+    </div>
   )
 }
