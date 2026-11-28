@@ -97,6 +97,8 @@ jobs:
           SQL_SERVER_PORT: 5174
           SQL_SERVER_USER: player
           SQL_SERVER_PASSWORD: Player123!
+          SQL_SERVER_SHADOW_USER: shadow
+          SQL_SERVER_SHADOW_PASSWORD: Shadow123!
           API_KEY: ci
           GAME_PG_HOST: localhost
           GAME_PG_PORT: 6000
