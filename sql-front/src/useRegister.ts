@@ -24,6 +24,8 @@ export function useRegister() {
       if (outcome.registered) {
         localStorage.setItem(TOKEN_STORAGE, outcome.token);
         localStorage.setItem('userName', outcome.name);
+        // The router only mounts once registered, so it would start on whatever URL the player arrived on.
+        history.replaceState(null, '', '/');
         dispatch({ type: 'exercises/register', payload: outcome.name });
       }
     } catch (error) {
