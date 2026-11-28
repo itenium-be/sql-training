@@ -108,6 +108,7 @@
 .adm-sol-right { display: inline-flex; align-items: center; gap: 10px; }
 
 .adm-tab .adm-badge-red { background: rgba(var(--df-red-rgb), .16); color: var(--df-red); }
+.adm-ai { max-width: none; }
 .adm-ai-list { list-style: none; margin: 0; padding: 0; }
 .adm-ai-row { border-bottom: 1px solid var(--df-border-soft); }
 .adm-ai-row.adm-dq { opacity: .6; }
@@ -123,8 +124,8 @@
 .adm-ai-score { width: 56px; text-align: right; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 1.6rem; font-weight: 800; color: var(--df-cream); }
 .adm-ai-score.adm-ai-high { color: var(--df-red); }
 .adm-ai-detail { padding: 0 4px 12px 54px; }
-.adm-ai-table { width: 100%; font-size: .82rem; font-family: 'JetBrains Mono', ui-monospace, monospace; }
-.adm-ai-table th { color: var(--df-muted); font-weight: 700; text-align: left; padding: 4px 8px 4px 0; }
-.adm-ai-table td { color: var(--df-cream); padding: 3px 8px 3px 0; }
+.adm-ai-table { width: 100%; font-size: .95rem; font-family: 'JetBrains Mono', ui-monospace, monospace; }
+.adm-ai-table th { color: var(--df-muted); font-weight: 700; text-align: left; padding: 6px 16px 6px 0; white-space: nowrap; }
+.adm-ai-table td { color: var(--df-cream); padding: 5px 16px 5px 0; }
 .adm-ai-empty { text-align: center; padding: 24px; margin: 0; }
 .adm-ai-foot { margin-top: 10px; }
