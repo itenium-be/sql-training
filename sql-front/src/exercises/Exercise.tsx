@@ -62,15 +62,15 @@ function ExerciseIntro({exercise, onStart}: {exercise: ExerciseModel, onStart: (
       <h1 className="df-intro-title">{exercise.name}</h1>
       <p className="df-intro-desc">{exercise.desc}</p>
       <ExerciseMeta exercise={exercise} />
+      <Button variant="success" className="df-mobile-only" onClick={onStart}>
+        Let's Start
+      </Button>
       <div className="df-rtabs" role="tablist">
         <button type="button" role="tab" aria-selected={tab === 'sample'} onClick={() => setTab('sample')}>Sample</button>
         <button type="button" role="tab" aria-selected={tab === 'diagram'} onClick={() => setTab('diagram')}>Diagram</button>
       </div>
       {tab === 'sample' ? (
         <>
-          <Button variant="success" className="df-mobile-only" onClick={onStart}>
-            Let's Start
-          </Button>
           <SampleNote query={exercise.sampleQuery} />
           <SampleQuery query={exercise.sampleQuery} className="df-sample-query" />
           <div className="df-sample-returns">↓ returns</div>
