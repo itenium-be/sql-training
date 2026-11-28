@@ -9,6 +9,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: true,
+    allowedHosts: ['sql.lan'],
     port: Number(process.env.VITE_PORT) || 5173,
     ...(hmrClientPort ? { hmr: { clientPort: Number(hmrClientPort) } } : {}),
     proxy: {
