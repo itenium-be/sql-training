@@ -65,22 +65,24 @@ function ExerciseIntro({exercise, onStart}: {exercise: ExerciseModel, onStart: (
       <Button variant="success" className="df-mobile-only" onClick={onStart} data-tour="start">
         Let's Start
       </Button>
-      <div className="df-rtabs" role="tablist">
-        <button type="button" role="tab" aria-selected={tab === 'sample'} onClick={() => setTab('sample')} data-tour="intro-sample-tab">Sample</button>
-        <button type="button" role="tab" aria-selected={tab === 'diagram'} onClick={() => setTab('diagram')} data-tour="intro-diagram-tab">Diagram</button>
-      </div>
-      {tab === 'sample' ? (
-        <>
-          <SampleNote query={exercise.sampleQuery} />
-          <SampleQuery query={exercise.sampleQuery} game={exercise.id} className="df-sample-query" />
-          <div className="df-sample-returns">↓ returns</div>
-          <ExerciseSampleData />
-        </>
-      ) : (
-        <div className="df-intro-diagram">
-          <SchemaDiagram game={exercise.id} />
+      <div data-tour="intro-panel">
+        <div className="df-rtabs" role="tablist">
+          <button type="button" role="tab" aria-selected={tab === 'sample'} onClick={() => setTab('sample')} data-tour="intro-sample-tab">Sample</button>
+          <button type="button" role="tab" aria-selected={tab === 'diagram'} onClick={() => setTab('diagram')} data-tour="intro-diagram-tab">Diagram</button>
         </div>
-      )}
+        {tab === 'sample' ? (
+          <>
+            <SampleNote query={exercise.sampleQuery} />
+            <SampleQuery query={exercise.sampleQuery} game={exercise.id} className="df-sample-query" />
+            <div className="df-sample-returns">↓ returns</div>
+            <ExerciseSampleData />
+          </>
+        ) : (
+          <div className="df-intro-diagram">
+            <SchemaDiagram game={exercise.id} />
+          </div>
+        )}
+      </div>
       <Button variant="success" onClick={onStart} data-tour="start">
         Let's Start
       </Button>

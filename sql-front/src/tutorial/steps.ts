@@ -22,8 +22,8 @@ const submit = (text: string): Action[] => [
 export const STEPS: Step[] = [
   { anchor: 'posters', title: 'Four playgrounds', caption: 'From easy to expert, each on its own database.' },
   { anchor: 'poster', title: "Let's play", caption: 'Pick a playground to start.' },
-  { anchor: 'intro-sample-tab', title: 'Sample', caption: 'A peek at the real tables: get to know the data before you start.', enter: [{ do: 'click', anchor: 'poster' }], actions: [{ do: 'click', anchor: 'intro-sample-tab' }] },
-  { anchor: 'intro-diagram-tab', title: 'Diagram', caption: 'How the tables relate to each other.', actions: [{ do: 'click', anchor: 'intro-diagram-tab' }] },
+  { anchor: 'intro-panel', title: 'Sample', caption: 'A peek at the real tables: get to know the data before you start.', enter: [{ do: 'click', anchor: 'poster' }], actions: [{ do: 'click', anchor: 'intro-sample-tab' }] },
+  { anchor: 'intro-panel', title: 'Diagram', caption: 'How the tables relate to each other.', actions: [{ do: 'click', anchor: 'intro-diagram-tab' }] },
   { anchor: 'start', title: 'The clock starts', caption: 'Each question is timed from the moment you first open it. Fastest earns a bonus.' },
   { anchor: 'question', title: 'The question', caption: 'The badge shows the points it is worth. Help and wrong answers lower it.', enter: [{ do: 'click', anchor: 'start' }] },
   { anchor: 'columns', title: 'Expected columns', caption: 'Return exactly these columns. "Order matters" means the row order counts too.' },
