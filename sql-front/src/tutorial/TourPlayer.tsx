@@ -1,8 +1,8 @@
-import { useEffect, useReducer, useRef, useState } from 'react';
+import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { EditorView } from '@codemirror/view';
 import { closeCompletion } from '@codemirror/autocomplete';
 import { Action, Step } from './steps';
-import { anchorFor, initialTour, playable, previousPlayable, readMs, Target, tour, TourEvent } from './tourEngine';
+import { anchorFor, initialTour, playable, readMs, Target, tour, TourEvent } from './tourEngine';
 import './tutorial.css';
 
 const NARROW = '(max-width: 1100px)';
@@ -10,6 +10,8 @@ const TOUCH = '(pointer: coarse)';
 const MOVE_MS = 800;
 const ANCHOR_WAIT_MS = 3000;
 const TYPE_MS = 25;
+// Lets React commit a replayed click or edit before the next one reads the page.
+const REPLAY_MS = 100;
 const CARD_GAP = 16;
 const CARD_WIDTH = 320;
 
@@ -38,12 +40,12 @@ async function waitFor(target: Target, alive: () => boolean): Promise<HTMLElemen
   return null;
 }
 
-async function typeInto(el: HTMLElement, text: string, alive: () => boolean) {
+async function typeInto(el: HTMLElement, text: string, alive: () => boolean, instant: boolean) {
   const editor = el.querySelector<HTMLElement>('.cm-editor');
   const view = editor && EditorView.findFromDOM(editor);
   if (!view) return;
-  view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: '' } });
-  for (let i = 0; i < text.length && alive(); i++) {
+  view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: instant ? text : '' } });
+  for (let i = 0; !instant && i < text.length && alive(); i++) {
     view.dispatch({ changes: { from: i, insert: text[i] }, selection: { anchor: i + 1 } });
     await sleep(TYPE_MS);
   }
@@ -64,7 +66,15 @@ function cardStyle(target: Rect | null, cardHeight: number): React.CSSProperties
   return undefined;
 }
 
-export function TourPlayer({steps, loop, onEnd}: {steps: Step[], loop: boolean, onEnd: () => void}) {
+type TourPlayerProps = {
+  steps: Step[];
+  loop: boolean;
+  onEnd: () => void;
+  /** Resets the demo app to its first screen, so Back can replay the steps before it. */
+  onRewind: () => void;
+};
+
+export function TourPlayer({steps, loop, onEnd, onRewind}: TourPlayerProps) {
   const [state, dispatch] = useReducer((s: typeof initialTour, e: TourEvent) => tour(s, e, steps.length), initialTour);
   const spot = useRef<HTMLElement | null>(null);
   const [spotRect, setSpotRect] = useState<Rect | null>(null);
@@ -79,10 +89,10 @@ export function TourPlayer({steps, loop, onEnd}: {steps: Step[], loop: boolean, 
     if (state.ended) onEnd();
   }, [state.ended, onEnd]);
 
-  const back = () => {
-    const to = previousPlayable(steps, state.index, isNarrow(), anchor => find(anchor) !== null);
-    if (to !== null) dispatch({back: to});
-  };
+  const back = useCallback(() => {
+    onRewind();
+    dispatch('back');
+  }, [onRewind]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -108,41 +118,47 @@ export function TourPlayer({steps, loop, onEnd}: {steps: Step[], loop: boolean, 
       setCursor({x: r.left + r.width / 2, y: r.top + r.height / 2});
       await sleep(MOVE_MS);
     };
-    const act = async (action: Action) => {
+    const act = async (action: Action, replay: boolean) => {
       const el = await waitFor(action, alive);
       if (!el || !alive()) return;
-      await pointAt(el);
+      if (!replay) await pointAt(el);
       if (!alive()) return;
       if (action.do === 'type') {
-        await typeInto(el, action.text, alive);
+        await typeInto(el, action.text, alive, replay);
       } else {
-        setClicking(c => c + 1);
+        if (!replay) setClicking(c => c + 1);
         el.click();
       }
-      await sleep(700);
+      await sleep(replay ? REPLAY_MS : 700);
     };
 
     const run = async () => {
       setReady(false);
+      if (state.direction === 'back') {
+        spot.current = null;
+        for (const action of steps.slice(0, state.index).flatMap(s => s.actions ?? [])) {
+          if (!alive()) return;
+          await act(action, true);
+        }
+      }
       const el = step.anchor ? await waitFor(step, alive) : null;
       if (!alive()) return;
       spot.current = el;
       if (!playable(step, isNarrow(), () => el !== null)) {
-        dispatch('next');
+        if (state.direction === 'back') back();
+        else dispatch('next');
         return;
       }
       if (el) await pointAt(el);
-      if (state.direction === 'next') {
-        for (const action of step.actions ?? []) {
-          if (!alive()) return;
-          await act(action);
-        }
+      for (const action of step.actions ?? []) {
+        if (!alive()) return;
+        await act(action, false);
       }
       if (alive()) setReady(true);
     };
     run();
     return () => { active = false; };
-  }, [step, state.direction]);
+  }, [steps, step, state.index, state.direction, back]);
 
   useEffect(() => {
     if (!ready || state.paused) return;
@@ -175,7 +191,7 @@ export function TourPlayer({steps, loop, onEnd}: {steps: Step[], loop: boolean, 
         <p>{step.caption}</p>
         <div className="tour-ctl">
           <span className="tour-n">{state.index + 1}/{steps.length}</span>
-          <button type="button" onClick={back} aria-label="Back">◀</button>
+          <button type="button" onClick={back} disabled={state.index === 0} aria-label="Back">◀</button>
           <button type="button" onClick={() => dispatch(state.paused ? 'resume' : 'pause')} aria-label={state.paused ? 'Play' : 'Pause'}>{state.paused ? '▶' : '❚❚'}</button>
           <button type="button" onClick={() => dispatch('next')} aria-label="Next">▶▶</button>
           {!loop && <button type="button" className="tour-skip" onClick={() => dispatch('skip')}>Skip</button>}

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { anchorFor, initialTour, playable, previousPlayable, readMs, tour } from './tourEngine';
+import { anchorFor, initialTour, playable, readMs, tour } from './tourEngine';
 
 const count = 3;
 const at = (index: number) => ({ ...initialTour, index });
@@ -9,8 +9,12 @@ describe('tour', () => {
     expect(tour(at(1), 'next', count).index).toBe(2);
   });
 
-  test('back jumps to the given step', () => {
-    expect(tour(at(2), { back: 0 }, count).index).toBe(0);
+  test('back moves to the previous step', () => {
+    expect(tour(at(2), 'back', count).index).toBe(1);
+  });
+
+  test('back on the first step stays put', () => {
+    expect(tour(at(0), 'back', count)).toEqual(at(0));
   });
 
   test('pause and resume toggle without moving', () => {
@@ -28,7 +32,7 @@ describe('tour', () => {
   });
 
   test('a move remembers its direction', () => {
-    expect(tour(at(1), { back: 0 }, count).direction).toBe('back');
+    expect(tour(at(1), 'back', count).direction).toBe('back');
     expect(tour(at(1), 'next', count).direction).toBe('next');
   });
 });
@@ -60,22 +64,6 @@ describe('playable', () => {
 
   test('checks the anchor for the current layout', () => {
     expect(playable({ anchor: 'schema', narrowAnchor: 'schema-tab' }, true, a => a === 'schema-tab')).toBe(true);
-  });
-});
-
-describe('previousPlayable', () => {
-  const steps = [{ anchor: 'a' }, { anchor: 'gone' }, { anchor: 'b' }];
-
-  test('skips back over steps not on the current screen', () => {
-    expect(previousPlayable(steps, 2, false, a => a !== 'gone')).toBe(0);
-  });
-
-  test('null when no earlier step is on screen', () => {
-    expect(previousPlayable(steps, 2, false, () => false)).toBeNull();
-  });
-
-  test('skips steps without an anchor', () => {
-    expect(previousPlayable([{}, { anchor: 'b' }], 1, false, () => true)).toBeNull();
   });
 });
 

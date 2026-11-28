@@ -34,30 +34,38 @@ export function Tutorial() {
   const [real] = useState(sandboxed);
   const [loop] = useState(() => new URLSearchParams(window.location.search).has('loop'));
   const [run, setRun] = useState(() => ({ id: 0, store: demoStore() }));
+  const [tourId, setTourId] = useState(0);
+
+  const resetDemo = useCallback(() => {
+    api = createFakeApi();
+    localStorage.clear();
+    setRun(r => ({ id: r.id + 1, store: demoStore() }));
+  }, []);
 
   const onEnd = useCallback(() => {
     if (loop) {
-      api = createFakeApi();
-      localStorage.clear();
-      setRun(r => ({ id: r.id + 1, store: demoStore() }));
+      resetDemo();
+      setTourId(t => t + 1);
       return;
     }
     markTutorialSeen(real);
     window.location.assign('/');
-  }, [loop, real]);
+  }, [loop, real, resetDemo]);
 
   return (
-    <Provider key={run.id} store={run.store}>
-      <MemoryRouter>
-        <Container className="df-app">
-          <TopNavigation />
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            {demoDefinitions.map(ex => <Route key={ex.id} path={ex.id} element={<Exercise exercise={ex} />} />)}
-          </Routes>
-        </Container>
-        <TourPlayer steps={STEPS} loop={loop} onEnd={onEnd} />
-      </MemoryRouter>
-    </Provider>
+    <>
+      <Provider key={`demo-${run.id}`} store={run.store}>
+        <MemoryRouter>
+          <Container className="df-app">
+            <TopNavigation />
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              {demoDefinitions.map(ex => <Route key={ex.id} path={ex.id} element={<Exercise exercise={ex} />} />)}
+            </Routes>
+          </Container>
+        </MemoryRouter>
+      </Provider>
+      <TourPlayer key={`tour-${tourId}`} steps={STEPS} loop={loop} onEnd={onEnd} onRewind={resetDemo} />
+    </>
   );
 }
