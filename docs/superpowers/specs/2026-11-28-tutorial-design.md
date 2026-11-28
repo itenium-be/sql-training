@@ -38,7 +38,7 @@ Demo question (Countries, `World`): *European countries with more than 50 millio
 - A step stays on screen for 60ms per caption character, at least 2.5s, or until Next.
 - Esc and Skip exit.
 - A step whose anchor is missing after 3s is skipped.
-- Back jumps to the nearest earlier step whose anchor is on screen, without replaying its actions.
+- Back goes to the previous step: the demo resets to the dashboard, the earlier steps' actions replay instantly under the overlay, then the step plays as usual. Back is disabled on the first step.
 - Clicks on the page are blocked; only the card's controls respond.
 
 ## Sandbox
@@ -93,7 +93,7 @@ A "How it works" slide before "Let's get this party started!" embeds `<iframe sr
   - next / back / pause / skip move as named; next on the last step ends the tour
   - a step whose anchor is missing is not playable
   - on narrow screens `narrowAnchor` wins over `anchor`
-  - Back skips steps that are not on the current screen
+  - back moves to the previous step and stays put on the first
 - `shouldAutoStart`: true only for a registered player without `tutorialSeen`
 - every `anchor` and `narrowAnchor` in `steps.ts` appears as a `data-tour` value in `sql-front/src`
 
