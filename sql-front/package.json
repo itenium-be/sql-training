@@ -30,7 +30,8 @@
     "react-bootstrap": "^2.10.10",
     "react-dom": "^19.3.1",
     "react-redux": "^9.3.1",
-    "react-router-dom": "^7.18.5"
+    "react-router-dom": "^7.18.5",
+    "style-mod": "^4.1.5"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

@@ -72,7 +72,7 @@ function ExerciseIntro({exercise, onStart}: {exercise: ExerciseModel, onStart: (
       {tab === 'sample' ? (
         <>
           <SampleNote query={exercise.sampleQuery} />
-          <SampleQuery query={exercise.sampleQuery} className="df-sample-query" />
+          <SampleQuery query={exercise.sampleQuery} game={exercise.id} className="df-sample-query" />
           <div className="df-sample-returns">↓ returns</div>
           <ExerciseSampleData />
         </>
@@ -502,7 +502,7 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
                 )}
                 {resultTab === 'sample' && (
                   <>
-                    <SampleQuery query={exercise.sampleQuery} className="df-sample-query" />
+                    <SampleQuery query={exercise.sampleQuery} game={exercise.id} className="df-sample-query" />
                     <ExerciseSampleData />
                   </>
                 )}

@@ -1,11 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
-import { MSSQL, PostgreSQL, sql } from "@codemirror/lang-sql";
+import { sql } from "@codemirror/lang-sql";
 import { Diagnostic, linter, lintGutter } from "@codemirror/lint";
-import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
+import { syntaxHighlighting } from "@codemirror/language";
 import { EditorView, keymap, placeholder } from "@codemirror/view";
 import { Prec } from "@codemirror/state";
-import { tags as t } from "@lezer/highlight";
 import { acceptCompletion, completeFromList } from "@codemirror/autocomplete";
 import { config } from "../config";
 import { SqlSchema } from "./schema";
@@ -13,6 +12,7 @@ import { loadSchema } from "./loadSchema";
 import { ExerciseId } from "./exerciseModels";
 import { pingActivity } from "./activityPing";
 import { telemetryExtension } from "./editorTelemetry";
+import { devfestHighlight, sqlDialect } from "./sqlHighlight";
 
 const SUBMIT_EVENT = 'sql-editor-submit';
 
@@ -85,19 +85,6 @@ const devfestTheme = EditorView.theme({
   },
 }, { dark: true });
 
-const devfestHighlight = HighlightStyle.define([
-  { tag: t.keyword, color: '#e9b44c', fontWeight: '600' },
-  { tag: [t.operatorKeyword, t.operator], color: '#e3a066' },
-  { tag: [t.string, t.special(t.string)], color: '#a9c97a' },
-  { tag: [t.number, t.bool, t.null], color: '#e98a5b' },
-  { tag: [t.typeName, t.standard(t.name)], color: '#7fb8d4' },
-  { tag: [t.function(t.variableName), t.function(t.name)], color: '#f0d28a' },
-  { tag: [t.lineComment, t.blockComment, t.comment], color: '#8a7a5c', fontStyle: 'italic' },
-  { tag: t.special(t.name), color: '#d9b8f0' },
-  { tag: [t.punctuation, t.paren, t.squareBracket, t.brace, t.separator], color: '#bfae8a' },
-  { tag: t.name, color: '#f0e2c2' },
-]);
-
 async function validate(game: string, text: string): Promise<SqlProblem[]> {
   const res = await fetch(`${config.api}/exercises/validate`, {
     method: 'POST',
@@ -138,7 +125,7 @@ export function SqlEditor({ game, exerciseId, value, onChange, onSubmit, height 
   }, [game]);
 
   const extensions = useMemo(() => {
-    const dialect = game === 'Worldcup' ? MSSQL : PostgreSQL;
+    const dialect = sqlDialect(game);
     const columns = new Map<string, string[]>();
     Object.entries(schema).forEach(([table, cols]) => cols.forEach(col => columns.set(col, [...(columns.get(col) ?? []), table])));
     const columnCompletions = completeFromList([...columns].map(([col, tables]) => ({ label: col, type: 'property', detail: tables.join(', '), boost: -1 })));
