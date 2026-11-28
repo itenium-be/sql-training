@@ -3,14 +3,18 @@ import { Modal } from "react-bootstrap";
 
 export function SampleQuery({query, className}: {query: string; className?: string}) {
   const [open, setOpen] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const [preRef, isClamped] = useIsClamped<HTMLPreElement>();
+  const preClass = [className, expanded && 'df-query-open'].filter(Boolean).join(' ');
 
   return (
     <div className="df-query-wrap">
-      <pre ref={preRef} className={className}>{query}</pre>
+      <pre ref={preRef} className={preClass}>{query}</pre>
       <button type="button" className="df-query-expand" aria-label="View full query" onClick={() => setOpen(true)}>⤢</button>
-      {isClamped && (
-        <button type="button" className="df-query-more" onClick={() => setOpen(true)}>Show full query ⤢</button>
+      {(isClamped || expanded) && (
+        <button type="button" className="df-query-more" onClick={() => setExpanded(!expanded)}>
+          {expanded ? 'Show less' : 'Show more…'}
+        </button>
       )}
       <Modal show={open} onHide={() => setOpen(false)} fullscreen>
         <Modal.Header closeButton>

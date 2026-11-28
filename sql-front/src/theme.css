@@ -1322,6 +1322,7 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
     /* Sized to the clamp height, not the element, so only a clamped query gets its last line faded */
     mask: linear-gradient(#000 calc(100% - 1.5em), transparent) top / 100% var(--df-query-clamp) no-repeat;
   }
+  .df-query-wrap pre.df-query-open { max-height: none; mask: none; }
   .df-query-expand {
     display: flex;
     align-items: center;
