@@ -215,3 +215,7 @@
 .join-compact .join-head { font-size: 1rem; margin-bottom: .2rem; }
 .join-compact .join-cap { margin-top: .35rem; }
 .join-compact .join-val, .join-compact .join-url { font-size: 1.35rem; }
+
+/* The game renders at desktop width and is scaled down, so the slide shows its wide layout. */
+.tour-frame { width: 852px; height: 479px; margin: 0 auto; overflow: hidden; border: 1px solid var(--df-border); border-radius: 12px; }
+.tour-frame iframe { width: 1375px; height: 773px; border: 0; transform: scale(.62); transform-origin: 0 0; }

@@ -123,6 +123,19 @@ layout: default
 layout: default
 ---
 
+<span class="eyebrow">How</span>
+<h1 class="!mb-3">How it <span class="gradient-gold">works</span></h1>
+
+<div class="tour-frame">
+  <iframe :src="`${$slidev.configs.gameUrl}/tutorial?loop`" title="Tutorial: a guided tour of the game" />
+</div>
+
+<img src="/img/itenium-logo.png" class="brand" alt="itenium" />
+
+---
+layout: default
+---
+
 <h1 class="!mb-2">Let’s get this <span class="gradient-copper">party</span> started!</h1>
 
 <JoinCards steps />
