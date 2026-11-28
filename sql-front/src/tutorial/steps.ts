@@ -18,7 +18,7 @@ const submit = (text: string): Action[] => [
 ];
 
 export const STEPS: Step[] = [
-  { anchor: 'posters', title: 'Four playgrounds', caption: 'From easy to expert, each on its own database. The bar shows how far you got.' },
+  { anchor: 'posters', title: 'Four playgrounds', caption: 'From easy to expert, each on its own database.' },
   { anchor: 'links', title: 'Leaderboard & slides', caption: 'See where you stand, or read the rules and prizes again. This tutorial lives here too.' },
   { anchor: 'poster', title: "Let's play", caption: 'Pick a playground to start.', actions: [{ do: 'click', anchor: 'poster' }] },
   { anchor: 'intro-sample-tab', title: 'Sample', caption: 'A peek at the real tables: get to know the data before you start.', actions: [{ do: 'click', anchor: 'intro-sample-tab' }] },
