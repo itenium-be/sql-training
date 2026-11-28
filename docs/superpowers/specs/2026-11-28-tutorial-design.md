@@ -8,7 +8,7 @@ Mockup: `design/tutorial/index.html`, variant **A · Spotlight**.
 
 ## Script
 
-`sql-front/src/tutorial/steps.ts` holds the 19 steps. A click that leaves a screen (Countries, Let's Start) is the next step's `enter`, so it only happens on Next:
+`sql-front/src/tutorial/steps.ts` holds the 19 steps. A click that leaves a screen (Countries, Let's Start) is the next step's `enter`, run instantly on Next:
 
 1. On the dashboard: the posters, then a click on Countries.
 2. On the intro: Example data, Diagram, Let's Start.

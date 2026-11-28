@@ -148,9 +148,9 @@ export function TourPlayer({steps, loop, onEnd, onRewind}: TourPlayerProps) {
       }
       const enter = step.enter ?? [];
       for (const [i, action] of enter.entries()) {
-        if (!await act(action, false)) return;
+        if (!await act(action, true)) return;
         applied.current = target + i + 1;
-        await sleep(700);
+        await sleep(REPLAY_MS);
       }
       const el = step.anchor ? await waitFor(step, alive) : null;
       if (!alive()) return;

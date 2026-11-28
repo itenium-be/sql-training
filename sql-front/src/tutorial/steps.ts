@@ -6,7 +6,7 @@ export type Action = Target & { do: 'click' } | Target & { do: 'type'; text: str
 export type Step = Target & {
   title: string;
   caption: string;
-  /** Run on arrival, before the step's anchor is looked up: the click that leaves the previous screen. */
+  /** Run instantly on arrival, before the step's anchor is looked up: the click that leaves the previous screen. */
   enter?: Action[];
   /** Run in order once the cursor reaches the step's anchor. */
   actions?: Action[];
