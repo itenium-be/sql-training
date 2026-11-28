@@ -5,7 +5,7 @@ export const teacherExercises: ExerciseModel = {
   name: "Teachers & Departments",
   sampleQuery:
     "SELECT t.name, t.phone, t.mobile, t.salary, employed_at, birth_date, d.name as dept_name, d.phone as dept_phone FROM teachers t JOIN departments d ON t.dept=d.id",
-  desc: "Be social, join tables! (postgres)",
+  desc: "Be social, join tables!",
   exercises: [
     {
       id: 1,

@@ -5,7 +5,7 @@ export const companyExercises: ExerciseModel = {
   id: "Company",
   name: "Big Company",
   sampleQuery: companySampleQuery,
-  desc: "2.5 million rows: JSON, recursion and window functions. Revenue = SUM(quantity * unit_price) of the delivered orders. Queries are killed after 5 seconds! (postgres)",
+  desc: "2.5 million rows: JSON, recursion and window functions. Revenue = SUM(quantity * unit_price) of the delivered orders. Queries are killed after 5 seconds!",
   schema: true,
   exercises: [
     {

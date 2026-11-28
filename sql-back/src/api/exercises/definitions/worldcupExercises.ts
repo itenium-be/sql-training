@@ -7,7 +7,7 @@ export const worldcupExercises: ExerciseModel = {
 FROM matches m JOIN teams t1 ON t1.id=m.team1_id JOIN countries c1 ON t1.country_id=c1.id
 JOIN teams t2 ON t2.id=m.team2_id JOIN countries c2 ON t2.country_id=c2.id
 JOIN rounds r ON m.round_id=r.id JOIN events e ON r.event_id=e.id`,
-  desc: "More tables. (sql server)",
+  desc: "More tables.",
   schema: true,
   exercises: [
     {

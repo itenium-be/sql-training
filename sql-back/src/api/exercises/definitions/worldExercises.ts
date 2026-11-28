@@ -4,7 +4,7 @@ export const worldExercises: ExerciseModel = {
   id: "World",
   name: "Countries of the world",
   sampleQuery: "SELECT id, name, continent, area, population, gdp, capital, tld FROM countries",
-  desc: "The starter exercises! (postgres database)",
+  desc: "The starter exercises!",
   exercises: [
     {
       id: 1,
