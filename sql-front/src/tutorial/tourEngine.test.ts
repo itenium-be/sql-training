@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { anchorFor, initialTour, playable, readMs, tour } from './tourEngine';
+import { actionsBefore, anchorFor, catchUp, initialTour, playable, tour } from './tourEngine';
 
 const count = 3;
 const at = (index: number) => ({ ...initialTour, index });
@@ -15,12 +15,6 @@ describe('tour', () => {
 
   test('back on the first step stays put', () => {
     expect(tour(at(0), 'back', count)).toEqual(at(0));
-  });
-
-  test('pause and resume toggle without moving', () => {
-    const paused = tour(at(1), 'pause', count);
-    expect(paused).toMatchObject({ index: 1, paused: true });
-    expect(tour(paused, 'resume', count)).toMatchObject({ index: 1, paused: false });
   });
 
   test('next on the last step ends the tour', () => {
@@ -67,12 +61,26 @@ describe('playable', () => {
   });
 });
 
-describe('readMs', () => {
-  test('60ms per character', () => {
-    expect(readMs('x'.repeat(100))).toBe(6000);
+describe('actionsBefore', () => {
+  const steps = [{ actions: [1, 2] }, {}, { actions: [3] }, { actions: [4] }];
+
+  test('counts the actions of every earlier step', () => {
+    expect(actionsBefore(steps, 0)).toBe(0);
+    expect(actionsBefore(steps, 2)).toBe(2);
+    expect(actionsBefore(steps, 3)).toBe(3);
+  });
+});
+
+describe('catchUp', () => {
+  test('replays the missing actions on top of the demo', () => {
+    expect(catchUp(2, 5)).toEqual({ reset: false, from: 2 });
   });
 
-  test('at least 2.5s', () => {
-    expect(readMs('Go!')).toBe(2500);
+  test('does nothing when the demo is already there', () => {
+    expect(catchUp(3, 3)).toEqual({ reset: false, from: 3 });
+  });
+
+  test('resets and replays from the start when the demo is ahead', () => {
+    expect(catchUp(5, 2)).toEqual({ reset: true, from: 0 });
   });
 });
