@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tutorial overlay mockup</title>
+<link rel="stylesheet" href="../dashboard/mock.css">
+<style>
+html, body { height: 100%; overflow: hidden; }
+.wrap { max-width: none; height: 100%; display: flex; flex-direction: column; }
+.ide { flex: 1; display: grid; grid-template-columns: 300px 1fr 230px; gap: 14px; min-height: 0; }
+.panel { padding: 14px; overflow: hidden; }
+.qhead { display: flex; justify-content: space-between; align-items: center; }
+.qhead h2 { margin: 0; }
+.pts { background: var(--df-gold); color: #1b1a2e; font-weight: 800; border-radius: 999px; padding: 2px 10px; font-size: .8rem; }
+.q { margin: 10px 0; color: var(--df-cream); font-size: .92rem; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; }
+.chip { font-family: 'JetBrains Mono', monospace; font-size: .75rem; border: 1px solid var(--df-border); border-radius: 8px; padding: 2px 8px; color: var(--df-cream); }
+.reveal { margin-top: 10px; border: 1px dashed var(--df-border); border-radius: 10px; padding: 8px; color: var(--df-muted); font-size: .85rem; }
+.ed { display: flex; flex-direction: column; gap: 12px; min-height: 0; }
+.edhead { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-bottom: 1px solid var(--df-border-soft); }
+.timer { margin-left: auto; font-family: 'JetBrains Mono', monospace; color: var(--df-muted); font-size: .85rem; }
+.run { background: var(--df-gold); color: #1b1a2e; border: 0; border-radius: 10px; padding: 6px 16px; font-weight: 800; }
+.code { padding: 14px; font-family: 'JetBrains Mono', monospace; font-size: .88rem; color: var(--df-cream); min-height: 90px; }
+.code .kw { color: var(--df-gold); }
+.rtabs { display: flex; gap: 4px; padding: 8px 8px 0; border-bottom: 1px solid var(--df-border-soft); }
+.rtabs span { padding: 6px 12px; font-size: .82rem; border-radius: 8px 8px 0 0; color: var(--df-muted); }
+.rtabs span.on { background: var(--df-surface); color: var(--df-cream); }
+.rbody { padding: 12px; font-family: 'JetBrains Mono', monospace; font-size: .8rem; color: var(--df-muted); flex: 1; }
+.schema h2 { font-size: .9rem; }
+.tbl { font-family: 'JetBrains Mono', monospace; font-size: .78rem; margin-bottom: 10px; }
+.tbl b { color: var(--df-gold); display: block; }
+.ltabs { display: none; gap: 4px; margin-bottom: 8px; }
+.ltabs span { flex: 1; text-align: center; padding: 6px; border: 1px solid var(--df-border); border-radius: 10px; font-size: .85rem; }
+.ltabs span.on { background: var(--df-surface); color: var(--df-cream); }
+@media (max-width: 700px) {
+  html, body { overflow: auto; }
+  .ide { display: flex; flex-direction: column; }
+  .schema { display: none; }
+  .ltabs { display: flex; }
+  .hdr .bsub { display: none; }
+}
+
+/* ---------- overlay (shared) ---------- */
+#cursor { position: fixed; left: 0; top: 0; z-index: 50; pointer-events: none; transition: transform .9s cubic-bezier(.5,0,.2,1); }
+#cursor svg { width: 28px; height: 28px; filter: drop-shadow(0 2px 4px rgba(0,0,0,.6)); }
+#cursor .tap { display: none; width: 34px; height: 34px; margin: -17px 0 0 -17px; border-radius: 50%; background: rgba(233,180,76,.35); border: 2px solid var(--df-gold); }
+.touch #cursor svg { display: none; }
+.touch #cursor .tap { display: block; }
+#cursor .ripple { position: absolute; left: -22px; top: -22px; width: 44px; height: 44px; border-radius: 50%; border: 3px solid var(--df-gold); opacity: 0; }
+#cursor.click .ripple { animation: rip .6s ease-out; }
+@keyframes rip { from { transform: scale(.3); opacity: 1 } to { transform: scale(1.6); opacity: 0 } }
+#hl { position: fixed; z-index: 40; pointer-events: none; border-radius: 12px; transition: all .6s cubic-bezier(.5,0,.2,1); }
+.cap { z-index: 60; background: var(--df-bg-raised); border: 1px solid var(--df-gold); border-radius: 14px; color: var(--df-cream); box-shadow: 0 10px 30px rgba(0,0,0,.5); }
+.cap h4 { margin: 0 0 4px; font-size: .95rem; color: var(--df-gold); }
+.cap p { margin: 0; font-size: .88rem; line-height: 1.4; }
+.cap .cost { color: var(--df-red); font-weight: 800; }
+.ctl { display: flex; align-items: center; gap: 6px; }
+.ctl button { background: var(--df-surface); border: 1px solid var(--df-border); color: var(--df-cream); border-radius: 8px; min-width: 32px; height: 30px; font-size: .8rem; }
+.ctl .n { font-family: 'JetBrains Mono', monospace; font-size: .75rem; color: var(--df-muted); margin-right: auto; }
+.ctl .skip { padding: 0 10px; }
+
+/* A · Spotlight: dim + cutout, caption card beside target, controls in card */
+.vA #hl { box-shadow: 0 0 0 9999px rgba(10,6,2,.72), 0 0 0 2px var(--df-gold); }
+.vA .cap { position: fixed; width: 300px; padding: 14px; transition: all .6s cubic-bezier(.5,0,.2,1); }
+.vA .cap .ctl { margin-top: 12px; }
+.vA.narrow .cap { left: 10px !important; right: 10px; bottom: 10px; top: auto !important; width: auto; }
+
+/* B · Ring: no dim, pulsing ring, tethered bubble, floating pill controls */
+.vB #hl { border: 2px solid var(--df-gold); animation: pulse 1.4s ease-in-out infinite; }
+@keyframes pulse { 50% { box-shadow: 0 0 0 8px rgba(233,180,76,.25) } }
+.vB .cap { position: fixed; width: 280px; padding: 12px 14px; transition: all .6s cubic-bezier(.5,0,.2,1); }
+.vB .cap::before { content: ''; position: absolute; top: -8px; left: 24px; width: 14px; height: 14px; background: var(--df-bg-raised); border-left: 1px solid var(--df-gold); border-top: 1px solid var(--df-gold); transform: rotate(45deg); }
+.vB .pill { position: fixed; z-index: 60; left: 50%; bottom: 18px; transform: translateX(-50%); background: rgba(31,23,15,.95); border: 1px solid var(--df-border); border-radius: 999px; padding: 6px 10px; }
+.vB.narrow .cap { left: 10px !important; right: 10px; width: auto; }
+
+/* C · Subtitles: glow on target, full-width bottom bar with segmented progress */
+.vC #hl { box-shadow: 0 0 0 2px var(--df-gold), 0 0 28px 6px rgba(233,180,76,.45); }
+.vC .bar { position: fixed; z-index: 60; left: 0; right: 0; bottom: 0; background: linear-gradient(transparent, rgba(10,6,2,.96) 30%); padding: 34px 24px 16px; }
+.vC .segs { display: flex; gap: 3px; margin-bottom: 10px; }
+.vC .segs i { flex: 1; height: 3px; border-radius: 2px; background: var(--df-border); }
+.vC .segs i.done { background: var(--df-gold); }
+.vC .bar .row { display: flex; align-items: flex-end; gap: 20px; max-width: 900px; margin: 0 auto; }
+.vC .bar .txt { flex: 1; }
+.vC .bar h4 { color: var(--df-gold); margin: 0 0 4px; font-size: 1rem; }
+.vC .bar p { margin: 0; color: var(--df-cream); font-size: 1.05rem; }
+.vC.narrow .bar .row { flex-direction: column; align-items: stretch; gap: 10px; }
+.vC.narrow .bar p { font-size: .92rem; }
+
+/* D · Narrator: soft dim, docked side panel with chapters; bottom sheet on phone */
+.vD #hl { box-shadow: 0 0 0 9999px rgba(10,6,2,.5), 0 0 0 2px var(--df-gold); }
+.vD .nar { position: fixed; z-index: 60; right: 16px; top: 70px; width: 270px; padding: 14px; }
+.vD .chap { display: flex; gap: 6px; margin-bottom: 12px; }
+.vD .chap span { flex: 1; font-family: 'JetBrains Mono', monospace; font-size: .65rem; text-transform: uppercase; letter-spacing: .1em; color: var(--df-muted); border-bottom: 3px solid var(--df-border); padding-bottom: 4px; }
+.vD .chap span.on { color: var(--df-gold); border-color: var(--df-gold); }
+.vD .chap span.done { border-color: var(--df-copper); }
+.vD .nar .ctl { margin-top: 12px; }
+.vD.narrow .nar { left: 0; right: 0; top: auto; bottom: 0; width: auto; border-radius: 18px 18px 0 0; }
+</style></head>
+<body>
+<div class="wrap">
+  <div class="hdr"><div class="brand"><div class="mark"></div><div><div class="bname">SQL Showdown</div><div class="bsub">Tutorial · demo data</div></div></div><div class="me"><div class="av">YOU</div></div></div>
+  <div class="ide">
+    <div class="card panel">
+      <div class="ltabs"><span class="on">Exercises</span><span data-tour-narrow="schema">Schema</span></div>
+      <div class="eyebrow">Countries · 12 exercises</div>
+      <div class="qhead"><h2>Exercise 3</h2><span class="pts" data-tour="points">10 pts</span></div>
+      <div class="q">List the countries in Europe with more than 50 million inhabitants.</div>
+      <div data-tour="columns"><div class="eyebrow">Expected columns</div>
+        <div class="chips"><span class="chip">name</span><span class="chip">population</span></div>
+        <div class="muted" style="font-size:.8rem">Order matters</div></div>
+      <div class="reveal" data-tour="hint">💡 Reveal hint <span class="cost">−1</span></div>
+    </div>
+    <div class="ed">
+      <div class="card">
+        <div class="edhead"><span class="muted">PG</span><span class="timer">00:42</span><button class="run" data-tour="run">Run ▶</button></div>
+        <div class="code"><span class="kw">SELECT</span> name, population<br><span class="kw">FROM</span> world<br><span class="kw">WHERE</span> continent = 'Europe'</div>
+      </div>
+      <div class="card" style="flex:1; display:flex; flex-direction:column">
+        <div class="rtabs"><span class="on">Your result</span><span data-tour="expected">🔒 Expected</span><span>Sample</span><span>Diagram</span></div>
+        <div class="rbody">name | population<br>Germany | 83 200 000<br>France | 68 000 000<br>…</div>
+      </div>
+    </div>
+    <div class="card panel schema" data-tour="schema"><h2>Schema</h2>
+      <div class="tbl"><b>world</b>name<br>continent<br>area<br>population<br>gdp</div>
+    </div>
+  </div>
+</div>
+
+<div id="hl"></div>
+<div id="cursor"><svg viewBox="0 0 24 24"><path d="M4 2l16 9-7 2-3 7z" fill="#f0e2c2" stroke="#16100a" stroke-width="1.5" stroke-linejoin="round"/></svg><div class="tap"></div><div class="ripple"></div></div>
+<div id="ui"></div>
+
+<script>
+const v = new URLSearchParams(location.search).get('v') || 'A';
+document.body.classList.add('v' + v);
+const narrow = () => innerWidth <= 700;
+const STEPS = [
+  {anchor: 'points', title: 'Points', text: 'Every exercise starts at its max. The badge drops as you spend help or miss.'},
+  {anchor: 'columns', title: 'Expected columns', text: 'Return exactly these columns. "Order matters" means rows too.'},
+  {anchor: 'schema', title: 'Schema', text: 'All tables and columns. The editor autocompletes them too.'},
+  {anchor: 'run', title: 'Run', click: true, text: 'Wrong? The diff shows what is off. Every 3 wrong attempts cost <span class="cost">−1</span>.'},
+  {anchor: 'expected', title: 'Expected result', click: true, text: 'Peek at the target result for <span class="cost">−1</span>.'},
+];
+const CHAPTERS = ['Dashboard', 'Intro', 'Exercise'];
+let i = 0;
+const ctl = () => `<div class="ctl"><span class="n">${i + 7}/16</span><button>◀</button><button>❚❚</button><button>▶</button><button class="skip">Skip</button></div>`;
+
+function target(s) {
+  return narrow() && document.querySelector(`[data-tour-narrow="${s.anchor}"]`) || document.querySelector(`[data-tour="${s.anchor}"]`);
+}
+
+function render() {
+  document.body.classList.toggle('narrow', narrow());
+  document.body.classList.toggle('touch', narrow());
+  const s = STEPS[i];
+  const r = target(s).getBoundingClientRect();
+  const pad = 6;
+  Object.assign(document.getElementById('hl').style, {left: r.left - pad + 'px', top: r.top - pad + 'px', width: r.width + 2 * pad + 'px', height: r.height + 2 * pad + 'px'});
+  const cur = document.getElementById('cursor');
+  cur.style.transform = `translate(${r.left + r.width * .6}px, ${r.top + r.height * .6}px)`;
+  cur.classList.remove('click');
+  if (s.click) setTimeout(() => cur.classList.add('click'), 1000);
+
+  const ui = document.getElementById('ui');
+  const body = `<h4>${s.title}</h4><p>${s.text}</p>`;
+  if (v === 'A' || v === 'B') {
+    ui.innerHTML = `<div class="cap">${body}${v === 'A' ? ctl() : ''}</div>${v === 'B' ? `<div class="pill">${ctl()}</div>` : ''}`;
+    const cap = ui.querySelector('.cap');
+    const below = r.bottom + 14 + cap.offsetHeight < innerHeight - (v === 'B' ? 60 : 0);
+    let left = Math.min(Math.max(10, r.left), innerWidth - cap.offsetWidth - 10);
+    if (v === 'A' && !narrow() && r.right + 320 < innerWidth) { cap.style.left = r.right + 18 + 'px'; cap.style.top = r.top + 'px'; return; }
+    cap.style.left = left + 'px';
+    cap.style.top = (below ? r.bottom + 14 : r.top - cap.offsetHeight - 14) + 'px';
+  } else if (v === 'C') {
+    ui.innerHTML = `<div class="bar"><div class="segs">${Array.from({length: 16}, (_, k) => `<i class="${k <= i + 6 ? 'done' : ''}"></i>`).join('')}</div><div class="row"><div class="txt">${body}</div>${ctl()}</div></div>`;
+  } else {
+    ui.innerHTML = `<div class="cap nar"><div class="chap">${CHAPTERS.map((c, k) => `<span class="${k === 2 ? 'on' : 'done'}">${c}</span>`).join('')}</div>${body}${ctl()}</div>`;
+  }
+}
+
+render();
+setInterval(() => { i = (i + 1) % STEPS.length; render(); }, 3200);
+addEventListener('resize', render);
+</script>
+</body></html>
