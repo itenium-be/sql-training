@@ -1299,6 +1299,7 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
 
 @media (max-width: 820px) {
   .df-intro-meta { margin-bottom: 8px; }
+  .df-intro-meta .df-pill { margin-bottom: 0; }
   .df-mobile-only { display: inline-block; margin-bottom: 20px; }
   .df-query-wrap pre { padding-right: 44px; }
   .df-query-expand {
