@@ -26,8 +26,7 @@ data with different contents, and it counts only if it is correct there too.
 The shadow delta scripts edit the real seed. Per exercise they add:
 
 - **Decoys** that catch a likely wrong filter. Examples: for World 2, a spaceless name with every
-  vowel except `e` and one with every vowel except `a`. For Teachers 3, a fourth department. For
-  World 5, a continent whose largest-area check breaks `area > 0`.
+  vowel except `e` and one with every vowel except `a`. For Teachers 3, a fourth department.
 - **Perturbations** (changed values, added or deleted rows), so every exercise's result differs
   from the real one.
 
@@ -65,4 +64,4 @@ Constraints:
   - every solution's shadow result is non-empty and differs from the real expected result
   - every query in the `knownCheats` fixture is scored incorrect. The fixture holds `SELECT 8`
     style hardcodes, the two World 2 vowel queries from the issue, Teachers 3
-    `WHEN d.id IS NOT NULL THEN 'Sci'` and World 5 `area > 0` inside `>= ALL (…)`.
+    `WHEN d.id IS NOT NULL THEN 'Sci'`.

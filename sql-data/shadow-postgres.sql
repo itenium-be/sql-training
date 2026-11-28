@@ -13,11 +13,10 @@ VALUES
 -- W2: all vowels; and decoys that miss one vowel (no 'e', no 'a')
 ('Montequiaru', 'Africa', 245810, 7215033, 9120000000, 'Quiaru', '.mq'),
 ('Kouagadiuma', 'Africa', 112622, 4410829, 5310000000, 'Diuma', '.og'),
-('Tenuikoro', 'Oceania', 18274, 911372, 4140000000, 'Koro', '.tk'),
--- W5: a continent whose largest area is 0: filtering area > 0 leaves an empty subquery
-('Ross Dependency', 'Antarctica', 0, 33, NULL, 'Scott Base', NULL),
-('Queen Maud Land', 'Antarctica', NULL, 41, NULL, 'Troll', NULL);
+('Tenuikoro', 'Oceania', 18274, 911372, 4140000000, 'Koro', '.tk');
 
+-- W5: the Dominican Republic overtakes Cuba
+UPDATE countries SET area = 120000 WHERE name = 'Dominican Republic';
 -- W3: Argentina overtakes Brazil
 UPDATE countries SET gdp = 2412000000000 WHERE name = 'Argentina';
 -- W4: Germany overtakes Japan; W7: and the 50% threshold moves

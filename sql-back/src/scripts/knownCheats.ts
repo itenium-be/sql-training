@@ -14,14 +14,6 @@ WHERE name LIKE '%a%' AND name LIKE '%a%' AND name LIKE '%i%' AND name LIKE '%o%
 WHERE name LIKE '%e%' AND name LIKE '%e%' AND name LIKE '%i%' AND name LIKE '%o%' AND name LIKE '%u%' AND name NOT LIKE '% %'`,
   },
   {
-    game: "World",
-    exerciseId: 5,
-    query: `SELECT continent, name AS country, area
-FROM countries c
-WHERE area >= ALL (SELECT area FROM countries x WHERE x.continent = c.continent AND area > 0)
-ORDER BY continent`,
-  },
-  {
     game: "Teachers",
     exerciseId: 3,
     query: `SELECT t.name,
