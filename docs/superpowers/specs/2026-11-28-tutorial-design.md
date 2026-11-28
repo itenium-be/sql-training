@@ -31,14 +31,14 @@ Demo question (Countries, `World`): *European countries with more than 50 millio
 
 ## Overlay
 
-- Spotlight: everything but the target is dimmed. The caption card sits beside the target, with the controls inside it: step `n/20`, Back, Pause, Next, Skip.
+- Spotlight: everything but the target is dimmed. The caption card sits beside the target, with the controls inside it: step `n/19`, Back, Next, Skip.
 - Narrow (≤1100px, the exercise page's own breakpoint): a step uses its `narrowAnchor` when it has one (e.g. the Schema tab instead of the side panel). The card docks at the bottom.
 - Touch (`pointer: coarse`): a tap ripple replaces the arrow cursor.
 - The target is scrolled into view before the cursor moves.
-- A step stays on screen for 60ms per caption character, at least 2.5s, or until Next.
+- The tour only moves on Next / Back (or → / ←); a step stays until then.
 - Esc and Skip exit.
 - A step whose anchor is missing after 3s is skipped.
-- Back goes to the previous step: the demo resets to the dashboard, the earlier steps' actions replay instantly under the overlay, then the step plays as usual. Back is disabled on the first step.
+- Entering a step first brings the demo to the state after all earlier steps' actions: missing actions replay instantly, and a demo that is ahead (after Back) resets to the dashboard first. Next during a step's animation thus finishes its cut-off actions, and Back over steps without actions resets nothing. Back is disabled on the first step.
 - Clicks on the page are blocked; only the card's controls respond.
 
 ## Sandbox
@@ -74,7 +74,7 @@ A "How it works" slide before "Let's get this party started!" embeds `<iframe sr
 | `tutorial/fakeApi.ts`       | pure `(url, init) → {status, body}` over `demoData`; tracks attempts, hint, expected and solved                |
 | `tutorial/sandbox.ts`       | installs `fakeApi` as `fetch` and the in-memory `localStorage`                                                 |
 | `tutorial/steps.ts`         | the script: `{anchor, narrowAnchor?, action: hover \| click \| type, text?, caption}`                          |
-| `tutorial/tourEngine.ts`    | pure: current step, pause / back / next / skip, anchor per layout, Back target, reading time                   |
+| `tutorial/tourEngine.ts`    | pure: current step, back / next / skip, anchor per layout, how to catch the demo up to a step                  |
 | `tutorial/autoStart.ts`     | pure `shouldAutoStart(storage, registered)`                                                                    |
 | `tutorial/TourPlayer.tsx`   | spotlight, cursor or tap ripple, caption card; fires real DOM clicks; types into CodeMirror via `EditorView`   |
 | `tutorial/Tutorial.tsx`     | the page: sandbox, store, `MemoryRouter`, `Dashboard` / `Exercise`, `TourPlayer`                               |
@@ -90,10 +90,11 @@ A "How it works" slide before "Let's get this party started!" embeds `<iframe sr
   - the correct query solves the exercise
   - an `/api` URL outside its table throws
 - `tourEngine`
-  - next / back / pause / skip move as named; next on the last step ends the tour
+  - next / back / skip move as named; next on the last step ends the tour
   - a step whose anchor is missing is not playable
   - on narrow screens `narrowAnchor` wins over `anchor`
   - back moves to the previous step and stays put on the first
+  - catching up replays only the missing actions, and starts over when the demo is ahead
 - `shouldAutoStart`: true only for a registered player without `tutorialSeen`
 - every `anchor` and `narrowAnchor` in `steps.ts` appears as a `data-tour` value in `sql-front/src`
 
