@@ -1371,3 +1371,27 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
   .df-alldone-head h2 { width: 100%; }
   .df-alldone-cta { width: 100%; }
 }
+
+.df-sample-note {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin: 12px 0;
+  padding: 9px 12px;
+  background: rgba(233, 180, 76, 0.08);
+  border: 1px solid rgba(233, 180, 76, 0.35);
+  border-left: 3px solid var(--df-gold);
+  border-radius: 8px;
+  font-size: .9rem;
+  line-height: 1.45;
+}
+.df-sample-note code { color: var(--df-gold); }
+.df-sample-returns {
+  margin: -4px 0 8px;
+  text-align: center;
+  color: var(--df-copper);
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}

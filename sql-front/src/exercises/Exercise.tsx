@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Button from 'react-bootstrap/Button';
 import Badge from 'react-bootstrap/Badge';
 import { ATTEMPTS_PER_PENALTY, ExerciseDetails, ExerciseId, ExerciseModel, ExpectedModel, SqlExerciseModel } from "./exerciseModels";
@@ -6,6 +6,7 @@ import { livePoints } from "./livePoints";
 import { ExerciseSampleData, ExercisesData } from "./ExerciseSampleData";
 import { ResultDiffTable } from "./ResultDiffTable";
 import { SampleQuery } from "./SampleQuery";
+import { sampleTables } from "./sampleTables";
 import { authFetch, config } from "../config";
 import { useAppDispatch, useAppSelector } from "../store";
 import { Alert, Modal } from "react-bootstrap";
@@ -62,15 +63,17 @@ function ExerciseIntro({exercise, onStart}: {exercise: ExerciseModel, onStart: (
       <p className="df-intro-desc">{exercise.desc}</p>
       <ExerciseMeta exercise={exercise} />
       <div className="df-rtabs" role="tablist">
-        <button type="button" role="tab" aria-selected={tab === 'sample'} onClick={() => setTab('sample')}>Example Data</button>
+        <button type="button" role="tab" aria-selected={tab === 'sample'} onClick={() => setTab('sample')}>Sample</button>
         <button type="button" role="tab" aria-selected={tab === 'diagram'} onClick={() => setTab('diagram')}>Diagram</button>
       </div>
       {tab === 'sample' ? (
         <>
-          <SampleQuery query={exercise.sampleQuery} />
           <Button variant="success" className="df-mobile-only" onClick={onStart}>
             Let's Start
           </Button>
+          <SampleNote query={exercise.sampleQuery} />
+          <SampleQuery query={exercise.sampleQuery} className="df-sample-query" />
+          <div className="df-sample-returns">↓ returns</div>
           <ExerciseSampleData />
         </>
       ) : (
@@ -82,6 +85,21 @@ function ExerciseIntro({exercise, onStart}: {exercise: ExerciseModel, onStart: (
         Let's Start
       </Button>
     </>
+  );
+}
+
+
+function SampleNote({query}: {query: string}) {
+  const tables = sampleTables(query);
+  return (
+    <div className="df-sample-note">
+      <span aria-hidden="true">💡</span>
+      <span>
+        A peek at the real {tables.map((t, i) => (
+          <Fragment key={t}>{i > 0 && (i === tables.length - 1 ? ' and ' : ', ')}<code>{t}</code></Fragment>
+        ))} {tables.length === 1 ? 'table' : 'tables'} — the exercises run against exactly this data.
+      </span>
+    </div>
   );
 }
 
