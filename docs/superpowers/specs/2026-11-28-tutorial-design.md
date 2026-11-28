@@ -8,43 +8,38 @@ Mockup: `design/tutorial/index.html`, variant **A · Spotlight**.
 
 ## Script
 
-| #  | Screen      | Anchor                    | Cursor                              | Caption (gist)                                                   |
-| -- | ----------- | ------------------------- | ----------------------------------- | ---------------------------------------------------------------- |
-| 1  | Dashboard   | posters                   | hover                               | Four playgrounds: difficulty, database, your progress            |
-| 2  | Dashboard   | links                     | hover                               | Your standing; rules & prizes                                    |
-| 3  | Dashboard   | Countries poster          | click                               | —                                                                |
-| 4  | Intro       | Example Data tab          | click                               | Sample query + rows: know the data before you start              |
-| 5  | Intro       | Diagram tab               | click                               | How the tables relate                                            |
-| 6  | Intro       | Let's Start               | click                               | The clock starts when you first open a question                  |
-| 7  | Exercise    | question card + points    | hover                               | Max points; the badge drops as you spend                         |
-| 8  | Exercise    | expected columns          | hover                               | Exactly these columns; whether order counts                      |
-| 9  | Exercise    | schema panel / Schema tab | hover                               | Tables & columns; the editor autocompletes them                  |
-| 10 | Exercise    | editor + Run              | type + click, 3 times               | The diff shows what's off; every 3 wrong attempts = −1           |
-| 11 | Exercise    | Hint                      | click                               | −1                                                               |
-| 12 | Exercise    | 🔒 Expected tab           | click                               | The target result, −1                                            |
-| 13 | Exercise    | Sample data / Diagram tab | click                               | Same as the intro, always at hand                                |
-| 14 | Exercise    | editor + Run              | type + click                        | Solved; Fastest / Shortest / Leanest; others' solutions          |
-| 15 | Exercise    | Give up / Next            | hover                               | Give up = 0 points, but you see the solution                     |
-| 16 | Dashboard   | —                         | —                                   | Go!                                                              |
+`sql-front/src/tutorial/steps.ts` holds the 20 steps:
 
-Demo question (Countries, `world`): *European countries with more than 50 million inhabitants, largest first.*
+1. On the dashboard: the posters, the links, then a click on Countries.
+2. On the intro: Example data, Diagram, Let's Start.
+3. On the exercise:
+   - the question, the expected columns and the schema
+   - three wrong submits; each shows *Query result does not match expected output!*, and the third lowers the badge by 1
+   - reveal Expected (−1), after which the Your result tab marks the row-order difference
+   - Hint (−1), the Sample tab and Give up
+   - the correct submit, then the solutions
+4. A closing card.
 
-| Attempt | Query flaw           | The player sees                               |
-| ------- | -------------------- | --------------------------------------------- |
-| 1       | no population filter | the diff marks extra rows                     |
-| 2       | `SELECT *`           | a column mismatch with the expected columns   |
-| 3       | no `ORDER BY`        | the diff marks row order; the badge drops 1   |
-| 4       | correct              | solved                                        |
+Demo question (Countries, `World`): *European countries with more than 50 million inhabitants, largest first.*
+
+| Attempt | Query flaw           |
+| ------- | -------------------- |
+| 1       | no population filter |
+| 2       | `SELECT *`           |
+| 3       | no `ORDER BY`        |
+| 4       | correct              |
 
 ## Overlay
 
-- Spotlight: everything but the target is dimmed. The caption card sits beside the target, with the controls inside it: step `n/16`, Back, Pause, Next, Skip.
+- Spotlight: everything but the target is dimmed. The caption card sits beside the target, with the controls inside it: step `n/20`, Back, Pause, Next, Skip.
 - Narrow (≤1100px, the exercise page's own breakpoint): a step uses its `narrowAnchor` when it has one (e.g. the Schema tab instead of the side panel). The card docks at the bottom.
 - Touch (`pointer: coarse`): a tap ripple replaces the arrow cursor.
 - The target is scrolled into view before the cursor moves.
 - A step stays on screen for 60ms per caption character, at least 2.5s, or until Next.
 - Esc and Skip exit.
-- A step whose anchor is missing in the current layout is skipped.
+- A step whose anchor is missing after 3s is skipped.
+- Back jumps to the nearest earlier step whose anchor is on screen, without replaying its actions.
+- Clicks on the page are blocked; only the card's controls respond.
 
 ## Sandbox
 
@@ -61,14 +56,14 @@ The fake API applies the server's scoring rules through `livePoints` and the exi
 
 ## Starting
 
-- A registered player who opens the dashboard without `tutorialSeen` in `localStorage` is sent to `/tutorial`.
+- A registered player who opens `/` (`Home`) without `tutorialSeen` in `localStorage` is sent to `/tutorial`.
 - A "How it works" card beside Leaderboard and Slides replays it.
 - On exit `tutorialSeen` is set in the real `localStorage` and the player goes to `/`.
-- `?autoplay&loop` (the slides) wraps from the last step to the first and never sets `tutorialSeen`.
+- `?loop` (the slides): the last step restarts the tour with a fresh store and fake API; Skip is hidden; `tutorialSeen` is never set.
 
 ## Slides
 
-A "How it works" slide before "Let's get this party started!" embeds `<iframe src="{gameUrl}/tutorial?autoplay&loop">`.
+A "How it works" slide before "Let's get this party started!" embeds `<iframe src="{gameUrl}/tutorial?loop">`, rendered at 1375px and scaled down so it shows the wide layout.
 `gameUrl` comes from the slides frontmatter; behind nginx on the minipc the slides and the game share the origin.
 
 ## Placement
@@ -79,7 +74,7 @@ A "How it works" slide before "Let's get this party started!" embeds `<iframe sr
 | `tutorial/fakeApi.ts`       | pure `(url, init) → {status, body}` over `demoData`; tracks attempts, hint, expected and solved                |
 | `tutorial/sandbox.ts`       | installs `fakeApi` as `fetch` and the in-memory `localStorage`                                                 |
 | `tutorial/steps.ts`         | the script: `{anchor, narrowAnchor?, action: hover \| click \| type, text?, caption}`                          |
-| `tutorial/tourEngine.ts`    | pure: current step, play / pause / back / next / skip, missing-anchor skip, loop                              |
+| `tutorial/tourEngine.ts`    | pure: current step, pause / back / next / skip, anchor per layout, Back target, reading time                   |
 | `tutorial/autoStart.ts`     | pure `shouldAutoStart(storage, registered)`                                                                    |
 | `tutorial/TourPlayer.tsx`   | spotlight, cursor or tap ripple, caption card; fires real DOM clicks; types into CodeMirror via `EditorView`   |
 | `tutorial/Tutorial.tsx`     | the page: sandbox, store, `MemoryRouter`, `Dashboard` / `Exercise`, `TourPlayer`                               |
@@ -95,11 +90,16 @@ A "How it works" slide before "Let's get this party started!" embeds `<iframe sr
   - the correct query solves the exercise
   - an `/api` URL outside its table throws
 - `tourEngine`
-  - next / back / pause / skip move as named; back on the first step stays there
-  - a step whose anchor is missing is skipped
+  - next / back / pause / skip move as named; next on the last step ends the tour
+  - a step whose anchor is missing is not playable
   - on narrow screens `narrowAnchor` wins over `anchor`
-  - with `loop` the last step wraps to the first; without it the tour ends
+  - Back skips steps that are not on the current screen
 - `shouldAutoStart`: true only for a registered player without `tutorialSeen`
 - every `anchor` and `narrowAnchor` in `steps.ts` appears as a `data-tour` value in `sql-front/src`
 
-Browser (`browser_evaluate`, at 1375px and 390px): every step resolves its target and the fake fetch saw no unknown URL.
+Browser, at 1375px, 1000px and 390px with touch:
+- every step shows its spotlight and a card in view
+- the badge reads 6 → 5 → 4 → 3
+- no `/api` request reaches the network
+- a real draft survives
+- the tour ends on `/` with `tutorialSeen` set; with `?loop` it restarts and leaves `tutorialSeen` unset
