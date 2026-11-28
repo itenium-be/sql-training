@@ -8,7 +8,7 @@ Mockup: `design/tutorial/index.html`, variant **A · Spotlight**.
 
 ## Script
 
-`sql-front/src/tutorial/steps.ts` holds the 20 steps:
+`sql-front/src/tutorial/steps.ts` holds the 19 steps. A click that leaves a screen (Countries, Let's Start) is the next step's `enter`, so it only happens on Next:
 
 1. On the dashboard: the posters, then a click on Countries.
 2. On the intro: Example data, Diagram, Let's Start.
@@ -73,7 +73,7 @@ A "How it works" slide before "Let's get this party started!" embeds `<iframe sr
 | `tutorial/demoData.ts`      | canned definitions, sample data, schema, the question, the 3 wrong results and the correct one                 |
 | `tutorial/fakeApi.ts`       | pure `(url, init) → {status, body}` over `demoData`; tracks attempts, hint, expected and solved                |
 | `tutorial/sandbox.ts`       | installs `fakeApi` as `fetch` and the in-memory `localStorage`                                                 |
-| `tutorial/steps.ts`         | the script: `{anchor, narrowAnchor?, action: hover \| click \| type, text?, caption}`                          |
+| `tutorial/steps.ts`         | the script: `{anchor, narrowAnchor?, title, caption, enter?, actions?}`, actions `click \| type`               |
 | `tutorial/tourEngine.ts`    | pure: current step, back / next / skip, anchor per layout, how to catch the demo up to a step                  |
 | `tutorial/autoStart.ts`     | pure `shouldAutoStart(storage, registered)`                                                                    |
 | `tutorial/TourPlayer.tsx`   | spotlight, cursor or tap ripple, caption card; fires real DOM clicks; types into CodeMirror via `EditorView`   |
@@ -96,7 +96,7 @@ A "How it works" slide before "Let's get this party started!" embeds `<iframe sr
   - back moves to the previous step and stays put on the first
   - catching up replays only the missing actions, and starts over when the demo is ahead
 - `shouldAutoStart`: true only for a registered player without `tutorialSeen`
-- every `anchor` and `narrowAnchor` in `steps.ts` appears as a `data-tour` value in `sql-front/src`
+- every `anchor` and `narrowAnchor` in `steps.ts`, including those of `enter` and `actions`, appears as a `data-tour` value in `sql-front/src`
 
 Browser, at 1375px, 1000px and 390px with touch:
 - every step shows its spotlight and a card in view
