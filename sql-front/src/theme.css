@@ -1301,7 +1301,17 @@ h2 { margin-top: 1.25rem; font-size: 1.6rem; }
   .df-intro-meta { margin-bottom: 8px; }
   .df-intro-meta .df-pill { margin-bottom: 0; }
   .df-mobile-only { display: inline-block; margin-bottom: 20px; }
-  .df-query-wrap pre { padding-right: 44px; }
+  .df-query-wrap pre {
+    --df-query-clamp: calc(6em + 20px);
+    padding-right: 44px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    max-height: var(--df-query-clamp);
+    overflow: hidden;
+    /* Sized to the clamp height, not the element, so only a clamped query gets its last line faded */
+    mask: linear-gradient(#000 calc(100% - 1.5em), transparent) top / 100% var(--df-query-clamp) no-repeat;
+  }
   .df-query-expand {
     display: flex;
     align-items: center;
