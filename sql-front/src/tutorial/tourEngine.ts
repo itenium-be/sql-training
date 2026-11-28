@@ -33,8 +33,8 @@ export function playable(target: Target, narrow: boolean, exists: (anchor: strin
   return anchor === undefined || exists(anchor);
 }
 
-export function actionsBefore(steps: { actions?: unknown[] }[], index: number): number {
-  return steps.slice(0, index).reduce((n, step) => n + (step.actions?.length ?? 0), 0);
+export function actionsBefore(steps: { enter?: unknown[]; actions?: unknown[] }[], index: number): number {
+  return steps.slice(0, index).reduce((n, step) => n + (step.enter?.length ?? 0) + (step.actions?.length ?? 0), 0);
 }
 
 /** How to bring a demo that has run `applied` actions to exactly `target`: actions only add, so a demo ahead of the target starts over. */

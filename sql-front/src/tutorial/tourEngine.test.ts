@@ -62,12 +62,12 @@ describe('playable', () => {
 });
 
 describe('actionsBefore', () => {
-  const steps = [{ actions: [1, 2] }, {}, { actions: [3] }, { actions: [4] }];
+  const steps = [{ actions: [1, 2] }, {}, { enter: [3], actions: [4] }, { actions: [5] }];
 
-  test('counts the actions of every earlier step', () => {
+  test('counts the enter and actions of every earlier step', () => {
     expect(actionsBefore(steps, 0)).toBe(0);
     expect(actionsBefore(steps, 2)).toBe(2);
-    expect(actionsBefore(steps, 3)).toBe(3);
+    expect(actionsBefore(steps, 3)).toBe(4);
   });
 });
 

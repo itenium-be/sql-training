@@ -9,7 +9,7 @@ const tagged = new Set(
   [...new Glob('**/*.tsx').scanSync(src)]
     .flatMap(file => [...readFileSync(join(src, file), 'utf8').matchAll(/data-tour="([^"]+)"/g)].map(m => m[1])),
 );
-const anchors = STEPS.flatMap(step => [step, ...(step.actions ?? [])])
+const anchors = STEPS.flatMap(step => [step, ...(step.enter ?? []), ...(step.actions ?? [])])
   .flatMap(target => [target.anchor, target.narrowAnchor])
   .filter((anchor): anchor is string => anchor !== undefined);
 

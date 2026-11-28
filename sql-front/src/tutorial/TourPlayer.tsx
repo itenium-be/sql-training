@@ -82,7 +82,7 @@ export function TourPlayer({steps, loop, onEnd, onRewind}: TourPlayerProps) {
   const [clicking, setClicking] = useState(0);
   const [cardHeight, setCardHeight] = useState(160);
   const step = steps[state.index];
-  const actions = useMemo(() => steps.flatMap(s => s.actions ?? []), [steps]);
+  const actions = useMemo(() => steps.flatMap(s => [...(s.enter ?? []), ...(s.actions ?? [])]), [steps]);
   /** How many of `actions` the demo on screen has run. */
   const applied = useRef(0);
   const touch = window.matchMedia(TOUCH).matches;
@@ -102,7 +102,8 @@ export function TourPlayer({steps, loop, onEnd, onRewind}: TourPlayerProps) {
   }, [loop]);
 
   useEffect(() => {
-    const timer = setInterval(() => setSpotRect(spot.current && rectOf(spot.current)), 100);
+    // A spotlit element that leaves the page (the hint button becoming the hint) keeps its last box rather than jumping to 0,0.
+    const timer = setInterval(() => setSpotRect(prev => spot.current && (spot.current.isConnected ? rectOf(spot.current) : prev)), 100);
     return () => clearInterval(timer);
   }, []);
 
@@ -145,6 +146,12 @@ export function TourPlayer({steps, loop, onEnd, onRewind}: TourPlayerProps) {
         applied.current = i + 1;
         await sleep(REPLAY_MS);
       }
+      const enter = step.enter ?? [];
+      for (const [i, action] of enter.entries()) {
+        if (!await act(action, false)) return;
+        applied.current = target + i + 1;
+        await sleep(700);
+      }
       const el = step.anchor ? await waitFor(step, alive) : null;
       if (!alive()) return;
       spot.current = el;
@@ -155,7 +162,7 @@ export function TourPlayer({steps, loop, onEnd, onRewind}: TourPlayerProps) {
       if (el) await pointAt(el);
       for (const [i, action] of (step.actions ?? []).entries()) {
         if (!await act(action, false)) return;
-        applied.current = target + i + 1;
+        applied.current = target + enter.length + i + 1;
         await sleep(700);
       }
     };

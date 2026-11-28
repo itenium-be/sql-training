@@ -6,6 +6,8 @@ export type Action = Target & { do: 'click' } | Target & { do: 'type'; text: str
 export type Step = Target & {
   title: string;
   caption: string;
+  /** Run on arrival, before the step's anchor is looked up: the click that leaves the previous screen. */
+  enter?: Action[];
   /** Run in order once the cursor reaches the step's anchor. */
   actions?: Action[];
 };
@@ -19,11 +21,11 @@ const submit = (text: string): Action[] => [
 
 export const STEPS: Step[] = [
   { anchor: 'posters', title: 'Four playgrounds', caption: 'From easy to expert, each on its own database.' },
-  { anchor: 'poster', title: "Let's play", caption: 'Pick a playground to start.', actions: [{ do: 'click', anchor: 'poster' }] },
-  { anchor: 'intro-sample-tab', title: 'Sample', caption: 'A peek at the real tables: get to know the data before you start.', actions: [{ do: 'click', anchor: 'intro-sample-tab' }] },
+  { anchor: 'poster', title: "Let's play", caption: 'Pick a playground to start.' },
+  { anchor: 'intro-sample-tab', title: 'Sample', caption: 'A peek at the real tables: get to know the data before you start.', enter: [{ do: 'click', anchor: 'poster' }], actions: [{ do: 'click', anchor: 'intro-sample-tab' }] },
   { anchor: 'intro-diagram-tab', title: 'Diagram', caption: 'How the tables relate to each other.', actions: [{ do: 'click', anchor: 'intro-diagram-tab' }] },
-  { anchor: 'start', title: 'The clock starts', caption: 'Each question is timed from the moment you first open it. Fastest earns a bonus.', actions: [{ do: 'click', anchor: 'start' }] },
-  { anchor: 'question', title: 'The question', caption: 'The badge shows the points it is worth. Help and wrong answers lower it.' },
+  { anchor: 'start', title: 'The clock starts', caption: 'Each question is timed from the moment you first open it. Fastest earns a bonus.' },
+  { anchor: 'question', title: 'The question', caption: 'The badge shows the points it is worth. Help and wrong answers lower it.', enter: [{ do: 'click', anchor: 'start' }] },
   { anchor: 'columns', title: 'Expected columns', caption: 'Return exactly these columns. "Order matters" means the row order counts too.' },
   { anchor: 'schema', narrowAnchor: 'schema-tab', title: 'Schema', caption: 'Every table and column. The editor autocompletes them as you type.' },
   { anchor: 'editor', title: 'Write & submit', caption: 'Type your query and submit it, or press Ctrl+Enter.', actions: submit(noFilter) },
