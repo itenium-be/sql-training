@@ -9,7 +9,7 @@ export function GamePoster({game}: {game: GameProgress}) {
   const dispatch = useAppDispatch();
   const ds = datasets[game.id];
   return (
-    <Link to={`/${game.id}`} className="db-card db-poster" onClick={() => dispatch(fetchData(game.id))}>
+    <Link to={`/${game.id}`} className="db-card db-poster" data-tour="poster" onClick={() => dispatch(fetchData(game.id))}>
       <div className="db-art">
         <img src={ds.image} alt="" />
         <span className={`db-level db-level-${ds.level}`}>{ds.level}</span>

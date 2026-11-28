@@ -1,12 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Image, Row } from "react-bootstrap";
 import { useAppSelector } from "./store";
 import { RegisterForm } from "./RegisterForm";
 import { Dashboard } from "./dashboard/Dashboard";
+import { shouldAutoStart } from "./tutorial/autoStart";
 
 export function Home() {
   const registeredName = useAppSelector(state => state.exercises.userName);
   const [meme] = useState(() => Math.floor(Math.random() * 18) + 1);
+
+  useEffect(() => {
+    if (shouldAutoStart(localStorage, !!registeredName)) {
+      window.location.assign('/tutorial');
+    }
+  }, [registeredName]);
 
   if (registeredName) {
     return <Dashboard />;

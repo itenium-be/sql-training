@@ -11,6 +11,10 @@ describe('pageTitle', () => {
     expect(pageTitle('/beamer')).toBe('Leaderboard · SQL Showdown');
   });
 
+  test('tutorial', () => {
+    expect(pageTitle('/tutorial')).toBe('How it works · SQL Showdown');
+  });
+
   test('game', () => {
     expect(pageTitle('/')).toBe('SQL Showdown · DevFest Paris');
     expect(pageTitle('/3')).toBe('SQL Showdown · DevFest Paris');

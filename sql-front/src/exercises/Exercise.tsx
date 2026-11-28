@@ -62,12 +62,12 @@ function ExerciseIntro({exercise, onStart}: {exercise: ExerciseModel, onStart: (
       <h1 className="df-intro-title">{exercise.name}</h1>
       <p className="df-intro-desc">{exercise.desc}</p>
       <ExerciseMeta exercise={exercise} />
-      <Button variant="success" className="df-mobile-only" onClick={onStart}>
+      <Button variant="success" className="df-mobile-only" onClick={onStart} data-tour="start">
         Let's Start
       </Button>
       <div className="df-rtabs" role="tablist">
-        <button type="button" role="tab" aria-selected={tab === 'sample'} onClick={() => setTab('sample')}>Sample</button>
-        <button type="button" role="tab" aria-selected={tab === 'diagram'} onClick={() => setTab('diagram')}>Diagram</button>
+        <button type="button" role="tab" aria-selected={tab === 'sample'} onClick={() => setTab('sample')} data-tour="intro-sample-tab">Sample</button>
+        <button type="button" role="tab" aria-selected={tab === 'diagram'} onClick={() => setTab('diagram')} data-tour="intro-diagram-tab">Diagram</button>
       </div>
       {tab === 'sample' ? (
         <>
@@ -81,7 +81,7 @@ function ExerciseIntro({exercise, onStart}: {exercise: ExerciseModel, onStart: (
           <SchemaDiagram game={exercise.id} />
         </div>
       )}
-      <Button variant="success" onClick={onStart}>
+      <Button variant="success" onClick={onStart} data-tour="start">
         Let's Start
       </Button>
     </>
@@ -351,14 +351,14 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
         })}
       </ol>
 
-      <section className="df-excard">
+      <section className="df-excard" data-tour="question">
         <div className="df-excard-head">
           <h2 className="df-excard-title">Exercise {sql.id}</h2>
           <PointsBadge sql={sql} hintUsed={hint !== null} expectedUsed={expected !== null} attempts={attempts} />
         </div>
         <p className="df-excard-desc">{details?.desc ?? (startError || 'Loading…')}</p>
         {details && details.expectedColumns.length > 0 && (
-          <div className="df-excard-cols">
+          <div className="df-excard-cols" data-tour="columns">
             <div className="df-eyebrow df-excard-colslabel">Expected columns</div>
             <div className="df-chips">
               {details.expectedColumns.map(col => <code key={col} className="df-chip">{col}</code>)}
@@ -374,7 +374,7 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
           <p>{hint}</p>
         </section>
       ) : (
-        <button type="button" className="df-reveal" onClick={() => requestHelp('hint')}>
+        <button type="button" className="df-reveal" onClick={() => requestHelp('hint')} data-tour="hint">
           <span>💡 Reveal hint</span>
           <span className="df-cost">−{sql.hintCost} pt</span>
         </button>
@@ -382,7 +382,7 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
 
       <div className="df-panel-nav">
         {!solved && !gaveUp && !success && (
-          <Button variant="outline-danger" onClick={() => setConfirmGiveUp(true)} style={{flex: 1}}>
+          <Button variant="outline-danger" onClick={() => setConfirmGiveUp(true)} style={{flex: 1}} data-tour="giveup">
             🏳 Give up
           </Button>
         )}
@@ -437,7 +437,7 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
         {narrow && (
           <div className="df-paneltabs" role="tablist">
             <button type="button" role="tab" aria-selected={leftTab === 'exercises'} onClick={() => setLeftTab('exercises')}>Exercises</button>
-            <button type="button" role="tab" aria-selected={leftTab === 'schema'} onClick={() => setLeftTab('schema')}>Schema</button>
+            <button type="button" role="tab" aria-selected={leftTab === 'schema'} onClick={() => setLeftTab('schema')} data-tour="schema-tab">Schema</button>
           </div>
         )}
         {!narrow || leftTab === 'exercises'
@@ -459,13 +459,13 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
           </>
         ) : (
           <>
-            <div className="df-editor">
+            <div className="df-editor" data-tour="editor">
               <div className="df-editor-head">
                 {currentGame === 'Worldcup'
                   ? <span className="df-editor-dialect df-dialect-mssql" title="SQL Server" aria-label="SQL Server"><SqlServerIcon /></span>
                   : <span className="df-editor-dialect df-dialect-pg" title="PostgreSQL" aria-label="PostgreSQL"><PostgresIcon /></span>}
                 <QuestionTimer origin={origin} />
-                <Button variant="primary" onClick={handleFetch} disabled={!sqlText.length} className="df-editor-submit">
+                <Button variant="primary" onClick={handleFetch} disabled={!sqlText.length} className="df-editor-submit" data-tour="submit">
                   Submit<span className="df-shortcut">&nbsp;&nbsp;⌘↵</span>
                 </Button>
               </div>
@@ -480,11 +480,11 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
 
             <div className="df-results">
               <div className="df-rtabs" role="tablist">
-                <button type="button" role="tab" aria-selected={resultTab === 'result'} onClick={() => setResultTab('result')}><span className="df-label-long">Your result</span><span className="df-label-short">Result</span></button>
-                <button type="button" role="tab" aria-selected={resultTab === 'expected'} onClick={() => setResultTab('expected')}>
+                <button type="button" role="tab" aria-selected={resultTab === 'result'} onClick={() => setResultTab('result')} data-tour="result-tab"><span className="df-label-long">Your result</span><span className="df-label-short">Result</span></button>
+                <button type="button" role="tab" aria-selected={resultTab === 'expected'} onClick={() => setResultTab('expected')} data-tour="expected-tab">
                   {expected ? 'Expected' : '🔒 Expected'}
                 </button>
-                <button type="button" role="tab" aria-selected={resultTab === 'sample'} onClick={() => setResultTab('sample')}><span className="df-label-long">Sample data</span><span className="df-label-short">Sample</span></button>
+                <button type="button" role="tab" aria-selected={resultTab === 'sample'} onClick={() => setResultTab('sample')} data-tour="sample-tab"><span className="df-label-long">Sample data</span><span className="df-label-short">Sample</span></button>
                 <button type="button" role="tab" aria-selected={resultTab === 'diagram'} onClick={() => setResultTab('diagram')}>Diagram</button>
               </div>
               <div className="df-results-body">
@@ -513,7 +513,7 @@ function SqlExercise({exercise, sql}: {exercise: ExerciseModel, sql: SqlExercise
         )}
       </section>
 
-      {!narrow && <aside className="df-ide-schema">{<SchemaPanel game={currentGame ?? ''} sqlText={sqlText} />}</aside>}
+      {!narrow && <aside className="df-ide-schema" data-tour="schema">{<SchemaPanel game={currentGame ?? ''} sqlText={sqlText} />}</aside>}
     </div>
   )
 }
@@ -551,7 +551,7 @@ function RevealExpected({cost, onReveal}: {cost: number, onReveal: () => void}) 
       <div className="df-locked-icon">🔒</div>
       <div className="df-locked-title">Expected result is hidden</div>
       <p className="df-locked-text">Reveal the expected rows to compare them against yours. Revealing costs {cost} point{cost === 1 ? '' : 's'} on this exercise.</p>
-      <Button variant="primary" onClick={onReveal}>
+      <Button variant="primary" onClick={onReveal} data-tour="reveal-expected">
         Reveal expected result&nbsp;&nbsp;<span className="df-cost-inline">−{cost} pt</span>
       </Button>
     </div>

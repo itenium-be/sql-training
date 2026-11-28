@@ -124,3 +124,11 @@ export function SlidesIcon({size = 24}: {size?: number}) {
     </svg>
   );
 }
+
+export function CursorIcon({size = 24}: {size?: number}) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M4 3l16 7-7 2-2 7z" />
+    </svg>
+  );
+}

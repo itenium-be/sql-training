@@ -1,0 +1,36 @@
+.tour-blocker { position: fixed; inset: 0; z-index: 2000; }
+.tour-dim { position: fixed; inset: 0; z-index: 2001; background: rgba(10, 6, 2, .72); pointer-events: none; }
+.tour-spot {
+  position: fixed; z-index: 2001; border-radius: 12px; pointer-events: none;
+  box-shadow: 0 0 0 9999px rgba(10, 6, 2, .72), 0 0 0 2px var(--df-gold);
+  transition: left .6s cubic-bezier(.5, 0, .2, 1), top .6s cubic-bezier(.5, 0, .2, 1), width .6s cubic-bezier(.5, 0, .2, 1), height .6s cubic-bezier(.5, 0, .2, 1);
+}
+
+.tour-cursor { position: fixed; left: 0; top: 0; z-index: 2003; pointer-events: none; transition: transform .8s cubic-bezier(.5, 0, .2, 1); }
+.tour-cursor svg { width: 28px; height: 28px; fill: var(--df-cream); stroke: var(--df-bg); stroke-width: 1.5; stroke-linejoin: round; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .6)); }
+.tour-tap { display: none; width: 34px; height: 34px; margin: -17px 0 0 -17px; border-radius: 50%; background: rgba(233, 180, 76, .35); border: 2px solid var(--df-gold); }
+.tour-touch .tour-cursor svg { display: none; }
+.tour-touch .tour-tap { display: block; }
+.tour-ripple { position: absolute; left: -22px; top: -22px; width: 44px; height: 44px; border-radius: 50%; border: 3px solid var(--df-gold); opacity: 0; }
+.tour-ripple-on { animation: tour-ripple .6s ease-out; }
+@keyframes tour-ripple { from { transform: scale(.3); opacity: 1; } to { transform: scale(1.6); opacity: 0; } }
+
+.tour-card {
+  position: fixed; z-index: 2004; width: 320px; padding: 14px 16px;
+  background: var(--df-bg-raised); border: 1px solid var(--df-gold); border-radius: 14px;
+  color: var(--df-cream); box-shadow: 0 10px 30px rgba(0, 0, 0, .5);
+  transition: left .6s cubic-bezier(.5, 0, .2, 1), top .6s cubic-bezier(.5, 0, .2, 1);
+}
+.tour-card h4 { margin: 0 0 4px; font-size: 1rem; color: var(--df-gold); }
+.tour-card p { margin: 0; font-size: .9rem; line-height: 1.45; }
+.tour-card-docked { left: 12px; right: 12px; bottom: 12px; width: auto; max-width: 560px; margin: 0 auto; }
+.tour-card-center { inset: 0; margin: auto; height: fit-content; }
+
+.tour-ctl { display: flex; align-items: center; gap: 6px; margin-top: 12px; }
+.tour-ctl button {
+  background: var(--df-surface); border: 1px solid var(--df-border); color: var(--df-cream);
+  border-radius: 8px; min-width: 34px; height: 32px; font-size: .8rem;
+}
+.tour-ctl button:hover { border-color: var(--df-gold); }
+.tour-n { font-family: 'JetBrains Mono', monospace; font-size: .75rem; color: var(--df-muted); margin-right: auto; }
+.tour-skip { padding: 0 12px; }

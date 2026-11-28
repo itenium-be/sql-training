@@ -11,6 +11,7 @@ import { Register } from './Register'
 import { Waiting } from './Waiting'
 import { Admin } from './Admin'
 import { Beamer } from './beamer/Beamer'
+import { Tutorial } from './tutorial/Tutorial'
 import { useGameMode } from './game'
 import { screenFor } from './flow'
 import { TOKEN_STORAGE } from './config'
@@ -25,6 +26,9 @@ export function App() {
   }
   if (window.location.pathname.startsWith('/beamer')) {
     return <Beamer projector />;
+  }
+  if (window.location.pathname.startsWith('/tutorial')) {
+    return <Tutorial />;
   }
   return <Game />;
 }

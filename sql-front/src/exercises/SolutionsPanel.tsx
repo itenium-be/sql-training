@@ -34,7 +34,7 @@ export function SolutionsPanel({game, exerciseId, solved, points, maxPoints}: {g
   const myTags = cards.find(c => c.isYou)?.tags ?? [];
 
   return (
-    <div className="df-solutions">
+    <div className="df-solutions" data-tour="solutions">
       {solved && (
         <MySolution game={game} exerciseId={exerciseId} points={points} maxPoints={maxPoints}
           metrics={playerMetrics(scoreOf(you), myTags)} />
