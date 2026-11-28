@@ -47,11 +47,13 @@ function SuspectRow({ s, onDisqualify }: { s: AiSuspect; onDisqualify: AiTabProp
 
 export function AiTab({ suspects, onDisqualify }: AiTabProps) {
   return (
-    <div className="df-register adm-ai">
-      {suspects.length
-        ? <ul className="adm-ai-list">{suspects.map(s => <SuspectRow key={s.player} s={s} onDisqualify={onDisqualify} />)}</ul>
-        : <p className="adm-sub adm-ai-empty">No AI players flagged.</p>}
-      <div className="adm-sub adm-ai-foot">Listed on a hard tell only. Speed, time away and cadence only rank.</div>
+    <div className="adm-wide">
+      <div className="df-register" style={{ maxWidth: 'none' }}>
+        {suspects.length
+          ? <ul className="adm-ai-list">{suspects.map(s => <SuspectRow key={s.player} s={s} onDisqualify={onDisqualify} />)}</ul>
+          : <p className="adm-sub adm-ai-empty">No AI players flagged.</p>}
+        <div className="adm-sub adm-ai-foot">Listed on a hard tell only. Speed, time away and cadence only rank.</div>
+      </div>
     </div>
   );
 }

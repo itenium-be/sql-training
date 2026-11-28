@@ -108,7 +108,6 @@
 .adm-sol-right { display: inline-flex; align-items: center; gap: 10px; }
 
 .adm-tab .adm-badge-red { background: rgba(var(--df-red-rgb), .16); color: var(--df-red); }
-.adm-ai { max-width: none; }
 .adm-ai-list { list-style: none; margin: 0; padding: 0; }
 .adm-ai-row { border-bottom: 1px solid var(--df-border-soft); }
 .adm-ai-row.adm-dq { opacity: .6; }
