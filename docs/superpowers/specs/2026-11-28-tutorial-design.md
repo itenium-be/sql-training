@@ -10,7 +10,7 @@ Mockup: `design/tutorial/index.html`, variant **A · Spotlight**.
 
 `sql-front/src/tutorial/steps.ts` holds the 20 steps:
 
-1. On the dashboard: the posters, the links, then a click on Countries.
+1. On the dashboard: the posters, then a click on Countries.
 2. On the intro: Example data, Diagram, Let's Start.
 3. On the exercise:
    - the question, the expected columns and the schema

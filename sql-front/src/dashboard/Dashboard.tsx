@@ -26,7 +26,7 @@ export function Dashboard() {
         {summary.games.map(game => <GamePoster key={game.id} game={game} />)}
       </div>
 
-      <div className="db-links" data-tour="links">
+      <div className="db-links">
         <Link to="/leaderboard" className="db-card db-link">
           <span className="db-ico"><TrophyIcon /></span>
           <span><h3>Leaderboard</h3><small>{standing}</small></span>
